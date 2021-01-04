@@ -78,13 +78,13 @@ class GSTRecords(object):
     # suppress pylint warnings about too many class instance attributes:
     # pylint: disable=too-many-instance-attributes
 
-    GSTCSV_YEAR = 2017
+    GSTCSV_YEAR = 2020
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-    GST_DATA_FILENAME = 'gst.csv'
-    GST_WEIGHTS_FILENAME = 'gst_weights.csv'
+    GST_DATA_FILENAME = 'gst_cmie_august_2020.csv'
+    GST_WEIGHTS_FILENAME = 'gst_weights_cmie_august_2020.csv'
     GST_BLOWFACTORS_FILENAME = 'gst_panel_blowup.csv'
-    VAR_INFO_FILENAME = 'gstrecords_variables.json'
+    VAR_INFO_FILENAME = 'gstrecords_variables_cmie.json'
 
     def __init__(self,
                  data=GST_DATA_FILENAME,
