@@ -464,14 +464,6 @@
             },
             "type": "float"
         },
-        "gst_house_rent": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of HOUSE_RENT",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
         "gst_household_appliances": {
             "category": "NON_FOOD",
             "desc": "GST paid by Household on consumption of HOUSEHOLD_APPLIANCES",
@@ -688,14 +680,6 @@
             },
             "type": "float"
         },
-        "gst_other_taxes": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of OTHER_TAXES",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
         "gst_other_tobacco_products": {
             "category": "NON_FOOD",
             "desc": "GST paid by Household on consumption of OTHER_TOBACCO_PRODUCTS",
@@ -720,25 +704,9 @@
             },
             "type": "float"
         },
-        "gst_overseas_education": {
-            "category": "EDUCATION",
-            "desc": "GST paid by Household on consumption of OVERSEAS_EDUCATION",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
         "gst_painting_and_renovation": {
             "category": "NON_FOOD",
             "desc": "GST paid by Household on consumption of PAINTING_AND_RENOVATION",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_parking_fees": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of PARKING_FEES",
             "form": {
                 "2020": "Calculated"
             },
@@ -755,22 +723,6 @@
         "gst_petrol_and_cng": {
             "category": "NON_FOOD",
             "desc": "GST paid by Household on consumption of PETROL_AND_CNG",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_pets": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of PETS",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_pocket_money": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of POCKET_MONEY",
             "form": {
                 "2020": "Calculated"
             },
@@ -832,22 +784,6 @@
             },
             "type": "float"
         },
-        "gst_religious_obligations": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of RELIGIOUS_OBLIGATIONS",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_remittances_sent": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of REMITTANCES_SENT",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
         "gst_salty_snacks": {
             "category": "FOOD",
             "desc": "GST paid by Household on consumption of SALTY_SNACKS",
@@ -904,22 +840,6 @@
             },
             "type": "float"
         },
-        "gst_social_obligations": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of SOCIAL_OBLIGATIONS",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_society_charges": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of SOCIETY_CHARGES",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
         "gst_stationery": {
             "category": "EDUCATION",
             "desc": "GST paid by Household on consumption of STATIONERY",
@@ -939,14 +859,6 @@
         "gst_tea": {
             "category": "FOOD",
             "desc": "GST paid by Household on consumption of TEA",
-            "form": {
-                "2020": "Calculated"
-            },
-            "type": "float"
-        },
-        "gst_toll_charges": {
-            "category": "NON_FOOD",
-            "desc": "GST paid by Household on consumption of TOLL_CHARGES",
             "form": {
                 "2020": "Calculated"
             },
@@ -1506,14 +1418,6 @@
             },
             "type": "float"
         },
-        "CONS_HOUSE_RENT": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF HOUSE_RENT",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
         "CONS_HYGIENE_PRODUCTS": {
             "category": "HEALTH",
             "desc": "CONSUMPTION OF HYGIENE_PRODUCTS",
@@ -1722,14 +1626,6 @@
             },
             "type": "float"
         },
-        "CONS_OTHER_TAXES": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF OTHER_TAXES",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
         "CONS_OTHER_TOBACCO_PRODUCTS": {
             "category": "NON_FOOD",
             "desc": "CONSUMPTION OF OTHER_TOBACCO_PRODUCTS",
@@ -1746,25 +1642,9 @@
             },
             "type": "float"
         },
-        "CONS_OVERSEAS_EDUCATION": {
-            "category": "EDUCATION",
-            "desc": "CONSUMPTION OF OVERSEAS_EDUCATION",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
         "CONS_PAINTING_AND_RENOVATION": {
             "category": "NON_FOOD",
             "desc": "CONSUMPTION OF PAINTING_AND_RENOVATION",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_PARKING_FEES": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF PARKING_FEES",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"
             },
@@ -1781,22 +1661,6 @@
         "CONS_PETROL_AND_CNG": {
             "category": "NON_FOOD",
             "desc": "CONSUMPTION OF PETROL_AND_CNG",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_PETS": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF PETS",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_POCKET_MONEY": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF POCKET_MONEY",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"
             },
@@ -1858,22 +1722,6 @@
             },
             "type": "float"
         },
-        "CONS_RELIGIOUS_OBLIGATIONS": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF RELIGIOUS_OBLIGATIONS",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_REMITTANCES_SENT": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF REMITTANCES_SENT",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
         "CONS_SALTY_SNACKS": {
             "category": "FOOD",
             "desc": "CONSUMPTION OF SALTY_SNACKS",
@@ -1930,22 +1778,6 @@
             },
             "type": "float"
         },
-        "CONS_SOCIAL_OBLIGATIONS": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF SOCIAL_OBLIGATIONS",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_SOCIETY_CHARGES": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF SOCIETY_CHARGES",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
         "CONS_STATIONERY": {
             "category": "EDUCATION",
             "desc": "CONSUMPTION OF STATIONERY",
@@ -1965,14 +1797,6 @@
         "CONS_TEA": {
             "category": "FOOD",
             "desc": "CONSUMPTION OF TEA",
-            "form": {
-                "2020-July": "Household Survey CMIE Consumer Pyramid"
-            },
-            "type": "float"
-        },
-        "CONS_TOLL_CHARGES": {
-            "category": "NON_FOOD",
-            "desc": "CONSUMPTION OF TOLL_CHARGES",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"
             },
@@ -2091,7 +1915,7 @@
             "type": "string"
         },
         "TOTAL_EXPENDITURE": {
-            "category": "NONE",
+            "category": "None",
             "desc": "Household Total Consumption",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"
@@ -2099,7 +1923,7 @@
             "type": "float"
         },
         "WEIGHT0": {
-            "category": "NONE",
+            "category": "None",
             "desc": "Household unit sampling weight unadjusted",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"
@@ -2107,7 +1931,7 @@
             "type": "float"
         },
         "weight": {
-            "category": "NONE",
+            "category": "None",
             "desc": "Household unit sampling weight adjusted for Non-Response",
             "form": {
                 "2020-July": "Household Survey CMIE Consumer Pyramid"

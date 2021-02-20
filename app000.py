@@ -1,6 +1,7 @@
+
 """
-app0.py illustrates use of pitaxcalc-demo release 2.0.0 (India version).
-USAGE: python app0.py > app0.res
+app000.py illustrates use of pitaxcalc-demo release 2.0.0 (India version).
+USAGE: python app000.py > app000.res
 CHECK: Use your favorite Windows diff utility to confirm that app0.res is
        the same as the app0.out file that is in the repository.
 """
@@ -14,7 +15,7 @@ assert recs.data_year == 2020
 assert recs.current_year == 2020
 
 # create GSTRecords object containing gst.csv and gst_weights.csv input data
-grecs = GSTRecords()
+grecs = GSTRecords(data='gst_cmie_august_2020.csv', weights='gst_weights_cmie_august_2020.csv')
 
 assert isinstance(grecs, GSTRecords)
 assert grecs.data_year == 2020
@@ -70,11 +71,11 @@ total_consumption_education_all = calc1.weighted_total_garray('total_consumption
 total_consumption_health_all = calc1.weighted_total_garray('total_consumption_health')
 total_consumption_all = ((total_consumption_food_all+total_consumption_non_food_all+
                           total_consumption_education_all + total_consumption_health_all) / 10**7)
-total_consumption_all1 = calc1.weighted_total_garray('total_consumption') / 10**7
+#total_consumption_all1 = calc1.weighted_total_garray('total_consumption') / 10**7
 total_gst = calc1.weighted_total_garray('gst') / 10**7
 total_weight = calc1.garray('WEIGHT0').sum() / 10**7
 print(f'Total Consumption in Economy - 2020 (Rupees Crores): {total_consumption_all:,.0f}')
-print(f'Total Consumption in Economy - 2020 (Rupees Crores): {total_consumption_all1:,.0f}')
+#print(f'Total Consumption in Economy - 2020 (Rupees Crores): {total_consumption_all1:,.0f}')
 print(f'Total GST Collection - 2020 (Rupees Crores): {total_gst:,.0f}')
 print(f'Total Households - 2020 (Crores): {total_weight:,.0f}')
 results = pd.DataFrame({'GST_ID_NO': id_gst,
