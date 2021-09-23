@@ -75,11 +75,11 @@ class Records(object):
     # suppress pylint warnings about too many class instance attributes:
     # pylint: disable=too-many-instance-attributes
 
-    PITCSV_YEAR = 2020
+    PITCSV_YEAR = 2017
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     PIT_DATA_FILENAME = 'pit.csv'
-    PIT_WEIGHTS_FILENAME = 'pit_weights.csv'
+    PIT_WEIGHTS_FILENAME = 'pit_weights1.csv'
     VAR_INFO_FILENAME = 'records_variables.json'
 
     def __init__(self,
@@ -235,6 +235,11 @@ class Records(object):
         GF_CYL_SET_OFF = self.gfactors.factor_value('LOSSES_CY', year)
         GF_BFL_SET_OFF_BALANCE = self.gfactors.factor_value('LOSSES_BF', year)
         GF_NET_AGRC_INCOME = self.gfactors.factor_value('AGRI_INCOME', year)
+        print("Grow Factors: ",GF_SALARY, GF_RENT, GF_BP_NONSPECULATIVE, GF_BP_SPECULATIVE,
+              GF_BP_SPECIFIED,GF_BP_PATENT115BBF,GF_STCG_APPRATE,
+              GF_OINCOME,GF_DEDUCTIONS, GF_DEDUCTION_10AA,  GF_ST_CG_AMT_1,
+              GF_ST_CG_AMT_2, GF_LT_CG_AMT_1,GF_LT_CG_AMT_2, GF_CYL_SET_OFF,
+              GF_BFL_SET_OFF_BALANCE, GF_NET_AGRC_INCOME)
         self.SALARIES *= GF_SALARY
         self.INCOME_HP *= GF_RENT
         self.PRFT_GAIN_BP_OTHR_SPECLTV_BUS *= GF_BP_NONSPECULATIVE

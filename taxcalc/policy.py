@@ -41,13 +41,14 @@ class Policy(ParametersBase):
     class instance: Policy
     """
 
-    DEFAULTS_FILENAME = 'current_law_policy_cmie.json'
-    JSON_START_YEAR = 2020  # remains the same unless earlier data added
-    LAST_KNOWN_YEAR = 2020  # last year for which indexed param vals are known
+    #DEFAULTS_FILENAME = 'current_law_policy_cmie2.json'
+    JSON_START_YEAR = 2017  # remains the same unless earlier data added
+    LAST_KNOWN_YEAR = 2017  # last year for which indexed param vals are known
     LAST_BUDGET_YEAR = 2023  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
 
     def __init__(self,
+                 DEFAULTS_FILENAME=None,
                  gfactors=None,
                  start_year=JSON_START_YEAR,
                  num_years=DEFAULT_NUM_YEARS):
@@ -61,7 +62,8 @@ class Policy(ParametersBase):
             raise ValueError('gfactors is not None or a GrowFactors instance')
 
         # read default parameters
-        self._vals = self._params_dict_from_json_file()
+        print(DEFAULTS_FILENAME)
+        self._vals = self._params_dict_from_json_file(DEFAULTS_FILENAME=DEFAULTS_FILENAME)
 
         if start_year < Policy.JSON_START_YEAR:
             raise ValueError('start_year cannot be less than JSON_START_YEAR')
