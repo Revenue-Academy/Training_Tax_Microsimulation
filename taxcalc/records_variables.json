@@ -47,6 +47,11 @@
       "desc": "Income from patents u/s 115BBF",
       "form": {"2017": "ITR-3 Part B-TI-3iv"}
     },
+    "TOTAL_PROFTS_GAINS_BP": {
+      "type": "float",
+      "desc": "Total Profits from Business and Profession",
+      "form": {"2017": "ITR-3 Part B-TI-3v"}
+    },    
     "ST_CG_AMT_1": {
       "type": "float",
       "desc": "111A (STCG on shares units on which where STT paid) @ 15% under current law",
@@ -228,11 +233,36 @@
       "type": "float",
       "desc": "Rebate as non-refundable tax credit",
       "form": {"2017": "ITR-3 Part B TTI-2e"}
+    },  
+    "tax_slab1": {
+      "type": "float",
+      "desc": "Tax on the first slab of income",
+      "form": {"2017": ""}
+    },
+    "tax_slab2": {
+      "type": "float",
+      "desc": "Tax on the second slab of income",
+      "form": {"2017": ""}
+    },
+    "tax_slab3": {
+      "type": "float",
+      "desc": "Tax on the third slab of income",
+      "form": {"2017": ""}
+    },
+    "tax_slab4": {
+      "type": "float",
+      "desc": "Tax on the fourth slab of income",
+      "form": {"2017": ""}
     },
     "surcharge": {
       "type": "float",
       "desc": "Surcharge on income above surcharge_thd",
       "form": {"2017": "ITR-3 Part B TTI-2giii"}
+    },    
+    "pitax_before_cess": {
+      "type": "float",
+      "desc": "PIT before Cess is included",
+      "form": {"2017": " "}
     },
     "cess": {
       "type": "float",

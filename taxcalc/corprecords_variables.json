@@ -1,7 +1,7 @@
 {
   "read": {
     "ID_NO": {
-      "required": true,
+      "required": false,
       "type": "int",
       "desc": "Unique positive numeric identifier for filing unit",
       "form": {"2017": "private info"}

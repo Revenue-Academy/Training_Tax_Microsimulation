@@ -20,10 +20,11 @@ class ParametersBase(object):
     """
     __metaclass__ = abc.ABCMeta
 
-    DEFAULTS_FILENAME = None
+    DEFAULTS_FILENAME = 'current_law_policy.json'
+    #DEFAULTS_FILENAME = None
 
     @classmethod
-    def default_data(cls, metadata=False, start_year=None):
+    def default_data(cls, metadata=False, start_year=None, DEFAULTS_FILENAME=DEFAULTS_FILENAME):
         """
         Return parameter data read from the subclass's json file.
 
@@ -39,7 +40,7 @@ class ParametersBase(object):
         """
         # extract different data from DEFAULT_FILENAME depending on start_year
         if start_year is None:
-            params = cls._params_dict_from_json_file()
+            params = cls._params_dict_from_json_file(DEFAULTS_FILENAME)
         else:
             nyrs = start_year - cls.JSON_START_YEAR + 1
             ppo = cls(num_years=nyrs)
@@ -227,7 +228,7 @@ class ParametersBase(object):
         return params
 
     @classmethod
-    def _params_dict_from_json_file(cls):
+    def _params_dict_from_json_file(cls, DEFAULTS_FILENAME=None):
         """
         Read DEFAULTS_FILENAME file and return complete dictionary.
 
@@ -240,11 +241,11 @@ class ParametersBase(object):
         params: dictionary
             containing complete contents of DEFAULTS_FILENAME file.
         """
-        if cls.DEFAULTS_FILENAME is None:
+        if DEFAULTS_FILENAME is None:
             msg = 'DEFAULTS_FILENAME must be overridden by inheriting class'
             raise NotImplementedError(msg)
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                            cls.DEFAULTS_FILENAME)
+                            DEFAULTS_FILENAME)
         if os.path.exists(path):
             with open(path) as pfile:
                 params_dict = json.load(pfile,
@@ -252,7 +253,7 @@ class ParametersBase(object):
         else:
             # cannot call read_egg_ function in unit tests
             params_dict = read_egg_json(
-                cls.DEFAULTS_FILENAME)  # pragma: no cover
+                DEFAULTS_FILENAME)  # pragma: no cover
         return params_dict
 
     def _update(self, year_mods):

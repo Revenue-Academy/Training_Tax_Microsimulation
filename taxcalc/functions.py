@@ -200,7 +200,8 @@ def pit_liability(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3, tbrk4,
                   Income_Rate_Purpose, AGEGRP, Total_Tax_Cap_Gains,
                   Total_Tax_STCG, Total_Tax_LTCG,
                   Aggregate_Income, tax_Aggregate_Income, rebate_agri,
-                  tax_TTI, rebate, surcharge, cess, pitax):
+                  tax_TTI, rebate, tax_slab1, tax_slab2, tax_slab3, tax_slab4,
+                  surcharge, pitax_before_cess, cess, pitax):
     """
     Compute tax liability given the progressive tax rate schedule specified
     by the (marginal tax) rate* and (upper tax bracket) brk* parameters and
@@ -235,6 +236,11 @@ def pit_liability(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3, tbrk4,
                         rate2 * min(tbrk2 - tbrk1, max(0., agginc - tbrk1)) +
                         rate3 * min(tbrk3 - tbrk2, max(0., agginc - tbrk2)) +
                         rate4 * max(0., agginc - tbrk3))
+    tax_slab1 = rate1 * min(agginc, tbrk1)
+    tax_slab2 = rate2 * min(tbrk2 - tbrk1, max(0., agginc - tbrk1))
+    tax_slab3 = rate3 * min(tbrk3 - tbrk2, max(0., agginc - tbrk2))
+    tax_slab4 = rate4 * max(0., agginc - tbrk3)
+    
     tax_Aggregate_Income = tax_normal_rates
     # compute tax_TTI
     tax_TTI = tax_normal_rates + tax_TI_special_rates
@@ -271,8 +277,10 @@ def pit_liability(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3, tbrk4,
     tax += surcharge
     # compute cess amount
     cess = tax * cess_rate
+    pitax_before_cess = tax
     # compute pitax amount
     pitax = tax + cess
     Total_Tax_Cap_Gains = Total_Tax_STCG + Total_Tax_LTCG
     return (Aggregate_Income, tax_Aggregate_Income, rebate_agri, tax_TTI,
-            Total_Tax_Cap_Gains, rebate, surcharge, cess, pitax)
+            Total_Tax_Cap_Gains, rebate, tax_slab1, tax_slab2, tax_slab3, tax_slab4, 
+            surcharge, pitax_before_cess, cess, pitax)
