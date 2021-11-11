@@ -550,14 +550,17 @@ class Application(Frame):
     def generate_tax_expenditures(self):
         
         # create Records object containing pit.csv and pit_weights.csv input data
-        recs = Records()
+        #recs = Records()
+        recs = Records(data=self.data_filename, weights=self.weights_filename, gfactors=GrowFactors(growfactors_filename=self.growfactors_filename))
         
         grecs = GSTRecords()
         
-        crecs1 = CorpRecords(data=self.data_filename, weights=self.weights_filename)
+        crecs1 = CorpRecords()
+        #crecs1 = CorpRecords(data=self.data_filename, weights=self.weights_filename)
+
         # Note: weights argument is optional
-        assert isinstance(crecs1, CorpRecords)
-        assert crecs1.current_year == 2017
+        assert isinstance(recs, Records)
+        assert recs.current_year == 2017
         
         # create Policy object containing current-law policy
         pol = Policy()
@@ -575,10 +578,8 @@ class Application(Frame):
         #sector=calc1.carray('sector')
         weight = calc1.carray('weight')
         
-        dump_vars = ['CIT_ID_NO', 'legal_form', 'sector', 'province', 'small_business', 
-                     'revenue', 'expenditure', 'income', 'tax_base_before_deductions', 
-                     'deductions_from_tax_base',
-                     'income_tax_base_after_deductions', 'citax']
+        dump_vars = ['FILING_SEQ_NO', 'ST_CG_AMT_1', 'ST_CG_AMT_2', 'LT_CG_AMT_1', 'LT_CG_AMT_2', 
+                     'pitax']
         dumpdf = calc1.dataframe_cit(dump_vars)
         #create the weight variable
         dumpdf['weight']= weight
