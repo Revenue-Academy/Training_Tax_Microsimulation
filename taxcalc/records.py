@@ -79,7 +79,7 @@ class Records(object):
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     PIT_DATA_FILENAME = 'pit.csv'
-    PIT_WEIGHTS_FILENAME = 'pit_weights1.csv'
+    PIT_WEIGHTS_FILENAME = 'pit_weights.csv'
     VAR_INFO_FILENAME = 'records_variables.json'
 
     def __init__(self,
@@ -142,6 +142,26 @@ class Records(object):
         """
         return self.__dim
 
+    def adjust_pit(self, pit_adjustment):
+        """
+        Add one to current year.
+        Also, does extrapolation, reweighting, adjusting for new current year.
+        """
+        self.TOTAL_INCOME_OS *= pit_adjustment
+        #print("TOTAL_INCOME_OS ", self.TOTAL_INCOME_OS)
+        """
+        # move to next year
+        self.__current_year += 0
+        # apply variable extrapolation grow factors
+        if self.gfactors is not None:
+            self._blowup(self.__current_year)
+        # specify current-year sample weights
+        if self.WT.size > 0:
+            wt_colname = 'WT{}'.format(self.__current_year)
+            self.weight = self.WT[wt_colname]
+        """
+
+        
     def increment_year(self):
         """
         Add one to current year.
@@ -165,6 +185,7 @@ class Records(object):
         """
         self.__current_year = new_current_year
         self.AYEAR.fill(new_current_year)
+        print("records self.__current_year ", self.__current_year)
 
     @staticmethod
     def read_var_info():
@@ -235,11 +256,13 @@ class Records(object):
         GF_CYL_SET_OFF = self.gfactors.factor_value('LOSSES_CY', year)
         GF_BFL_SET_OFF_BALANCE = self.gfactors.factor_value('LOSSES_BF', year)
         GF_NET_AGRC_INCOME = self.gfactors.factor_value('AGRI_INCOME', year)
+        """
         print("Grow Factors: ",GF_SALARY, GF_RENT, GF_BP_NONSPECULATIVE, GF_BP_SPECULATIVE,
               GF_BP_SPECIFIED,GF_BP_PATENT115BBF,GF_STCG_APPRATE,
               GF_OINCOME,GF_DEDUCTIONS, GF_DEDUCTION_10AA,  GF_ST_CG_AMT_1,
               GF_ST_CG_AMT_2, GF_LT_CG_AMT_1,GF_LT_CG_AMT_2, GF_CYL_SET_OFF,
               GF_BFL_SET_OFF_BALANCE, GF_NET_AGRC_INCOME)
+        """        
         self.SALARIES *= GF_SALARY
         self.INCOME_HP *= GF_RENT
         self.PRFT_GAIN_BP_OTHR_SPECLTV_BUS *= GF_BP_NONSPECULATIVE
@@ -257,6 +280,7 @@ class Records(object):
         self.CYL_SET_OFF *= GF_CYL_SET_OFF
         self.BFL_SET_OFF_BALANCE *= GF_BFL_SET_OFF_BALANCE
         self.NET_AGRC_INCOME *= GF_NET_AGRC_INCOME
+        #print(self.SALARIES)
 
     def _read_data(self, data):
         """

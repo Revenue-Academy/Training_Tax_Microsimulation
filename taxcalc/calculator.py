@@ -22,7 +22,7 @@ from taxcalc.functions import (net_salary_income, net_rental_income,
                                tax_stcg_splrate, tax_ltcg_splrate,
                                tax_specialrates, current_year_losses,
                                brought_fwd_losses, agri_income, pit_liability)
-from taxcalc.corpfunctions import (depreciation_PM,
+from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
                                    corp_income_business_profession,
                                    corp_GTI_before_set_off, GTI_and_losses,
                                    cit_liability)
@@ -93,55 +93,147 @@ class Calculator(object):
     def __init__(self, policy=None, records=None, corprecords=None,
                  gstrecords=None, verbose=True, sync_years=True):
         # pylint: disable=too-many-arguments,too-many-branches
+        self.records = records
+        self.corprecords = corprecords
+        self.gstrecords = gstrecords
+        if self.records is not None:        
+            from taxcalc.functions import (net_salary_income, net_rental_income,
+                                           income_business_profession,
+                                           total_other_income, gross_total_income,
+                                           itemized_deductions, deduction_10AA,
+                                           taxable_total_income,
+                                           tax_stcg_splrate, tax_ltcg_splrate,
+                                           tax_specialrates, current_year_losses,
+                                           brought_fwd_losses, agri_income, pit_liability)
+        if self.corprecords is not None:
+            from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
+                                               corp_income_business_profession,
+                                               corp_GTI_before_set_off, GTI_and_losses,
+                                               cit_liability)
+        if self.gstrecords is not None:
+            from taxcalc.gstfunctions import (gst_liability_item)        
+
         if isinstance(policy, Policy):
             self.__policy = copy.deepcopy(policy)
         else:
             raise ValueError('must specify policy as a Policy object')
-        if isinstance(records, Records):
-            self.__records = copy.deepcopy(records)
-        else:
-            raise ValueError('must specify records as a Records object')
-        if isinstance(gstrecords, GSTRecords):
-            self.__gstrecords = copy.deepcopy(gstrecords)
-        else:
-            raise ValueError('must specify records as a GSTRecords object')
-        if isinstance(corprecords, CorpRecords):
-            self.__corprecords = copy.deepcopy(corprecords)
-        else:
-            raise ValueError('must specify records as a CorpRecords object')
-        if self.__policy.current_year < self.__records.data_year:
-            self.__policy.set_year(self.__records.data_year)
-        current_year_is_data_year = (
-            self.__records.current_year == self.__records.data_year)
-        if sync_years and current_year_is_data_year:
-            if verbose:
-                print('You loaded data for ' +
-                      str(self.__records.data_year) + '.')
-                if self.__records.IGNORED_VARS:
-                    print('Your data include the following unused ' +
-                          'variables that will be ignored:')
-                    for var in self.__records.IGNORED_VARS:
-                        print('  ' +
-                              var)
-            while self.__records.current_year < self.__policy.current_year:
-                self.__records.increment_year()
-            if verbose:
-                print('Tax-Calculator startup automatically ' +
-                      'extrapolated your data to ' +
-                      str(self.__records.current_year) + '.')
-        assert self.__policy.current_year == self.__records.current_year
-        assert self.__policy.current_year == self.__gstrecords.current_year
-        assert self.__policy.current_year == self.__corprecords.current_year
+        if self.records is not None:
+            if isinstance(records, Records):
+                self.__records = copy.deepcopy(records)
+            else:
+                raise ValueError('must specify records as a Records object')
+        if self.gstrecords is not None:
+            if isinstance(gstrecords, GSTRecords):
+                self.__gstrecords = copy.deepcopy(gstrecords)
+            else:
+                raise ValueError('must specify records as a GSTRecords object')
+        if self.corprecords is not None:            
+            if isinstance(corprecords, CorpRecords):
+                self.__corprecords = copy.deepcopy(corprecords)
+            else:
+                raise ValueError('must specify records as a CorpRecords object')
+        if self.records is not None:        
+            if self.__policy.current_year < self.__records.data_year:
+                self.__policy.set_year(self.__records.data_year)        
+            current_year_is_data_year = (
+                    self.__records.current_year == self.__records.data_year)
+            if sync_years and current_year_is_data_year:
+                if verbose:
+                    print('You loaded data for ' +
+                          str(self.__records.data_year) + '.')
+                    if self.__records.IGNORED_VARS:
+                        print('Your data include the following unused ' +
+                              'variables that will be ignored:')
+                        for var in self.__records.IGNORED_VARS:
+                            print('  ' +
+                                  var)
+                while self.__records.current_year < self.__policy.current_year:
+                    self.__records.increment_year()
+                if verbose:
+                    print('Tax-Calculator startup automatically ' +
+                          'extrapolated your data to ' +
+                          str(self.__records.current_year) + '.')
+        if self.gstrecords is not None:        
+            if self.__policy.current_year < self.__gstrecords.data_year:
+                self.__policy.set_year(self.__gstrecords.data_year)        
+            current_year_is_data_year = (
+                    self.__gstrecords.current_year == self.__gstrecords.data_year)
+            if sync_years and current_year_is_data_year:
+                if verbose:
+                    print('You loaded data for ' +
+                          str(self.__gstrecords.data_year) + '.')
+                    if self.__gstrecords.IGNORED_VARS:
+                        print('Your data include the following unused ' +
+                              'variables that will be ignored:')
+                        for var in self.__gstrecords.IGNORED_VARS:
+                            print('  ' +
+                                  var)
+                while self.__gstrecords.current_year < self.__policy.current_year:
+                    self.__gstrecords.increment_year()
+                if verbose:
+                    print('Tax-Calculator startup automatically ' +
+                          'extrapolated your data to ' +
+                          str(self.__gstrecords.current_year) + '.')
+        if self.corprecords is not None:        
+            if self.__policy.current_year < self.__corprecords.data_year:
+                self.__policy.set_year(self.__corprecords.data_year)        
+            current_year_is_data_year = (
+                    self.__corprecords.current_year == self.__corprecords.data_year)
+            if sync_years and current_year_is_data_year:
+                if verbose:
+                    print('You loaded data for ' +
+                          str(self.__corprecords.data_year) + '.')
+                    if self.__corprecords.IGNORED_VARS:
+                        print('Your data include the following unused ' +
+                              'variables that will be ignored:')
+                        for var in self.__corprecords.IGNORED_VARS:
+                            print('  ' +
+                                  var)
+                while self.__corprecords.current_year < self.__policy.current_year:
+                    self.__corprecords.increment_year()
+                if verbose:
+                    print('Tax-Calculator startup automatically ' +
+                          'extrapolated your data to ' +
+                          str(self.__corprecords.current_year) + '.')                    
+        if self.records is not None:
+            assert self.__policy.current_year == self.__records.current_year
+        if self.gstrecords is not None:   
+            assert self.__policy.current_year == self.__gstrecords.current_year
+        if self.corprecords is not None:            
+            assert self.__policy.current_year == self.__corprecords.current_year
         self.__stored_records = None
-
+        
+    def set_current_year(self, year):
+        self.current_year = year
+        if self.records is not None:             
+            self.__records.set_current_year(year)
+        if self.corprecords is not None:             
+            self.__corprecords.set_current_year(year)
+        if self.gstrecords is not None:      
+            self.__gstrecords.set_current_year(year)
+        
+    def adjust_pit(self, pit_adjustment):
+        """
+        Adjust PIT for distributed Dividends under a Corporate Tax Change.
+        """
+        #next_year = self.__policy.current_year
+        if self.records is not None:                    
+            self.__records.adjust_pit(pit_adjustment)
+        #self.__gstrecords.increment_year()
+        #self.__corprecords.increment_year()
+        #self.__policy.set_year(next_year)
+        
     def increment_year(self):
         """
         Advance all embedded objects to next year.
         """
         next_year = self.__policy.current_year + 1
-        self.__records.increment_year()
-        self.__gstrecords.increment_year()
-        self.__corprecords.increment_year()
+        if self.records is not None:        
+            self.__records.increment_year()
+        if self.gstrecords is not None:            
+            self.__gstrecords.increment_year()
+        if self.corprecords is not None:            
+            self.__corprecords.increment_year()
         self.__policy.set_year(next_year)
 
     def advance_to_year(self, year):
@@ -150,6 +242,7 @@ class Calculator(object):
         increment year functionality by immediately specifying the year
         as input.  New year must be at least the current year.
         """
+        #print("self.current_year ", self.current_year)
         iteration = year - self.current_year
         if iteration < 0:
             raise ValueError('New current year must be ' +
@@ -164,77 +257,123 @@ class Calculator(object):
         """
         # pylint: disable=too-many-function-args,no-value-for-parameter
         # conducts static analysis of Calculator object for current_year
-        assert self.__records.current_year == self.__policy.current_year
-        assert self.__gstrecords.current_year == self.__policy.current_year
-        assert self.__corprecords.current_year == self.__policy.current_year
-        self.__records.zero_out_changing_calculated_vars()
+        if self.records is not None:
+            assert self.__records.current_year == self.__policy.current_year
+        if self.gstrecords is not None:
+            assert self.__gstrecords.current_year == self.__policy.current_year
+        if self.corprecords is not None:
+            assert self.__corprecords.current_year == self.__policy.current_year
+        if self.records is not None:        
+            self.__records.zero_out_changing_calculated_vars()
+        if self.gstrecords is not None:        
+            self.__gstrecords.zero_out_changing_calculated_vars()
+        if self.corprecords is not None:        
+            self.__corprecords.zero_out_changing_calculated_vars()            
         # For now, don't zero out for corporate
         # pdb.set_trace()
         # Corporate calculations
-        net_rental_income(self.__policy, self.__corprecords)
-        depreciation_PM(self.__policy, self.__corprecords)
-        corp_income_business_profession(self.__policy, self.__corprecords)
-        total_other_income(self.__policy, self.__corprecords)
-        current_year_losses(self.__policy, self.__corprecords)
-        brought_fwd_losses(self.__policy, self.__corprecords)
-        corp_GTI_before_set_off(self.__policy, self.__corprecords)
-        GTI_and_losses(self.__policy, self.__corprecords)
-        itemized_deductions(self.__policy, self.__corprecords)
-        deduction_10AA(self.__policy, self.__corprecords)
-        taxable_total_income(self.__policy, self.__corprecords)
-        tax_stcg_splrate(self.__policy, self.__corprecords)
-        tax_ltcg_splrate(self.__policy, self.__corprecords)
-        tax_specialrates(self.__policy, self.__corprecords)
-        cit_liability(self.__policy, self.__corprecords)
+        if self.corprecords is not None:   
+            net_rental_income(self.__policy, self.__corprecords)
+            depreciation_PM(self.__policy, self.__corprecords)
+            corp_income_business_profession(self.__policy, self.__corprecords)
+            total_other_income_cit(self.__policy, self.__corprecords)
+            current_year_losses(self.__policy, self.__corprecords)
+            brought_fwd_losses(self.__policy, self.__corprecords)
+            corp_GTI_before_set_off(self.__policy, self.__corprecords)
+            GTI_and_losses(self.__policy, self.__corprecords)
+            itemized_deductions(self.__policy, self.__corprecords)
+            deduction_10AA(self.__policy, self.__corprecords)
+            taxable_total_income(self.__policy, self.__corprecords)
+            tax_stcg_splrate(self.__policy, self.__corprecords)
+            tax_ltcg_splrate(self.__policy, self.__corprecords)
+            tax_specialrates(self.__policy, self.__corprecords)
+            cit_liability(self.__policy, self.__corprecords)
         # Individual calculations
-        net_salary_income(self.__policy, self.__records)
-        net_rental_income(self.__policy, self.__records)
-        income_business_profession(self.__policy, self.__records)
-        total_other_income(self.__policy, self.__records)
-        current_year_losses(self.__policy, self.__records)
-        brought_fwd_losses(self.__policy, self.__records)
-        gross_total_income(self.__policy, self.__records)
-        itemized_deductions(self.__policy, self.__records)
-        agri_income(self.__policy, self.__records)
-        taxable_total_income(self.__policy, self.__records)
-        tax_stcg_splrate(self.__policy, self.__records)
-        tax_ltcg_splrate(self.__policy, self.__records)
-        tax_specialrates(self.__policy, self.__records)
-        pit_liability(self.__policy, self.__records)
+        if self.records is not None:        
+            net_salary_income(self.__policy, self.__records)
+            net_rental_income(self.__policy, self.__records)
+            income_business_profession(self.__policy, self.__records)
+            total_other_income(self.__policy, self.__records)
+            current_year_losses(self.__policy, self.__records)
+            brought_fwd_losses(self.__policy, self.__records)
+            gross_total_income(self.__policy, self.__records)
+            itemized_deductions(self.__policy, self.__records)
+            agri_income(self.__policy, self.__records)
+            taxable_total_income(self.__policy, self.__records)
+            tax_stcg_splrate(self.__policy, self.__records)
+            tax_ltcg_splrate(self.__policy, self.__records)
+            tax_specialrates(self.__policy, self.__records)
+            pit_liability(self.__policy, self.__records)
         # GST calculations
-        # agg_consumption(self.__policy, self.__gstrecords)
-        # gst_liability_cereal(self.__policy, self.__gstrecords)
-        # gst_liability_other(self.__policy, self.__gstrecords)
-        gst_liability_item(self)
-        # gst_liability_item(self.__policy, self.__gstrecords)
-        # TODO: ADD: expanded_income(self.__policy, self.__records)
-        # TODO: ADD: aftertax_income(self.__policy, self.__records)
-
-    def weighted_total(self, variable_name):
+        if self.gstrecords is not None:         
+            # agg_consumption(self.__policy, self.__gstrecords)
+            # gst_liability_cereal(self.__policy, self.__gstrecords)
+            # gst_liability_other(self.__policy, self.__gstrecords)
+            gst_liability_item(self)
+            # gst_liability_item(self.__policy, self.__gstrecords)
+            # TODO: ADD: expanded_income(self.__policy, self.__records)
+            # TODO: ADD: aftertax_income(self.__policy, self.__records)
+        
+        
+    def weighted_total_pit(self, variable_name):
         """
         Return all-filing-unit weighted total of named Records variable.
         """
-        return (self.array(variable_name) * self.array('weight')).sum()
+        if self.records is not None:         
+            return (self.array(variable_name) * self.array('weight')).sum()
 
-    def weighted_garray(self, variable_name):
+    def weighted_gst(self, variable_name):
         """
-        Return all-filing-unit weighted total of named Records variable.
+        Return all-filing-unit weighted total of named GST Records variable.
         """
-        return (self.garray(variable_name) * self.garray('weight'))
+        if self.gstrecords is not None:
+            return (self.garray(variable_name) * self.garray('weight'))
 
-    def weighted_total_garray(self, variable_name):
+    def weighted_total_gst(self, variable_name):
         """
-        Return all-filing-unit weighted total of named Records variable.
+        Return all-filing-unit weighted total of named GST Records variable.
         """
-        return (self.garray(variable_name) * self.garray('weight')).sum()
+        if self.gstrecords is not None:        
+            return (self.garray(variable_name) * self.garray('weight')).sum()
 
-    def total_weight(self):
+    def weighted_cit(self, variable_name):
+        """
+        Return all-filing-unit weighted total of named Corp Records variable.
+        """
+        if self.corprecords is not None:         
+            return (self.carray(variable_name) * self.carray('weight'))
+
+    def weighted_total_cit(self, variable_name):
+        """
+        Return all-filing-unit weighted total of named Corp Records variable.
+        """
+        if self.corprecords is not None:         
+            return (self.carray(variable_name) * self.carray('weight')).sum()
+    
+    def total_weight_pit(self):
         """
         Return all-filing-unit total of sampling weights.
         NOTE: var_weighted_mean = calc.weighted_total(var)/calc.total_weight()
         """
-        return self.array('weight').sum()
+        if self.records is not None:         
+            return self.array('weight').sum()
 
+    def total_weight_gst(self):
+        """
+        Return all-filing-unit total of sampling weights.
+        NOTE: var_weighted_mean = calc.weighted_total(var)/calc.total_weight()
+        """
+        if self.gstrecords is not None:         
+            return self.garray('weight').sum()
+    
+    def total_weight_cit(self):
+        """
+        Return all-filing-unit total of sampling weights.
+        NOTE: var_weighted_mean = calc.weighted_total(var)/calc.total_weight()
+        """
+        if self.corprecords is not None:         
+            return self.carray('weight').sum()
+    
     def dataframe(self, variable_list):
         """
         Return pandas DataFrame containing the listed variables from embedded
@@ -242,10 +381,23 @@ class Calculator(object):
         """
         assert isinstance(variable_list, list)
         arys = [self.array(vname) for vname in variable_list]
+        #print(arys)
         pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable_list)
         del arys
         return pdf
 
+    def dataframe_cit(self, variable_list):
+        """
+        Return pandas DataFrame containing the listed variables from embedded
+        Records object.
+        """
+        assert isinstance(variable_list, list)
+        arys = [self.carray(vname) for vname in variable_list]
+        #print(arys)
+        pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable_list)
+        del arys
+        return pdf
+    
     def distribution_table_dataframe(self):
         """
         Return pandas DataFrame containing the DIST_TABLE_COLUMNS variables
@@ -261,10 +413,11 @@ class Calculator(object):
          object to specified variable_value and return None (which can be
          ignored).
         """
-        if variable_value is None:
-            return getattr(self.__records, variable_name)
-        assert isinstance(variable_value, np.ndarray)
-        setattr(self.__records, variable_name, variable_value)
+        if self.records is not None:         
+            if variable_value is None:
+                return getattr(self.__records, variable_name)
+            assert isinstance(variable_value, np.ndarray)
+            setattr(self.__records, variable_name, variable_value)
         return None
 
     def carray(self, variable_name, variable_value=None):
@@ -276,10 +429,11 @@ class Calculator(object):
          object to specified variable_value and return None (which can be
          ignored).
         """
-        if variable_value is None:
-            return getattr(self.__corprecords, variable_name)
-        assert isinstance(variable_value, np.ndarray)
-        setattr(self.__corprecords, variable_name, variable_value)
+        if self.corprecords is not None:       
+            if variable_value is None:
+                return getattr(self.__corprecords, variable_name)
+            assert isinstance(variable_value, np.ndarray)
+            setattr(self.__corprecords, variable_name, variable_value)
         return None
 
     def garray(self, variable_name, variable_value=None):
@@ -291,10 +445,11 @@ class Calculator(object):
          object to specified variable_value and return None (which can be
          ignored).
         """
-        if variable_value is None:
-            return getattr(self.__gstrecords, variable_name)
-        assert isinstance(variable_value, np.ndarray)
-        setattr(self.__gstrecords, variable_name, variable_value)
+        if self.gstrecords is not None:        
+            if variable_value is None:
+                return getattr(self.__gstrecords, variable_name)
+            assert isinstance(variable_value, np.ndarray)
+            setattr(self.__gstrecords, variable_name, variable_value)
         return None
 
     def n65(self):
@@ -368,6 +523,8 @@ class Calculator(object):
          return None (which can be ignored).
         """
         if param_value is None:
+            #from pprint import pprint
+            #pprint(vars(self.__policy))
             return getattr(self.__policy, param_name)
         setattr(self.__policy, param_name, param_value)
         return None

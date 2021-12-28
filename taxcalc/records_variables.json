@@ -199,6 +199,16 @@
       "desc": "Agricultural/any other Income used for rate purpose",
       "form": {"2017": "ITR-3 Part B-TI 16"}
     },
+    "total_other_income_os_adj": {
+      "type": "float",
+      "desc": "Adjusted Dividends due to Corporate Income Changes",
+      "form": {"2017": ""}
+    },    
+    "ADJ_FACTOR": {
+      "type": "float",
+      "desc": "Adjustment factor for Dividends for Corporate Income Changes",
+      "form": {"2017": ""}
+    },    
     "deductions": {
       "type": "float",
       "desc": "Total itemized deductions",

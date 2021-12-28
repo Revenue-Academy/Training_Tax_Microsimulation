@@ -218,6 +218,16 @@
       "desc": "Computed income from Business and Profession)",
       "form": {"2017": "ITR-6 Part B-TI-2vi"}
     },
+    "total_other_income_os_adj": {
+      "type": "float",
+      "desc": "Adjusted Dividends due to Corporate Income Changes",
+      "form": {"2017": ""}
+    },    
+    "ADJ_FACTOR": {
+      "type": "float",
+      "desc": "Adjustment factor for Dividends for Corporate Income Changes",
+      "form": {"2017": ""}
+    },
     "GTI_Before_Loss": {
       "type": "float",
       "desc": "Gross Total Income (GTI)",

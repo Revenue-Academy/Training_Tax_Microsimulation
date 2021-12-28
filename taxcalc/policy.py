@@ -4,10 +4,13 @@ Personal income tax (PIT) Policy class.
 # CODING-STYLE CHECKS:
 # pycodestyle policy.py
 # pylint --disable=locally-disabled policy.py
-
+import os
+import json
+import collections as collect
 import numpy as np
 from taxcalc.parameters import ParametersBase
 from taxcalc.growfactors import GrowFactors
+from taxcalc.utils import read_egg_json
 
 
 class Policy(ParametersBase):
@@ -41,19 +44,27 @@ class Policy(ParametersBase):
     class instance: Policy
     """
 
-    #DEFAULTS_FILENAME = 'current_law_policy_cmie2.json'
+    
     JSON_START_YEAR = 2017  # remains the same unless earlier data added
     LAST_KNOWN_YEAR = 2017  # last year for which indexed param vals are known
     LAST_BUDGET_YEAR = 2023  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
 
-    def __init__(self,
-                 DEFAULTS_FILENAME=None,
+    f = open('global_vars.json')
+    vars = json.load(f)
+    print("vars in policy", vars)
+    DEFAULTS_FILENAME = vars['DEFAULTS_FILENAME']
+
+    def __init__(self,DEFAULTS_FILENAME=None,
                  gfactors=None,
                  start_year=JSON_START_YEAR,
                  num_years=DEFAULT_NUM_YEARS):
+        
+        if DEFAULTS_FILENAME is not None:
+            self.DEFAULTS_FILENAME = DEFAULTS_FILENAME
+            
         super(Policy, self).__init__()
-
+         
         if gfactors is None:
             self._gfactors = GrowFactors()
         elif isinstance(gfactors, GrowFactors):
@@ -62,8 +73,8 @@ class Policy(ParametersBase):
             raise ValueError('gfactors is not None or a GrowFactors instance')
 
         # read default parameters
-        print(DEFAULTS_FILENAME)
-        self._vals = self._params_dict_from_json_file(DEFAULTS_FILENAME=DEFAULTS_FILENAME)
+
+        self._vals = self._params_dict_from_json_file()
 
         if start_year < Policy.JSON_START_YEAR:
             raise ValueError('start_year cannot be less than JSON_START_YEAR')
@@ -461,3 +472,65 @@ class Policy(ParametersBase):
                                                        vvalue[idx]) + '\n'
                             )
         del parameters
+# =============================================================================
+# 
+#     def default_data(self, metadata=False, start_year=None):
+#         """
+#         Return parameter data read from the subclass's json file.
+# 
+#         Parameters
+#         ----------
+#         metadata: boolean
+# 
+#         start_year: int or None
+# 
+#         Returns
+#         -------
+#         params: dictionary of data
+#         """
+#         # extract different data from DEFAULT_FILENAME depending on start_year
+#         if start_year is None:
+#             params = self._params_dict_from_json_file()
+#         else:
+#             nyrs = start_year - self.JSON_START_YEAR + 1
+#             ppo = self(num_years=nyrs)
+#             ppo.set_year(start_year)
+#             params = getattr(ppo, '_vals')
+#             params = ParametersBase._revised_default_data(params, start_year,
+#                                                           nyrs, ppo)
+#         # return different data from params dict depending on metadata value
+#         if metadata:
+#             return params
+#         else:
+#             return {name: data['value'] for name, data in params.items()}
+#         
+# 
+#     def _params_dict_from_json_file(self):
+#         """
+#         Read DEFAULTS_FILENAME file and return complete dictionary.
+# 
+#         Parameters
+#         ----------
+#         nothing: void
+# 
+#         Returns
+#         -------
+#         params: dictionary
+#             containing complete contents of DEFAULTS_FILENAME file.
+#         """
+#         print("DEFAULTS_FILENAME in _param_dict function ", self.DEFAULTS_FILENAME)
+#         if self.DEFAULTS_FILENAME is None:
+#             msg = 'DEFAULTS_FILENAME must be overridden by inheriting class'
+#             raise NotImplementedError(msg)
+#         path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+#                             self.DEFAULTS_FILENAME)
+#         if os.path.exists(path):
+#             with open(path) as pfile:
+#                 params_dict = json.load(pfile,
+#                                         object_pairs_hook=collect.OrderedDict)
+#         else:
+#             # cannot call read_egg_ function in unit tests
+#             params_dict = read_egg_json(
+#                 self.DEFAULTS_FILENAME)  # pragma: no cover
+#         return params_dict
+# =============================================================================

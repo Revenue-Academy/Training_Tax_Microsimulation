@@ -10,11 +10,14 @@ import copy
 import json
 import numpy as np
 from taxcalc.decorators import iterate_jit
-
+from taxcalc.gstrecords import GSTRecords
 
 def gst_liability_item(calc):
-    json_data = open('taxcalc/gstrecords_variables_cmie.json').read()
-    vardict = json.loads(json_data)
+    #json_data = open('taxcalc/gstrecords_variables_cmie.json').read()
+    #vardict = json.loads(json_data)
+    #print(vardict)
+    vardict = GSTRecords.read_var_info()
+    #print(vardict)
     FIELD_VARS = list(k for k, v in vardict['read'].items()
                       if (v['type'] == 'int' or v['type'] == 'float'))
     #print(FIELD_VARS)

@@ -12,6 +12,16 @@ from taxcalc.decorators import iterate_jit
 
 
 @iterate_jit(nopython=True)
+def total_other_income_cit(TOTAL_INCOME_OS):
+    """
+    Compute other_income from its components.
+    """
+    # TODO: when components of other income are available, do the calculation
+    # TODO: when using other_income as function argument, no calculations neee
+    
+    return TOTAL_INCOME_OS
+
+@iterate_jit(nopython=True)
 def depreciation_PM(dep_rate_pm1, PWR_DOWN_VAL_1ST_DAY_PY_15P,
                     PADDTNS_180_DAYS__MOR_PY_15P, PCR34_PY_15P,
                     PADDTNS_LESS_180_DAYS_15P, PCR7_PY_15P,
