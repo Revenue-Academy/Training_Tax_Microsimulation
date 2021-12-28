@@ -23,14 +23,13 @@ crecs2 = CorpRecords(data='cit_panel.csv', data_type='panel')
 assert isinstance(crecs2, CorpRecords)
 assert crecs2.current_year == 2017
 
+policy_filename = "current_law_policy_cmie.json"
 # create Policy object containing current-law policy
-pol = Policy()
+pol = Policy(DEFAULTS_FILENAME=policy_filename)
 
 # specify Calculator objects for current-law policy
-calc1 = Calculator(policy=pol, records=recs, corprecords=crecs1,
-                   gstrecords=grecs)
-calc2 = Calculator(policy=pol, records=recs, corprecords=crecs2,
-                   gstrecords=grecs)
+calc1 = Calculator(policy=pol, corprecords=crecs1)
+calc2 = Calculator(policy=pol, corprecords=crecs2)
 
 # NOTE: calc1 now contains a PRIVATE COPY of pol and a PRIVATE COPY of recs,
 #       so we can continue to use pol and recs in this script without any

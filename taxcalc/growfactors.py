@@ -6,6 +6,7 @@ Tax-Calculator GrowFactors class.
 # pylint --disable=locally-disabled growfactors.py
 
 import os
+import json
 import numpy as np
 import pandas as pd
 from taxcalc.utils import read_egg_csv
@@ -36,9 +37,15 @@ class GrowFactors(object):
     containing the default grow factors in the GrowFactors.FILENAME file.
     """
 
+    f = open('global_vars.json')
+    vars = json.load(f)
+    print("vars in growfactors", vars)
+
+    GROWFACTORS_FILENAME = vars['GROWFACTORS_FILENAME']
+    
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-    FILENAME = 'growfactors.csv'
-    FILE_PATH = os.path.join(CUR_PATH, FILENAME)
+    #FILENAME = 'growfactors.csv'
+    FILE_PATH = os.path.join(CUR_PATH, GROWFACTORS_FILENAME)
 
     # TODO: Growfactors for Corporate and non-corporate Income heads are
     # TODO: currently set as same. New field names should be read in case we
@@ -51,16 +58,19 @@ class GrowFactors(object):
                        'LOSSES_CY', 'LOSSES_BF', 'AGRI_INCOME', 'CORP',
                        'INVESTMENT', 'CONSUMPTION', 'OTHER_CONS_ITEM'])
 
-    def __init__(self, growfactors_filename=FILE_PATH):
+    def __init__(self, growfactors_filename=GROWFACTORS_FILENAME):
         # read grow factors from specified growfactors_filename
         gfdf = pd.DataFrame()
-        if isinstance(growfactors_filename, str):
-            if os.path.isfile(growfactors_filename):
-                gfdf = pd.read_csv(growfactors_filename,
+        CUR_PATH = os.path.abspath(os.path.dirname(__file__))
+        #FILENAME = 'growfactors.csv'
+        growfactors_filepath = os.path.join(CUR_PATH, growfactors_filename) 
+        if isinstance(growfactors_filepath, str):
+            if os.path.isfile(growfactors_filepath):
+                gfdf = pd.read_csv(growfactors_filepath,
                                    index_col='YEAR')
             else:
                 # cannot call read_egg_ function in unit tests
-                gfdf = read_egg_csv(GrowFactors.FILENAME,
+                gfdf = read_egg_csv(GrowFactors.GROWFACTORS_FILENAME,
                                     index_col='YEAR')  # pragma: no cover
         else:
             raise ValueError('growfactors_filename is not a string')

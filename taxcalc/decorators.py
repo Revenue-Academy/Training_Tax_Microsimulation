@@ -252,21 +252,23 @@ def iterate_jit(parameters=None, **kwargs):
         # Get the numba.jit arguments
         jit_args = inspect.getfullargspec(jit).args + ['nopython']
         kwargs_for_jit = toolz.keyfilter(jit_args.__contains__, kwargs)
-
         # Any name that is a parameter
         # Boolean flag is given special treatment.
         # Identify those names here
         dd_key_list = list(Policy.default_data(metadata=True).keys())
+        #print("dd_key_list ", dd_key_list)        
         allowed_parameters = dd_key_list
         allowed_parameters += list(arg[1:] for arg in dd_key_list)
+        #print("allowed_parameters ", allowed_parameters)
+        #print("arg ", [arg[1:] for arg in dd_key_list])
         additional_parameters = [arg for arg in in_args if
                                  arg in allowed_parameters]
         additional_parameters += parameters
-        # Remote duplicates
+        # Remove duplicates
         all_parameters = list(set(additional_parameters))
-
+        
         src = inspect.getsourcelines(func)[0]
-
+        #print("src ", src)
         # Discover the return arguments by walking
         # the AST of the function
         grn = GetReturnNode()
@@ -277,7 +279,6 @@ def iterate_jit(parameters=None, **kwargs):
                 break
         if not all_out_args:
             raise ValueError("Can't find return statement in function!")
-
         # Now create the apply-style possibly-jitted function
         applied_jitted_f = make_apply_function(func,
                                                list(reversed(all_out_args)),

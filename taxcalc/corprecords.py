@@ -82,7 +82,7 @@ class CorpRecords(object):
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     CIT_DATA_FILENAME = 'cit_cross.csv'
-    CIT_WEIGHTS_FILENAME = 'cit_cross_wgts.csv'
+    CIT_WEIGHTS_FILENAME = 'cit_cross_wgts1.csv'
     CIT_BLOWFACTORS_FILENAME = 'cit_panel_blowup.csv'
     VAR_INFO_FILENAME = 'corprecords_variables.json'
 

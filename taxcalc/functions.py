@@ -10,7 +10,6 @@ import copy
 import numpy as np
 from taxcalc.decorators import iterate_jit
 
-
 @iterate_jit(nopython=True)
 def net_salary_income(SALARIES, std_deduction, Income_Salary):
     """
@@ -70,6 +69,8 @@ def total_other_income(TOTAL_INCOME_OS):
     """
     # TODO: when components of other income are available, do the calculation
     # TODO: when using other_income as function argument, no calculations neeed
+    #total_other_income_os_adj = TOTAL_INCOME_OS*ADJ_FACTOR
+    
     return TOTAL_INCOME_OS
 
 
