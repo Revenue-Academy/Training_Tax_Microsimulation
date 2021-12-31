@@ -11,7 +11,7 @@ import numpy as np
 from taxcalc.decorators import iterate_jit
 
 @iterate_jit(nopython=True)
-def net_salary_income(SALARIES, std_deduction, Income_Salary):
+def net_salary_income(SALARY, std_deduction, Income_Salary):
     """
     Compute net salary as gross salary minus deductions u/s 16.
     """
@@ -21,12 +21,12 @@ def net_salary_income(SALARIES, std_deduction, Income_Salary):
     The deductions (transport and medical) that are being done away with while
     intrducing Standard Deduction is not captured in the schedule also. Thus,
     the two deductions combined (crude estimate gives a figure of 30000) is
-    added to "SALARIES" and then "std_deduction" (introduced as a policy
+    added to "SALARY" and then "std_deduction" (introduced as a policy
     variable) is deducted to get "Income_Salary". Standard Deduction is being
     intruduced only from AY 2019 onwards, "std_deduction" is set as 30000 for
     AY 2017 and of 2018 thus resulting in no change for those years.
     """
-    Income_Salary = SALARIES + 30000
+    Income_Salary = SALARY + 30000
     if Income_Salary <= std_deduction:
         Income_Salary = 0
     else:
@@ -134,13 +134,13 @@ def itemized_deductions(deductions, TOTAL_DEDUC_VIA):
 
 
 @iterate_jit(nopython=True)
-def deduction_10AA(deduction_10AA, TOTAL_DEDUC_10AA):
+def deduction_10AA(deduction_10AA, DEDUCT_SEC_10A_OR_10AA):
     """
     Compute deductions from itemizeable expenses and caps.
     """
     # TODO: when expenses and caps policy are available, do the calculation
     # TODO: when using deductions as function argument, no calculations neeed
-    deduction_10AA = TOTAL_DEDUC_10AA
+    deduction_10AA = DEDUCT_SEC_10A_OR_10AA
     return deduction_10AA
 
 
