@@ -281,21 +281,7 @@ class Application(Frame):
 
    
     def clicked_generate_revenues(self):
-        """
-        self.data_filename = "pit.csv"
-        self.weights_filename = "pit_weights1.csv"
-        self.records_variables_filename = "records_variables.json"
-        self.cit_data_filename = "cit_cross.csv"
-        self.cit_weights_filename = "cit_cross_wgts1.csv"
-        self.corprecords_variables_filename = "corprecords_variables.json"
-        self.gst_data_filename = "gst.csv"
-        self.gst_weights_filename = "gst_weights.csv"
-        self.gstrecords_variables_filename = "gstrecords_variables.json"         
-        self.policy_filename = "current_law_policy_cmie.json"
-        self.growfactors_filename = "growfactors1.csv"
-        #self.growfactors_filename = "growfactors1.csv"              
-        self.benchmark_filename = "tax_incentives_benchmark.json"
-        """
+
         vars = {}
         vars['DEFAULTS_FILENAME'] = self.policy_filename
         #filename_list = self.growfactors_filename.split('/')
