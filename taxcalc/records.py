@@ -235,44 +235,68 @@ class Records(object):
         """
         Apply to READ (not CALC) variables the grow factors for specified year.
         """
+        
+        vardict = self.read_var_info()
+        Records.INTEGER_READ_VARS = set(k for k,
+                                            v in vardict['read'].items()
+                                            if v['type'] == 'int')
+        FLOAT_READ_VARS = set(k for k, v in vardict['read'].items()
+                              if v['type'] == 'float')
+        Records.USABLE_READ_VARS = (Records.INTEGER_READ_VARS |
+                                        FLOAT_READ_VARS)
+        #print("CorpRecords.USABLE_READ_VARS ", CorpRecords.USABLE_READ_VARS)
+        #print("grow factors columns all ", self.gfactors.factor_names())
+        gf_columns_all = self.gfactors.factor_names()
+        gf_columns = Records.USABLE_READ_VARS.intersection(gf_columns_all)
+        #print("grow factors columns used ", gf_columns)
+        
+        for col in gf_columns:
+            GF_COLS = self.gfactors.factor_value(col, year)
+            var = getattr(self, col)
+            var *= GF_COLS
+            setattr(self, col, var)
+            
+        """   
         # pylint: disable=too-many-locals,too-many-statements
         GF_SALARY = self.gfactors.factor_value('SALARY', year)
-        GF_RENT = self.gfactors.factor_value('RENT', year)
-        GF_BP_NONSPECULATIVE = self.gfactors.factor_value('BP_NONSPECULATIVE',
+        GF_INCOME_HP = self.gfactors.factor_value('INCOME_HP', year)
+        GF_PRFT_GAIN_BP_OTHR_SPECLTV_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_OTHR_SPECLTV_BUS',
                                                           year)
-        GF_BP_SPECULATIVE = self.gfactors.factor_value('BP_SPECULATIVE', year)
-        GF_BP_SPECIFIED = self.gfactors.factor_value('BP_SPECIFIED', year)
-        GF_BP_PATENT115BBF = self.gfactors.factor_value('BP_PATENT115BBF',
+        GF_PRFT_GAIN_BP_SPECLTV_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_SPECLTV_BUS', year)
+        GF_PRFT_GAIN_BP_SPCFD_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_SPCFD_BUS', year)
+        GF_PRFT_GAIN_BP_INC_115BBF = self.gfactors.factor_value('PRFT_GAIN_BP_INC_115BBF',
                                                         year)
-        GF_STCG_APPRATE = self.gfactors.factor_value('STCG_APPRATE', year)
-        GF_OINCOME = self.gfactors.factor_value('OINCOME', year)
-        GF_DEDUCTIONS = self.gfactors.factor_value('DEDUCTIONS', year)
-        GF_DEDUCTION_10AA = self.gfactors.factor_value('DEDU_SEC_10A_OR_10AA',
+        GF_ST_CG_AMT_APPRATE = self.gfactors.factor_value('ST_CG_AMT_APPRATE', year)
+        GF_TOTAL_INCOME_OS = self.gfactors.factor_value('TOTAL_INCOME_OS', year)
+        GF_TOTAL_DEDUC_VIA = self.gfactors.factor_value('TOTAL_DEDUC_VIA', year)
+        GF_DEDUCT_SEC_10A_OR_10AA = self.gfactors.factor_value('DEDUCT_SEC_10A_OR_10AA',
                                                        year)
         GF_ST_CG_AMT_1 = self.gfactors.factor_value('ST_CG_AMT_1', year)
         GF_ST_CG_AMT_2 = self.gfactors.factor_value('ST_CG_AMT_2', year)
         GF_LT_CG_AMT_1 = self.gfactors.factor_value('LT_CG_AMT_1', year)
         GF_LT_CG_AMT_2 = self.gfactors.factor_value('LT_CG_AMT_2', year)
-        GF_CYL_SET_OFF = self.gfactors.factor_value('LOSSES_CY', year)
-        GF_BFL_SET_OFF_BALANCE = self.gfactors.factor_value('LOSSES_BF', year)
-        GF_NET_AGRC_INCOME = self.gfactors.factor_value('AGRI_INCOME', year)
+        GF_CYL_SET_OFF = self.gfactors.factor_value('CYL_SET_OFF', year)
+        GF_BFL_SET_OFF_BALANCE = self.gfactors.factor_value('BFL_SET_OFF_BALANCE', year)
+        GF_NET_AGRC_INCOME = self.gfactors.factor_value('NET_AGRC_INCOME', year)
+        """
         """
         print("Grow Factors: ",GF_SALARY, GF_RENT, GF_BP_NONSPECULATIVE, GF_BP_SPECULATIVE,
               GF_BP_SPECIFIED,GF_BP_PATENT115BBF,GF_STCG_APPRATE,
               GF_OINCOME,GF_DEDUCTIONS, GF_DEDUCTION_10AA,  GF_ST_CG_AMT_1,
               GF_ST_CG_AMT_2, GF_LT_CG_AMT_1,GF_LT_CG_AMT_2, GF_CYL_SET_OFF,
               GF_BFL_SET_OFF_BALANCE, GF_NET_AGRC_INCOME)
+        """
         """        
-        self.SALARIES *= GF_SALARY
-        self.INCOME_HP *= GF_RENT
-        self.PRFT_GAIN_BP_OTHR_SPECLTV_BUS *= GF_BP_NONSPECULATIVE
-        self.PRFT_GAIN_BP_SPECLTV_BUS *= GF_BP_SPECULATIVE
-        self.PRFT_GAIN_BP_SPCFD_BUS *= GF_BP_SPECIFIED
-        self.PRFT_GAIN_BP_INC_115BBF *= GF_BP_PATENT115BBF
-        self.ST_CG_AMT_APPRATE *= GF_STCG_APPRATE
-        self.TOTAL_INCOME_OS *= GF_OINCOME
-        self.TOTAL_DEDUC_VIA *= GF_DEDUCTIONS
-        self.TOTAL_DEDUC_10AA *= GF_DEDUCTION_10AA
+        self.SALARY *= GF_SALARY
+        self.INCOME_HP *= GF_INCOME_HP
+        self.PRFT_GAIN_BP_OTHR_SPECLTV_BUS *= GF_PRFT_GAIN_BP_OTHR_SPECLTV_BUS
+        self.PRFT_GAIN_BP_SPECLTV_BUS *= GF_PRFT_GAIN_BP_SPECLTV_BUS
+        self.PRFT_GAIN_BP_SPCFD_BUS *= GF_PRFT_GAIN_BP_SPCFD_BUS
+        self.PRFT_GAIN_BP_INC_115BBF *= GF_PRFT_GAIN_BP_INC_115BBF
+        self.ST_CG_AMT_APPRATE *= GF_ST_CG_AMT_APPRATE
+        self.TOTAL_INCOME_OS *= GF_TOTAL_INCOME_OS
+        self.TOTAL_DEDUC_VIA *= GF_TOTAL_DEDUC_VIA
+        self.DEDUCT_SEC_10A_OR_10AA *= GF_DEDUCT_SEC_10A_OR_10AA
         self.ST_CG_AMT_1 *= GF_ST_CG_AMT_1
         self.ST_CG_AMT_2 *= GF_ST_CG_AMT_2
         self.LT_CG_AMT_1 *= GF_LT_CG_AMT_1
@@ -281,7 +305,7 @@ class Records(object):
         self.BFL_SET_OFF_BALANCE *= GF_BFL_SET_OFF_BALANCE
         self.NET_AGRC_INCOME *= GF_NET_AGRC_INCOME
         #print(self.SALARIES)
-
+        """
     def _read_data(self, data):
         """
         Read Records data from file or use specified DataFrame as data.

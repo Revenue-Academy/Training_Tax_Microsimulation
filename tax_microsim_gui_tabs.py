@@ -87,8 +87,13 @@ class Application(Frame):
         
         self.data_filename = "pit.csv"
         self.weights_filename = "pit_weights1.csv"
+        self.records_variables_filename = "records_variables.json"
         self.cit_data_filename = "cit_cross.csv"
-        self.cit_weights_filename = "cit_cross_wgts1.csv"     
+        self.cit_weights_filename = "cit_cross_wgts1.csv"
+        self.corprecords_variables_filename = "corprecords_variables.json"
+        self.gst_data_filename = "gst.csv"
+        self.gst_weights_filename = "gst_weights.csv"
+        self.gstrecords_variables_filename = "gstrecords_variables.json"         
         self.policy_filename = "current_law_policy_cmie.json"
         self.growfactors_filename = "growfactors1.csv"
         #self.growfactors_filename = "growfactors1.csv"              
@@ -275,17 +280,37 @@ class Application(Frame):
         self.pic.image = self.image
 
    
-    def clicked_generate_revenues(self):        
+    def clicked_generate_revenues(self):
+        """
+        self.data_filename = "pit.csv"
+        self.weights_filename = "pit_weights1.csv"
+        self.records_variables_filename = "records_variables.json"
+        self.cit_data_filename = "cit_cross.csv"
+        self.cit_weights_filename = "cit_cross_wgts1.csv"
+        self.corprecords_variables_filename = "corprecords_variables.json"
+        self.gst_data_filename = "gst.csv"
+        self.gst_weights_filename = "gst_weights.csv"
+        self.gstrecords_variables_filename = "gstrecords_variables.json"         
+        self.policy_filename = "current_law_policy_cmie.json"
+        self.growfactors_filename = "growfactors1.csv"
+        #self.growfactors_filename = "growfactors1.csv"              
+        self.benchmark_filename = "tax_incentives_benchmark.json"
+        """
         vars = {}
         vars['DEFAULTS_FILENAME'] = self.policy_filename
         #filename_list = self.growfactors_filename.split('/')
         #self.growfactors_filename_global = filename_list[-1]        
         vars['GROWFACTORS_FILENAME'] = self.growfactors_filename
-        vars['pit_data_filename'] = "pit.csv"
-        vars['pit_weights_filename'] = "pit_weights1.csv"
-        vars['cit_data_filename'] = "cit_cross.csv"
-        vars['cit_weights_filename'] = "cit_cross_wgts1.csv"
-        vars['benchmark_filename'] = "tax_incentives_benchmark.json"
+        vars['pit_data_filename'] = self.data_filename
+        vars['pit_weights_filename'] = self.weights_filename
+        vars['records_variables_filename'] = self.records_variables_filename        
+        vars['cit_data_filename'] = self.cit_data_filename
+        vars['cit_weights_filename'] = self.cit_weights_filename
+        vars['corprecords_variables_filename'] = self.corprecords_variables_filename
+        vars['gst_data_filename'] = self.gst_data_filename
+        vars['gst_weights_filename'] = self.gst_weights_filename
+        vars['gstrecords_variables_filename'] = self.gstrecords_variables_filename        
+        vars['benchmark_filename'] = self.benchmark_filename
         
         with open('global_vars.json', 'w') as f:
             json.dump(vars, f)
@@ -325,17 +350,22 @@ class Application(Frame):
         #print("block_selected_dict before json save: ",self.block_selected_dict)
         with open('reform.json', 'w') as f:
             json.dump(self.block_selected_dict, f)
-            
+
         vars = {}
         vars['DEFAULTS_FILENAME'] = self.policy_filename
         #filename_list = self.growfactors_filename.split('/')
         #self.growfactors_filename_global = filename_list[-1]        
         vars['GROWFACTORS_FILENAME'] = self.growfactors_filename
-        vars['pit_data_filename'] = "pit.csv"
-        vars['pit_weights_filename'] = "pit_weights1.csv"
-        vars['cit_data_filename'] = "cit_cross.csv"
-        vars['cit_weights_filename'] = "cit_cross_wgts1.csv"
-        vars['benchmark_filename'] = "tax_incentives_benchmark.json"
+        vars['pit_data_filename'] = self.data_filename
+        vars['pit_weights_filename'] = self.weights_filename
+        vars['records_variables_filename'] = self.records_variables_filename        
+        vars['cit_data_filename'] = self.cit_data_filename
+        vars['cit_weights_filename'] = self.cit_weights_filename
+        vars['corprecords_variables_filename'] = self.corprecords_variables_filename
+        vars['gst_data_filename'] = self.gst_data_filename
+        vars['gst_weights_filename'] = self.gst_weights_filename
+        vars['gstrecords_variables_filename'] = self.gstrecords_variables_filename        
+        vars['benchmark_filename'] = self.benchmark_filename
         
         with open('global_vars.json', 'w') as f:
             json.dump(vars, f)
