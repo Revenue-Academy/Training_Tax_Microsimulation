@@ -8,30 +8,123 @@ PIT (personal income tax) Calculator class.
 # pylint: disable=too-many-lines
 # pylintx: disable=no-value-for-parameter,too-many-lines
 
+import csv
 import os
 import json
 import re
 import copy
 import numpy as np
 import pandas as pd
-from taxcalc.functions import (net_salary_income, net_rental_income,
+
+
+import importlib
+
+# Contrived example of generating a module named as a string
+#full_module_name = "taxcalc.functions." + "net_salary_income"
+
+# The file gets executed upon import, as expected.
+#mymodule = importlib.import_module(full_module_name)
+
+f = open('global_vars.json')
+vars = json.load(f)
+
+if vars['pit']:
+    #pit_function_names_file = 'taxcalc'+'/'+vars['pit_function_names_filename']
+    #f = open(pit_function_names_file)
+    #self.pit_function_names = json.load(f)
+    pit_oname = vars["pit_functions_filename"][:-3]
+    pit_imp_statement = "from taxcalc." + pit_oname + " import *"
+    exec(pit_imp_statement)
+
+    """
+    from taxcalc.functions import (net_salary_income, net_rental_income,
+                                   income_business_profession,
+                                   total_other_income, gross_total_income,
+                                   itemized_deductions, deduction_10AA,
+                                   taxable_total_income,
+                                   tax_stcg_splrate, tax_ltcg_splrate,
+                                   tax_specialrates, current_year_losses,
+                                   brought_fwd_losses, agri_income, pit_liability)
+    """
+if vars['cit']:
+    #CIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['cit_records_variables_filename']
+    #self.max_lag_years = vars['cit_max_lag_years']
+    cit_function_names_file = 'taxcalc/'+vars['cit_function_names_filename']
+    f = open(cit_function_names_file)
+    cit_function_names = json.load(f)
+    #print('self.cit_function_names ', self.cit_function_names)
+    cit_oname = vars["cit_functions_filename"][:-3]
+    cit_imp_statement = "from taxcalc." + cit_oname + " import *"
+    exec(cit_imp_statement)         
+    """
+    from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
+                                       corp_income_business_profession,
+                                       corp_GTI_before_set_off, GTI_and_losses,
+                                       cit_liability)
+    """
+if vars['vat']:
+    #vat_function_names_file = 'taxcalc/'+vars['vat_function_names_filename']
+    #f = open(vat_function_names_file)
+    #self.vat_function_names = json.load(f)
+    vat_oname = vars["vat_functions_filename"][:-3]
+    vat_imp_statement = "from taxcalc." + vat_oname + " import *"
+    exec(vat_imp_statement)
+            
+"""
+#PIT_VAR_INFO_FILENAME = vars['pit_records_variables_filename']
+pit_function_names_file = vars['pit_function_names_filename']
+f = open(pit_function_names_file)
+pit_function_names = json.load(f)
+#print(function_names[str(0)])
+
+CIT_VAR_INFO_FILENAME = vars['cit_records_variables_filename']
+cit_function_names_file = vars['cit_function_names_filename']
+f = open(cit_function_names_file)
+cit_function_names = json.load(f)
+
+#VAT_VAR_INFO_FILENAME = vars['vat_records_variables_filename']
+vat_function_names_file = vars['vat_function_names_filename']
+f = open(vat_function_names_file)
+vat_function_names = json.load(f)
+
+max_lag_years = vars['cit_max_lag_years']
+
+#oname = "taxcalc.functions"
+pit_oname = vars["pit_functions_filename"][:-3]
+pit_imp_statement = "from taxcalc." + pit_oname + " import *"
+exec(pit_imp_statement)
+            
+cit_oname = vars["cit_functions_filename"][:-3]
+cit_imp_statement = "from taxcalc." + cit_oname + " import *"
+exec(cit_imp_statement)
+
+vat_oname = vars["vat_functions_filename"][:-3]
+vat_imp_statement = "from taxcalc." + vat_oname + " import *"
+exec(vat_imp_statement)
+"""
+"""
+#from taxcalc.functions import *
+#import taxcalc.functions
+from taxcalc.functions import (net_rental_income,
                                income_business_profession,
                                total_other_income, gross_total_income,
                                itemized_deductions, deduction_10AA,
-                               taxable_total_income,
+                               taxable_total_income, 
                                tax_stcg_splrate, tax_ltcg_splrate,
-                               tax_specialrates, current_year_losses,
-                               brought_fwd_losses, agri_income, pit_liability)
+                               tax_specialrates, taxable_income,
+                               current_year_losses, brought_fwd_losses, 
+                               agri_income, pit_liability)
 from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
                                    corp_income_business_profession,
                                    corp_GTI_before_set_off, GTI_and_losses,
                                    cit_liability)
 from taxcalc.gstfunctions import (gst_liability_item)
+"""
 from taxcalc.policy import Policy
 from taxcalc.records import Records
 from taxcalc.corprecords import CorpRecords
 from taxcalc.gstrecords import GSTRecords
-from taxcalc.utils import DIST_VARIABLES, create_distribution_table
+from taxcalc.growfactors import GrowFactors
 # import pdb
 
 
@@ -96,7 +189,17 @@ class Calculator(object):
         self.records = records
         self.corprecords = corprecords
         self.gstrecords = gstrecords
-        if self.records is not None:        
+        if self.records is not None:
+            pit_function_names_file = 'taxcalc'+'/'+vars['pit_function_names_filename']
+            f = open(pit_function_names_file)
+            self.pit_function_names = json.load(f)
+            pit_oname = vars["pit_functions_filename"][:-3]
+            pit_imp_statement = "import taxcalc." + pit_oname
+            exec(pit_imp_statement)
+            if vars['pit_distribution_table']:
+                from taxcalc.utils import DIST_VARIABLES, create_distribution_table
+
+            """
             from taxcalc.functions import (net_salary_income, net_rental_income,
                                            income_business_profession,
                                            total_other_income, gross_total_income,
@@ -105,21 +208,43 @@ class Calculator(object):
                                            tax_stcg_splrate, tax_ltcg_splrate,
                                            tax_specialrates, current_year_losses,
                                            brought_fwd_losses, agri_income, pit_liability)
+            """
         if self.corprecords is not None:
+            CIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['cit_records_variables_filename']
+            self.max_lag_years = vars['cit_max_lag_years']
+            cit_function_names_file = 'taxcalc/'+vars['cit_function_names_filename']
+            f = open(cit_function_names_file)
+            self.cit_function_names = json.load(f)
+            cit_oname = vars["cit_functions_filename"][:-3]
+            cit_imp_statement = "import taxcalc." + cit_oname
+            exec(cit_imp_statement)
+            if vars['cit_distribution_table']:
+                from taxcalc.utils import DIST_VARIABLES, create_distribution_table            
+            """
             from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
                                                corp_income_business_profession,
                                                corp_GTI_before_set_off, GTI_and_losses,
                                                cit_liability)
+            """
         if self.gstrecords is not None:
-            from taxcalc.gstfunctions import (gst_liability_item)        
-
+            vat_function_names_file = 'taxcalc/'+vars['vat_function_names_filename']
+            f = open(vat_function_names_file)
+            self.vat_function_names = json.load(f)
+            vat_oname = vars["vat_functions_filename"][:-3]
+            vat_imp_statement = "import taxcalc." + vat_oname
+            exec(vat_imp_statement)
+            if vars['vat_distribution_table']:
+                from taxcalc.utils import DIST_VARIABLES, create_distribution_table            
+            #from taxcalc.gstfunctions import (gst_liability_item)        
+        gfactors=GrowFactors()
+        self.gfactors = gfactors
         if isinstance(policy, Policy):
             self.__policy = copy.deepcopy(policy)
         else:
             raise ValueError('must specify policy as a Policy object')
         if self.records is not None:
             if isinstance(records, Records):
-                self.__records = copy.deepcopy(records)
+                self.__records = copy.deepcopy(records)                
             else:
                 raise ValueError('must specify records as a Records object')
         if self.gstrecords is not None:
@@ -130,6 +255,15 @@ class Calculator(object):
         if self.corprecords is not None:            
             if isinstance(corprecords, CorpRecords):
                 self.__corprecords = copy.deepcopy(corprecords)
+                #self.max_lag_years
+                self.CROSS_YEAR_VARS = []
+                with open(CIT_VAR_INFO_FILENAME) as vfile:
+                    self.vardict = json.load(vfile)
+                    vfile.close()
+                for k, v in self.vardict["read"].items():
+                  #print("key: ", x, "value: ", y)
+                  if self.vardict["read"][k]["cross_year"]=='Yes':
+                      self.CROSS_YEAR_VARS = self.CROSS_YEAR_VARS + [k]                
             else:
                 raise ValueError('must specify records as a CorpRecords object')
         if self.records is not None:        
@@ -222,19 +356,214 @@ class Calculator(object):
         #self.__gstrecords.increment_year()
         #self.__corprecords.increment_year()
         #self.__policy.set_year(next_year)
+
+    def adjust_behavior(self, first_year, elasticity_filename):
+        def make_float(element_name, element_value):
+            try:
+                float(element_value)
+                return float(element_value)
+            except ValueError:
+                if element_name=="threshold":
+                    return 9e99
+                elif element_name=="elasticity":
+                    return 0.0
+                else:
+                    return 0.0
+    
+        """
+        Adjust for behavior.
+        """
+        curr_year = self.__policy.current_year
+        #print(self.__policy._vals.keys())
+        #elasticity_dict = 0.61
+        #variable_value = getattr(self.__records, variable_name)
+        #print(variable_value)        
+        
+        # This is the json file with the selected variables on which the 
+        # elasticity will be applied
+        f = open('elasticity_selection.json')
+        elasticity_dict = json.load(f)
+        # This is the json file with all the variables with the pre-populated
+        # elasticity values and other parameters
+        f = open('taxcalc/'+elasticity_filename)
+        elasticity_master = json.load(f)
+        policy_keys = set(self.__policy._vals.keys())
+        # We first need to look if a group of variables are selected or 
+        # individual variables. If a variable group (LABOR_INCOME or 
+        # CAPITAL_INCOME) is selected we need to 
+        # apply the elasticities to all variables of that group
+        for j in range(len(elasticity_dict)):
+            variable_name_main = elasticity_dict[str(j+1)]['selected_elasticity_item']
+            var_list = []
+            var_list_marginal = []
+            if (variable_name_main=='Taxable_Income'):
+                for var in elasticity_master.keys():
+                    if (elasticity_master[var]["group"]=="Marginal Rates"):
+                        #print(var)
+                        # This is needed to allocate the incomes to the 
+                        # components of Aggregate_Income as the elasticity 
+                        # applies to Aggregate_Income
+                        var_list_marginal = var_list_marginal + [var]
+                # For the estimation pick up the variable name on which the 
+                # marginal tax rates are applied. This is captured under the 
+                # var_name field in the json file
+                var_list = [elasticity_master[variable_name_main]["var_name"]]
+            elif (variable_name_main=='Capital_Income'):
+                for var in elasticity_master.keys():
+                    if (elasticity_master[var]["group"]=="Special Rates"):
+                        var_list = var_list + [var]
+            else:
+                var_list = [elasticity_master[variable_name_main]["var_name"]]
+
+            for variable_name in var_list:
+            # We first find the relevant elasticity applicable to each 
+            # variable value (individual record)
+                #print(variable_name)
+                variable_value = self.array(variable_name, variable_value=None)
+                #variable_value = getattr(self.__records, variable_name)
+                #print(type(variable_value))
+                rate_list_pre = [99.0 for i in range(len(variable_value))]
+                rate_list_post = [99.0 for i in range(len(variable_value))]
+                elasticity_list = [99.0 for i in range(len(variable_value))]                
+                for k in range(1,4):
+                    threshold_str = elasticity_dict[str(j+1)]['selected_threshold'+str(k)]
+                    elasticity_str= elasticity_dict[str(j+1)]['selected_elasticity'+str(k)]                    
+                    threshold = make_float("threshold", threshold_str)
+                    elasticity = make_float("elasticity", elasticity_str)
+                    elasticity_list = np.where((np.isclose(elasticity_list,99.0))&(variable_value <= threshold), elasticity, elasticity_list)
+                #print(elasticity_list)
+                # Once we got the relevant elasticities applicable to each 
+                # variable value (individual record)
+                # We then look for the changes in the applicable rates for 
+                # each variable value (individual record) due to reform 
+                keep_going = True
+                i=1
+                while keep_going:
+                # We check the tax bracket and applicable rate and apply
+                # them to the relevant variable value
+                # Note that the pre-reform values of the policy will be the 
+                # first policy value for the first year. For subsequent years
+                # the previous year's reform value will become the previous 
+                # value.     
+                    if '_tbrk'+str(i) in policy_keys:
+                        #print("Pre Reform")
+                        #print(self.__records.current_year)
+                        if (self.__records.current_year==first_year):
+                            tbrk_pre = self.__policy._vals['_tbrk'+str(i)]['value'][0]
+                            rate_pre = self.__policy._vals['_rate'+str(i)]['value'][0]
+                        else:
+                            # Reform values for policy are shown as a list
+                            # The previous year's reform value will become the 
+                            # previous value.     
+                            tbrk_pre = getattr(self.__policy, '_tbrk'+str(i))[self.__records.current_year - self.__records.data_year - 1]
+                            rate_pre = getattr(self.__policy, '_rate'+str(i))[self.__records.current_year - self.__records.data_year - 1]                    
+                        #print('_tbrk'+str(i)+': ', tbrk_pre)
+                        #print('_rate'+str(i)+': ', rate_pre)                
+                        rate_list_pre = np.where((np.isclose(rate_list_pre,99.0))&(variable_value <= tbrk_pre), rate_pre, rate_list_pre)
+                        #print("rate_list pre: ", rate_list_pre)
+                        
+                        #print("Reform")
+                        tbrk_post = getattr(self.__policy, '_tbrk'+str(i))[self.__records.current_year - self.__records.data_year]
+                        rate_post = getattr(self.__policy, '_rate'+str(i))[self.__records.current_year - self.__records.data_year]
+                        #print('_tbrk'+str(i)+': ', tbrk_post)
+                        #print('_rate'+str(i)+': ', rate_post)                 
+                        rate_list_post = np.where((np.isclose(rate_list_post,99.0))&(variable_value <= tbrk_post), rate_post, rate_list_post)
+                        #print("rate_list post: ", rate_list_post)
+                        i=i+1
+                    else:
+                        keep_going = False
+          
+                # compute the behavioral response
+                percent_chng = (rate_list_pre - rate_list_post)/(1-rate_list_pre)     
+                sub_effect = elasticity_list*percent_chng*variable_value
+                #print(variable_name, " before: \n", variable_value)
+                #print("sub_effect: \n", sub_effect)
+                # add the variable and the substution effect and save 
+                # the results                
+                self.incarray(variable_name, sub_effect)
+                #print("percent change in rate: ", variable_delta_percent)
+                new_variable_value = self.array(variable_name)
+                #print(variable_name, " after: \n", new_variable_value)
+                #if self.records is not None:                    
+                    #self.__records.adjust_behavior(variable_name, new_variable_value)
+                    # for Taxable Income allocate the 
+                    # response to the individual line items
+                    # this is necessary because functions calculates the tax
+                    # using these individual veriables
+                if (variable_name_main=='Taxable_Income'):
+                    for var in var_list_marginal:
+                        var_value_marginal = self.array(var)
+                        #print(var, " before: \n", var_value_marginal)
+                        variable_value = np.where(np.isclose(variable_value,0),-99,variable_value)
+                        sub_effect_marginal = np.where(np.isclose(variable_value,-99),0, ((var_value_marginal/variable_value)*sub_effect))        
+                        # add the variable and the substution effect and save 
+                        # the results
+                        self.incarray(var, sub_effect_marginal)
+                        new_var_value_marginal = self.array(var)
+                        #print(var, " after: \n", new_var_value_marginal)                            
+                       
+                #print(variable_name, " after: \n", new_variable_value)
+                
+                #testing
+                """
+                var_val_pre = np.array(variable_value).tolist()
+                var_val_post = np.array(new_variable_value).tolist()                
+                elast = np.array(elasticity_list).tolist()
+                rate_pre = np.array(rate_list_pre).tolist()
+                rate_post = np.array(rate_list_post).tolist()
+                dict = {'elasticity': elast, 'rate_pre': rate_pre, 'rate_post': rate_post, 'variable_value_pre': var_val_pre, 'variable_value_post': var_val_post}  
+                df = pd.DataFrame(dict) 
+                df.to_csv('test_elasticity_'+variable_name+'_'+str(curr_year)+'.csv')
+                """
+            
+
+        #print(rate_list)
+        #print(variable_value)
+        #setattr(self.__records, variable_name, variable_value)
+        #print(self.__records.SALARY)
+        return 
         
     def increment_year(self):
         """
         Advance all embedded objects to next year.
         """
+        # store the current year values of loss and closing balance of
+        # fixed assets to be moved to next year
+        if self.corprecords is not None:
+            bf_loss={}
+            for i in range(1, self.max_lag_years):
+                bf_loss[i] = getattr(self.__corprecords, 'newloss'+str(i))           
+            #bf_loss1 = self.__records.newloss1
+            
+            #print(bf_loss)
+            cl_wdv = {}
+            for var in self.CROSS_YEAR_VARS:
+                cl_wdv[var] = getattr(self.__corprecords, 'Cl'+var[2:])
+        #cl_wdv_bld = self.__records.Cl_WDV_Bld
+
         next_year = self.__policy.current_year + 1
-        if self.records is not None:        
-            self.__records.increment_year()
+        self.__policy.set_year(next_year)
+         
+        if self.records is not None:     
+            self.__records.increment_year()        
         if self.gstrecords is not None:            
             self.__gstrecords.increment_year()
         if self.corprecords is not None:            
             self.__corprecords.increment_year()
-        self.__policy.set_year(next_year)
+            
+        # populate the opening values of loss and opening balance of
+        # fixed assets from the previous year      
+        if self.corprecords is not None:         
+            for i in range(1, self.max_lag_years):
+                setattr(self.__corprecords, 'Loss_lag'+str(i), bf_loss[i])                 
+            #self.__records.Loss_lag1 = bf_loss1
+            for var in self.CROSS_YEAR_VARS:
+                setattr(self.__corprecords, var, cl_wdv[var])
+        
+        #self.__records.Op_WDV_Bld = cl_wdv_bld   
+        #self.__records.increment_year()
+        #self.__gstrecords.increment_year()
+        #self.__corprecords.increment_year()
 
     def advance_to_year(self, year):
         """
@@ -271,7 +600,16 @@ class Calculator(object):
             self.__corprecords.zero_out_changing_calculated_vars()            
         # For now, don't zero out for corporate
         # pdb.set_trace()
+        # Note that the order of calling these functions is important
+        # as some functions require values calculated by those before
         # Corporate calculations
+        if self.corprecords is not None:
+            for i in range(len(cit_function_names)):
+                func_name = globals()[cit_function_names[str(i)]]
+                #print(self.cit_function_names[str(i)])
+                func_name(self.__policy, self.__corprecords)
+        
+        """
         if self.corprecords is not None:   
             net_rental_income(self.__policy, self.__corprecords)
             depreciation_PM(self.__policy, self.__corprecords)
@@ -288,23 +626,23 @@ class Calculator(object):
             tax_ltcg_splrate(self.__policy, self.__corprecords)
             tax_specialrates(self.__policy, self.__corprecords)
             cit_liability(self.__policy, self.__corprecords)
+        """
         # Individual calculations
-        if self.records is not None:        
-            net_salary_income(self.__policy, self.__records)
-            net_rental_income(self.__policy, self.__records)
-            income_business_profession(self.__policy, self.__records)
-            total_other_income(self.__policy, self.__records)
-            current_year_losses(self.__policy, self.__records)
-            brought_fwd_losses(self.__policy, self.__records)
-            gross_total_income(self.__policy, self.__records)
-            itemized_deductions(self.__policy, self.__records)
-            agri_income(self.__policy, self.__records)
-            taxable_total_income(self.__policy, self.__records)
-            tax_stcg_splrate(self.__policy, self.__records)
-            tax_ltcg_splrate(self.__policy, self.__records)
-            tax_specialrates(self.__policy, self.__records)
-            pit_liability(self.__policy, self.__records)
+        # Note that the order of calling these functions is important
+        # as some functions require values calculated by those before
+        #f='net_salary_income("self.__policy", "self.__records")'       
+        if self.records is not None:
+            for i in range(len(self.pit_function_names)):
+                func_name = globals()[self.pit_function_names[str(i)]]
+                #print(function_names[str(i)])
+                func_name(self.__policy, self.__records)
         # GST calculations
+        if self.gstrecords is not None:
+            for i in range(len(self.vat_function_names)):
+                func_name = globals()[self.vat_function_names[str(i)]]
+                #print(function_names[str(i)])
+                func_name(self.__policy, self.__gstrecords)
+        """        
         if self.gstrecords is not None:         
             # agg_consumption(self.__policy, self.__gstrecords)
             # gst_liability_cereal(self.__policy, self.__gstrecords)
@@ -313,7 +651,7 @@ class Calculator(object):
             # gst_liability_item(self.__policy, self.__gstrecords)
             # TODO: ADD: expanded_income(self.__policy, self.__records)
             # TODO: ADD: aftertax_income(self.__policy, self.__records)
-        
+        """
         
     def weighted_total_pit(self, variable_name):
         """
@@ -596,7 +934,7 @@ class Calculator(object):
         del diag
         return pd.concat(tlist, axis=1)
 
-    def distribution_tables(self, calc, groupby,
+    def distribution_tables(self, calc, groupby, income_measure=None,
                             averages=False, scaling=True):
         """
         Get results from self and calc, sort them by GTI into table
@@ -650,14 +988,14 @@ class Calculator(object):
               specified income_measure.
         """
         # nested function used only by this method
-        def have_same_income_measure(calc1, calc2):
+        def have_same_income_measure(calc1, calc2, imeasure):
             """
             Return true if calc1 and calc2 contain the same GTI;
             otherwise, return false.  (Note that "same" means nobody's
             GTI differs by more than one cent.)
             """
-            im1 = calc1.array('GTI')
-            im2 = calc2.array('GTI')
+            im1 = calc1.array(imeasure)
+            im2 = calc2.array(imeasure)
             return np.allclose(im1, im2, rtol=0.0, atol=0.01)
         # main logic of method
         assert calc is None or isinstance(calc, Calculator)
@@ -667,7 +1005,10 @@ class Calculator(object):
             assert np.allclose(self.array('weight'),
                                calc.array('weight'))  # rows in same order
         var_dataframe = self.distribution_table_dataframe()
-        imeasure = 'GTI'
+        if income_measure is None:
+            imeasure = 'GTI'
+        else:
+            imeasure = income_measure
         dt1 = create_distribution_table(var_dataframe, groupby, imeasure,
                                         averages, scaling)
         del var_dataframe
@@ -677,11 +1018,15 @@ class Calculator(object):
             assert calc.current_year == self.current_year
             assert calc.array_len == self.array_len
             var_dataframe = calc.distribution_table_dataframe()
-            if have_same_income_measure(self, calc):
-                imeasure = 'GTI'
+            if have_same_income_measure(self, calc, imeasure):
+                if income_measure is None:
+                    imeasure = 'GTI'
+                else:
+                    imeasure = income_measure
             else:
-                imeasure = 'GTI_baseline'
-                var_dataframe[imeasure] = self.array('GTI')
+                imeasure = 'GTI'
+                #imeasure = 'GTI_baseline'
+                var_dataframe[imeasure] = self.array(imeasure)
             dt2 = create_distribution_table(var_dataframe, groupby, imeasure,
                                             averages, scaling)
             del var_dataframe

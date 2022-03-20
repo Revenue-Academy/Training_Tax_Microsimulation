@@ -78,13 +78,17 @@ class CorpRecords(object):
     # suppress pylint warnings about too many class instance attributes:
     # pylint: disable=too-many-instance-attributes
 
-    CITCSV_YEAR = 2017
+    f = open('global_vars.json')
+    vars = json.load(f)
+    #print("vars in corprecords", vars)
+    
+    CITCSV_YEAR = vars['start_year']
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-    CIT_DATA_FILENAME = 'cit_cross.csv'
-    CIT_WEIGHTS_FILENAME = 'cit_cross_wgts1.csv'
+    CIT_DATA_FILENAME = vars['cit_data_filename']
+    CIT_WEIGHTS_FILENAME = vars['cit_weights_filename']
     CIT_BLOWFACTORS_FILENAME = 'cit_panel_blowup.csv'
-    VAR_INFO_FILENAME = 'corprecords_variables.json'
+    VAR_INFO_FILENAME = vars['cit_records_variables_filename']
 
     def __init__(self,
                  data=CIT_DATA_FILENAME,
@@ -124,7 +128,7 @@ class CorpRecords(object):
         # specify current_year and ASSESSMENT_YEAR values
         if isinstance(start_year, int):
             self.__current_year = start_year
-            self.ASSESSMENT_YEAR.fill(start_year)
+            self.Year.fill(start_year)
         else:
             msg = 'start_year is not an integer'
             raise ValueError(msg)
@@ -138,7 +142,11 @@ class CorpRecords(object):
                     self.weight = (np.ones(self.array_length) *
                                    sum(self.WT[wt_colname]) /
                                    len(self.WT[wt_colname]))
-
+            else:
+                print("weights were not created")
+                print("because ",wt_colname," was not found in ",
+                      self.WT.columns)
+                
     @property
     def data_year(self):
         """
@@ -167,6 +175,7 @@ class CorpRecords(object):
         """
         # move to next year
         self.__current_year += 1
+        print('self.__current_year: ',self.__current_year)
         if self.data_type == 'cross-section':
             # apply variable extrapolation grow factors
             if self.gfactors is not None:
@@ -251,7 +260,7 @@ class CorpRecords(object):
         are skipped.
         """
         self.__current_year = new_current_year
-        self.ASSESSMENT_YEAR.fill(new_current_year)
+        self.Year.fill(new_current_year)
 
     @staticmethod
     def read_var_info():

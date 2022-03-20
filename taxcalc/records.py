@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 from taxcalc.growfactors import GrowFactors
 
-
 class Records(object):
     """
     Constructor for the tax-filing-unit Records class.
@@ -75,18 +74,24 @@ class Records(object):
     # suppress pylint warnings about too many class instance attributes:
     # pylint: disable=too-many-instance-attributes
 
-    PITCSV_YEAR = 2017
+    f = open('global_vars.json')
+    vars = json.load(f)
+    #print("vars in records", vars)
+    
+    PITCSV_YEAR = vars["start_year"]
+    
+    #PITCSV_YEAR = 2017
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-    PIT_DATA_FILENAME = 'pit.csv'
-    PIT_WEIGHTS_FILENAME = 'pit_weights.csv'
-    VAR_INFO_FILENAME = 'records_variables.json'
+    PIT_DATA_FILENAME = vars['pit_data_filename']
+    PIT_WEIGHTS_FILENAME = vars['pit_weights_filename']
+    VAR_INFO_FILENAME = vars['pit_records_variables_filename']
 
     def __init__(self,
                  data=PIT_DATA_FILENAME,
                  gfactors=GrowFactors(),
                  weights=PIT_WEIGHTS_FILENAME,
-                 start_year=PITCSV_YEAR):
+                 start_year=PITCSV_YEAR, policy=None):
         # pylint: disable=too-many-arguments,too-many-locals
         self.__data_year = start_year
         # read specified data
@@ -108,10 +113,10 @@ class Records(object):
             sum_sub_weights = self.WT.sum()
             factor = sum_full_weights / sum_sub_weights
             self.WT *= factor
-        # specify current_year and AYEAR values
+        # specify current_year and YEAR values
         if isinstance(start_year, int):
             self.__current_year = start_year
-            self.AYEAR.fill(start_year)
+            self.YEAR.fill(start_year)
         else:
             msg = 'start_year is not an integer'
             raise ValueError(msg)
@@ -160,7 +165,16 @@ class Records(object):
             wt_colname = 'WT{}'.format(self.__current_year)
             self.weight = self.WT[wt_colname]
         """
-
+    
+    def adjust_behavior(self, variable_name, variable_value):
+        
+        var = getattr(self, variable_name)
+        setattr(self, variable_name, variable_value)
+    
+    #def adjust_behavior(self, variable, policy_field):
+        #var = getattr(self, variable)
+        #var *= GF_COLS
+        #setattr(self, col, var)
         
     def increment_year(self):
         """
@@ -179,12 +193,12 @@ class Records(object):
 
     def set_current_year(self, new_current_year):
         """
-        Set current year to specified value and updates AYEAR variable.
+        Set current year to specified value and updates YEAR variable.
         Unlike increment_year method, extrapolation, reweighting, adjusting
         are skipped.
         """
         self.__current_year = new_current_year
-        self.AYEAR.fill(new_current_year)
+        self.YEAR.fill(new_current_year)
         print("records self.__current_year ", self.__current_year)
 
     @staticmethod
@@ -249,13 +263,14 @@ class Records(object):
         gf_columns_all = self.gfactors.factor_names()
         gf_columns = Records.USABLE_READ_VARS.intersection(gf_columns_all)
         #print("grow factors columns used ", gf_columns)
-        
+        #print("var pre: ", getattr(self, 'SALARY'))        
         for col in gf_columns:
             GF_COLS = self.gfactors.factor_value(col, year)
             var = getattr(self, col)
             var *= GF_COLS
             setattr(self, col, var)
-            
+
+        #print("var post: ", getattr(self, 'SALARY'))
         """   
         # pylint: disable=too-many-locals,too-many-statements
         GF_SALARY = self.gfactors.factor_value('SALARY', year)
@@ -340,10 +355,13 @@ class Records(object):
                 else:
                     setattr(self, varname,
                             taxdf[varname].astype(np.float64).values)
+                    #print(self.SALARY)
             else:
                 self.IGNORED_VARS.add(varname)
         # check that MUST_READ_VARS are all present in taxdf
         if not Records.MUST_READ_VARS.issubset(READ_VARS):
+            print('MUST_READ_VARS ', Records.MUST_READ_VARS)
+            print('READ_VARS ',READ_VARS)
             msg = 'Records data missing one or more MUST_READ_VARS'
             raise ValueError(msg)
         # delete intermediate taxdf object
@@ -359,9 +377,11 @@ class Records(object):
                 setattr(self, varname,
                         np.zeros(self.array_length, dtype=np.float64))
         # check for valid AGEGRP values
+        """
         if not np.all(np.logical_and(np.greater_equal(self.AGEGRP, 0),
                                      np.less_equal(self.AGEGRP, 2))):
             raise ValueError('not all AGEGRP values in [0,2] range')
+        """
         # delete intermediate variables
         del READ_VARS
         del UNREAD_VARS

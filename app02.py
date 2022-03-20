@@ -9,28 +9,36 @@ import pandas as pd
 #import taxcalc.taxcalc_globals as global_var
 import json
 
+data_filename = "pit.csv"
+weights_filename = "pit_weights1.csv"
+records_variables_filename = "records_variables.json"
+cit_data_filename = "cit_cross.csv"
+cit_weights_filename = "cit_cross_wgts1.csv"
+corprecords_variables_filename = "corprecords_variables.json"
+gst_data_filename = "gst.csv"
+gst_weights_filename = "gst_weights.csv"
+gstrecords_variables_filename = "gstrecords_variables.json"         
+policy_filename = "current_law_policy_cmie.json"
+growfactors_filename = "growfactors1.csv"           
+benchmark_filename = "tax_incentives_benchmark.json"
+
 vars = {}
-vars['DEFAULTS_FILENAME'] = 'current_law_policy_cmie.json'
-#filename_list = self.growfactors_filename.split('/')
-#self.growfactors_filename_global = filename_list[-1]        
-vars['GROWFACTORS_FILENAME'] = 'growfactors1.csv'
-vars['pit_data_filename'] = "pit.csv"
-vars['pit_weights_filename'] = "pit_weights1.csv"
-vars['cit_data_filename'] = "cit_cross.csv"
-vars['cit_weights_filename'] = "cit_cross_wgts1.csv"
-vars['benchmark_filename'] = "tax_incentives_benchmark.json"
+vars['DEFAULTS_FILENAME'] = policy_filename        
+vars['GROWFACTORS_FILENAME'] = growfactors_filename
+vars['pit_data_filename'] = data_filename
+vars['pit_weights_filename'] = weights_filename
+vars['records_variables_filename'] = records_variables_filename        
+vars['cit_data_filename'] = cit_data_filename
+vars['cit_weights_filename'] = cit_weights_filename
+vars['corprecords_variables_filename'] = corprecords_variables_filename
+vars['gst_data_filename'] = gst_data_filename
+vars['gst_weights_filename'] = gst_weights_filename
+vars['gstrecords_variables_filename'] = gstrecords_variables_filename        
+vars['benchmark_filename'] = benchmark_filename
 
 with open('global_vars.json', 'w') as f:
     json.dump(vars, f)
-
-f = open('global_vars.json')
-vars = json.load(f)
-
-print("data_filename: ", vars['cit_data_filename'])
-print("weights_filename: ", vars['cit_weights_filename'])
-print("growfactors_filename: ", vars['GROWFACTORS_FILENAME'])
-print("policy_filename: ", vars['DEFAULTS_FILENAME'])
-    
+        
 from taxcalc import *
 #Policy.default_data(metadata=True).keys()
 

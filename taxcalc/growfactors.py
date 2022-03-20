@@ -39,7 +39,7 @@ class GrowFactors(object):
 
     f = open('global_vars.json')
     vars = json.load(f)
-    print("vars in growfactors", vars)
+    #print("vars in growfactors", vars)
 
     GROWFACTORS_FILENAME = vars['GROWFACTORS_FILENAME']
     
@@ -50,17 +50,26 @@ class GrowFactors(object):
     # TODO: Growfactors for Corporate and non-corporate Income heads are
     # TODO: currently set as same. New field names should be read in case we
     # TODO: want separate growfactors for Corporate and Non-corporate data.
-    f = open(os.path.join(CUR_PATH, vars['records_variables_filename']))
-    records_variables = json.load(f)
-    f = open(os.path.join(CUR_PATH, vars['corprecords_variables_filename']))
-    corprecords_variables = json.load(f)
-    f = open(os.path.join(CUR_PATH, vars['gstrecords_variables_filename']))
-    gstrecords_variables = json.load(f)
+    if (vars['pit']):
+        f = open(os.path.join(CUR_PATH, vars['pit_records_variables_filename']))
+        records_variables = json.load(f)
+        set1 = set(records_variables['read'].keys())
+    else:
+        set1 = set()
+    if (vars['cit']):
+        f = open(os.path.join(CUR_PATH, vars['cit_records_variables_filename']))
+        corprecords_variables = json.load(f)
+        set2 = set(corprecords_variables['read'].keys())        
+    else:
+        set2 = set()
+    if (vars['vat']):    
+        f = open(os.path.join(CUR_PATH, vars['vat_records_variables_filename']))
+        gstrecords_variables = json.load(f)
+        set3 = set(gstrecords_variables['read'].keys())         
+    else:
+        set3 = set()    
 
-    set1 = set(records_variables['read'].keys())
-    set2 = set(corprecords_variables['read'].keys())
-    set3 = set(gstrecords_variables['read'].keys()) 
-    set4 = set(['CPI'])
+    set4 = set(['CPI', 'SALARY', 'Oil_Prices'])
     set5 = set(['CONSUMPTION', 'OTHER_CONS_ITEM'])
     VALID_NAMES = set.union(set1, set2, set3, set4, set5)
     """
@@ -144,7 +153,7 @@ class GrowFactors(object):
                  for cyr in range(firstyear, lastyear + 1)]
         return rates
 
-    def wage_growth_rates(self, firstyear, lastyear):
+    def wage_growth_rates(self, firstyear, lastyear, SALARY_VARIABLE):
         """
         Return list of wage growth rates rounded to four decimal digits.
         """
@@ -159,7 +168,7 @@ class GrowFactors(object):
             msg = 'lastyear={} > GrowFactors.last_year={}'
             raise ValueError(msg.format(lastyear, self.last_year))
         # pylint: disable=no-member
-        rates = [round((self.gfdf['SALARY'][cyr] - 1.0), 4)
+        rates = [round((self.gfdf[SALARY_VARIABLE][cyr] - 1.0), 4)
                  for cyr in range(firstyear, lastyear + 1)]
         return rates
 

@@ -195,7 +195,7 @@ def generate_policy_revenues():
            
     for year in range(2019, 2024):
         cols = []
-        calc1.advance_to_year(year)       
+        calc1.advance_to_year(year)    
         calc2.advance_to_year(year)
         # NOTE: calc1 now contains a PRIVATE COPY of pol and a PRIVATE COPY of recs,
         #       so we can continue to use pol and recs in this script without any

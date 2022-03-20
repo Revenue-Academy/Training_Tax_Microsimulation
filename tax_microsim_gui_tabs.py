@@ -66,7 +66,7 @@ class Application(Frame):
         TAB_CONTROL.add(self.TAB2, text=' Policy ')
 
         self.TAB3 = ttk.Frame(TAB_CONTROL)
-        TAB_CONTROL.add(self.TAB3, text=' Revenue Forecast ')
+        TAB_CONTROL.add(self.TAB3, text=' Behavior ')
         TAB_CONTROL.pack(expand=1, fill="both")
         
         self.TAB4 = ttk.Frame(TAB_CONTROL)
@@ -307,7 +307,7 @@ class Application(Frame):
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
         #self.foo_thread = Thread(target=self.generate_policy_revenues)
-        from generate_revenues import generate_revenues       
+        from generate_revenues import generate_revenues    
         self.foo_thread = Thread(target=generate_revenues)        
         self.foo_thread.daemon = True
         self.progressbar.start(interval=10)

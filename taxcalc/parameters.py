@@ -179,7 +179,7 @@ class ParametersBase(object):
                 if isinstance(name, str):
                     arr = getattr(self, name)
                     setattr(self, name[1:], arr[year_zero_indexed])
-
+                    #print(self._tbrk3, year)
     # ----- begin private methods of ParametersBase class -----
 
     @staticmethod

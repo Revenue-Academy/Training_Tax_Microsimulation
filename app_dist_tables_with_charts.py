@@ -4,6 +4,7 @@ app_dist_Tables00.py illustrates use of pitaxcalc-demo release 2.0.0
 USAGE: python app_dist_Tables00.py
 """
 
+import json
 import locale
 import pandas as pd
 from taxcalc import *
@@ -46,23 +47,91 @@ def convert_df(df, cols):
 
 
 
+
+data_filename = "pit.csv"
+weights_filename = "pit_weights.csv"
+records_variables_filename = "records_variables.json"
+cit_data_filename = "cit_cross.csv"
+cit_weights_filename = "cit_cross_wgts1.csv"
+corprecords_variables_filename = "corprecords_variables.json"
+gst_data_filename = "gst.csv"
+gst_weights_filename = "gst_weights.csv"
+gstrecords_variables_filename = "gstrecords_variables.json"         
+policy_filename = "current_law_policy_cmie11.json"
+growfactors_filename = "growfactors1.csv"           
+benchmark_filename = "tax_incentives_benchmark.json"
+functions_filename = "functions1.py"
+function_names = "function_names.json"
+start_year = 2017
+end_year=2023
+SALARY_VARIABLE = "SALARY"
+elasticity_filename = "elasticity.json"
+DIST_VARIABLES = ['weight', 'GTI', 'pitax']
+DIST_TABLE_COLUMNS = DIST_VARIABLES
+DIST_TABLE_LABELS = ['Returns',
+                     'Gross Total Income',
+                     'PITax']
+DECILE_ROW_NAMES = ['0-10n', '0-10z', '0-10p',
+                    '10-20', '20-30', '30-40', '40-50',
+                    '50-60', '60-70', '70-80', '80-90', '90-100',
+                    'ALL',
+                    '90-95', '95-99', 'Top 1%']
+STANDARD_ROW_NAMES = ['<0', '=0', '0-1L', '1-10L', '10-15L',
+                      '15-20L', '20-30L', '30-40L', '40-50L',
+                      '50-100L', '>100L', 'ALL']
+STANDARD_INCOME_BINS = [-9e99, -1e-9, 1e-9, 5e5, 10e5, 15e5, 20e5, 30e5,
+                        40e5, 50e5, 100e5, 9e99]    
+income_measure = "GTI"
+
+vars = {}
+vars['DEFAULTS_FILENAME'] = policy_filename        
+vars['GROWFACTORS_FILENAME'] = growfactors_filename
+vars['pit_data_filename'] = data_filename
+vars['pit_weights_filename'] = weights_filename
+vars['records_variables_filename'] = records_variables_filename        
+vars['cit_data_filename'] = cit_data_filename
+vars['cit_weights_filename'] = cit_weights_filename
+vars['corprecords_variables_filename'] = corprecords_variables_filename
+vars['gst_data_filename'] = gst_data_filename
+vars['gst_weights_filename'] = gst_weights_filename
+vars['gstrecords_variables_filename'] = gstrecords_variables_filename        
+vars['benchmark_filename'] = benchmark_filename
+vars['functions_filename'] = functions_filename
+vars['function_names'] = function_names
+vars["start_year"] = start_year
+vars["end_year"] = end_year
+vars["SALARY_VARIABLE"] = SALARY_VARIABLE
+vars['elasticity_filename'] = elasticity_filename
+vars['DIST_VARIABLES'] = DIST_VARIABLES
+vars['DIST_TABLE_COLUMNS'] = DIST_TABLE_COLUMNS        
+vars['DIST_TABLE_LABELS'] = DIST_TABLE_LABELS
+vars['DECILE_ROW_NAMES'] = DECILE_ROW_NAMES
+vars['STANDARD_ROW_NAMES'] = STANDARD_ROW_NAMES
+vars['STANDARD_INCOME_BINS'] = STANDARD_INCOME_BINS
+vars['income_measure'] = income_measure
+
+with open('global_vars.json', 'w') as f:
+    json.dump(vars, f)
+
+from taxcalc import *
+
 # create Records object containing pit.csv and pit_weights.csv input data
-recs = Records(data='pit.csv', weights='pit_weights.csv')
-grecs = GSTRecords()
-crecs = CorpRecords()
+recs = Records()
+#grecs = GSTRecords()
+#crecs = CorpRecords()
 
 # create Policy object containing current-law policy
 pol = Policy()
 
 # specify Calculator object for current-law policy
-calc1 = Calculator(policy=pol, records=recs, gstrecords=grecs, corprecords=crecs, verbose=False)
+calc1 = Calculator(policy=pol, records=recs, verbose=False)
 
 # specify Calculator object for reform in JSON file
 reform = Calculator.read_json_param_objects('Budget2019_reform.json', None)
 #print(reform['policy'])
 pol.implement_reform(reform['policy'])
 
-calc2 = Calculator(policy=pol, records=recs, gstrecords=grecs, corprecords=crecs, verbose=False)
+calc2 = Calculator(policy=pol, records=recs, verbose=False)
 # loop through years 2017, 2018, 2019, and 2020 and print out pitax
 
 START_YEAR = 2017
@@ -76,9 +145,9 @@ for year in range(START_YEAR, END_YEAR+1):
     calc2.advance_to_year(year)
     calc1.calc_all()
     calc2.calc_all()
-    weighted_tax1 = calc1.weighted_total('pitax')
-    weighted_tax2 = calc2.weighted_total('pitax')
-    total_weights = calc1.total_weight()
+    weighted_tax1 = calc1.weighted_total_pit('pitax')
+    weighted_tax2 = calc2.weighted_total_pit('pitax')
+    total_weights = calc1.total_weight_pit()
     wtd_tax_clp[year] = weighted_tax1
     wtd_tax_ref[year] = weighted_tax2
     wtd_tot[year] = total_weights
@@ -96,7 +165,8 @@ for year in range(START_YEAR, END_YEAR+1):
         print(f'Representing: {total_weights * 1e-5:,.2f} Lakh taxpayers')
         print('\n')
         for output_in_averages in [False, True]:
-            output_categories = 'standard_income_bins'
+            #output_categories = 'standard_income_bins'
+            output_categories = 'weighted_deciles'
             # pd.options.display.float_format = '{:,.3f}'.format
             # dt1, dt2 = calc1.distribution_tables(calc2, 'weighted_deciles')
             dt1, dt2 = calc1.distribution_tables(calc2, output_categories,
@@ -123,9 +193,13 @@ for year in range(START_YEAR, END_YEAR+1):
                 #pd.options.display.float_format = '{:,.0f}'.format
                 pd.options.display.float_format = '{:.0f}'.format
             
+            print(dt1)
             # list of columns for printing in rupees
             col_list1 = list(dt1.columns)
-            col_list1.remove('Income_Bracket')
+            if (output_categories == 'standard_income_bins'):
+                col_list1.remove('Income_Bracket')
+            else:
+                col_list1.remove('Decile')
             col_list1.remove('weight')
             print('\n')
             print('  *** CURRENT-LAW DISTRIBUTION TABLE ***')
@@ -145,7 +219,7 @@ for year in range(START_YEAR, END_YEAR+1):
                 with open('dist-table-all-ref-avg-'+str(year)+'.txt', 'w') as dfile:
                     dt2.to_string(dfile)
                 # print text version of each partial distribution table to a file
-                to_include = ['weight', 'GTI', 'TTI', 'pitax']
+                to_include = ['weight', 'GTI', 'pitax']
                 with open('dist-table-part-clp-avg-'+str(year)+'.txt', 'w') as dfile:
                     dt1.to_string(dfile, columns=to_include)
                 with open('dist-table-part-ref-avg-'+str(year)+'.txt', 'w') as dfile:
@@ -156,7 +230,7 @@ for year in range(START_YEAR, END_YEAR+1):
                 with open('dist-table-all-ref-total-'+str(year)+'.txt', 'w') as dfile:
                     dt2.to_string(dfile)
                 # print text version of each partial distribution table to a file
-                to_include = ['weight', 'GTI', 'TTI', 'pitax']
+                to_include = ['weight', 'GTI', 'pitax']
                 with open('dist-table-part-clp-total-'+str(year)+'.txt', 'w') as dfile:
                     dt1.to_string(dfile, columns=to_include)
                 with open('dist-table-part-ref-total-'+str(year)+'.txt', 'w') as dfile:
@@ -190,7 +264,7 @@ year = START_YEAR
 a={}
 for year in range(BASE_YEAR, END_YEAR+1):
     filename1='dist-table-all-clp-avg-'+str(year)+'.txt'
-    df1 = pd.read_fwf(filename1)       
+    df1 = pd.read_fwf(filename1)
     df1.drop('Unnamed: 0',axis=1,inplace=True)
     col_list =  df1.columns[1:] + '_avg_clp_' + str(year)
     col_list = col_list.insert(0, 'Income_Bracket')
