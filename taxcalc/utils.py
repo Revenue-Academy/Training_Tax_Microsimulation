@@ -18,14 +18,34 @@ from taxcalc.utilsprvt import (weighted_count_lt_zero,
                                weighted_count)
 
 
+f = open('global_vars.json')
+vars = json.load(f)
+
+if vars['pit']:
+    tax_type = 'pit'
+if vars['cit']:
+    tax_type = 'cit'
+if vars['vat']:
+    tax_type = 'vat'
+    
+if vars[tax_type+'_distribution_table']:
+    DIST_VARIABLES = vars['DIST_VARIABLES']
+    DIST_TABLE_COLUMNS = vars['DIST_TABLE_COLUMNS']
+    DIST_TABLE_LABELS = vars['DIST_TABLE_LABELS']
+    DECILE_ROW_NAMES = vars['DECILE_ROW_NAMES']
+    STANDARD_ROW_NAMES = vars['STANDARD_ROW_NAMES']
+    STANDARD_INCOME_BINS = vars['STANDARD_INCOME_BINS']
+        
 # Items in the DIST_TABLE_COLUMNS list below correspond to the items in the
 # DIST_TABLE_LABELS list below; this correspondence allows us to use this
 # labels list to map a label to the correct column in a distribution table.
 
+"""
 DIST_VARIABLES = ['weight', 'GTI', 'TTI',
                   'TI_special_rates', 'tax_TI_special_rates',
                   'Aggregate_Income', 'tax_Aggregate_Income',
                   'tax_TTI', 'rebate', 'surcharge', 'cess', 'pitax']
+
 
 DIST_TABLE_COLUMNS = DIST_VARIABLES
 
@@ -54,7 +74,7 @@ STANDARD_ROW_NAMES = ['<0', '=0', '0-5L', '5-10L', '10-15L',
 
 STANDARD_INCOME_BINS = [-9e99, -1e-9, 1e-9, 5e5, 10e5, 15e5, 20e5, 30e5,
                         40e5, 50e5, 100e5, 9e99]
-
+"""
 
 def unweighted_sum(pdf, col_name):
     """
@@ -223,16 +243,16 @@ def create_distribution_table(vdf, groupby, income_measure,
         sdf = pd.DataFrame()
         for col in DIST_TABLE_COLUMNS:
             if col == 'weight':
-                sdf[col] = gpdf.apply(unweighted_sum, col)
+                sdf[col] = gpdf.apply(unweighted_sum, col).values[:, 1]
             else:
-                sdf[col] = gpdf.apply(weighted_sum, col)
+                sdf[col] = gpdf.apply(weighted_sum, col).values[:, 1]
         return sdf
     # main logic of create_distribution_table
     assert isinstance(vdf, pd.DataFrame)
     assert (groupby == 'weighted_deciles' or
             groupby == 'standard_income_bins')
-    assert (income_measure == 'GTI' or
-            income_measure == 'GTI_baseline')
+    #assert (income_measure == 'GTI' or
+    #        income_measure == 'GTI_baseline')
     assert income_measure in vdf
     assert 'table_row' not in list(vdf.columns.values)
     # sort the data given specified groupby and income_measure
@@ -286,18 +306,28 @@ def create_distribution_table(vdf, groupby, income_measure,
     if averages:
         for col in DIST_TABLE_COLUMNS:
             if col != 'weight':
-                dist_table[col] /= dist_table['weight']
+                #print("DIST_TABLE_COLUMN: ",col)
+                #print(dist_table['weight'])
+                #print(dist_table[col])
+                dist_table['weight'] = np.array(dist_table['weight'], dtype=float)
+                dist_table['weight'] = np.where(np.isclose(dist_table['weight'],0.0), -99.0, dist_table['weight'])                
+                dist_table[col] = np.where(np.isclose(dist_table['weight'],-99.0),0.0, dist_table[col]/dist_table['weight'])
+                #dist_table[col] /= dist_table['weight']
+
 
     # optionally scale and round table entries
     if scaling:
         for col in DIST_TABLE_COLUMNS:
             if col == 'weight':
-                dist_table[col] = np.round(dist_table[col] * 1e-5, 3)
+                dist_table[col] *= 1e-5
+                dist_table.round({col: 3})
             else:
                 if averages:
-                    dist_table[col] = np.round(dist_table[col] * 1, 0)
+                    dist_table[col] *= 1
+                    dist_table.round({col: 0})
                 else:
-                    dist_table[col] = np.round(dist_table[col] * 1e-7, 3)
+                    dist_table[col] *= 1e-7
+                    dist_table.round({col: 3})
     # return table as Pandas DataFrame
     vdf.sort_index(inplace=True)
     return dist_table

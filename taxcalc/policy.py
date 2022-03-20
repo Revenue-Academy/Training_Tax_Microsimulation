@@ -44,16 +44,24 @@ class Policy(ParametersBase):
     class instance: Policy
     """
 
+
+
+    f = open('global_vars.json')
+    vars = json.load(f)
+    #print("vars in policy", vars)
+    DEFAULTS_FILENAME = vars['DEFAULTS_FILENAME']
+    SALARY_VARIABLE = vars["SALARY_VARIABLE"]
     
+    """
     JSON_START_YEAR = 2017  # remains the same unless earlier data added
     LAST_KNOWN_YEAR = 2017  # last year for which indexed param vals are known
     LAST_BUDGET_YEAR = 2023  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
-
-    f = open('global_vars.json')
-    vars = json.load(f)
-    print("vars in policy", vars)
-    DEFAULTS_FILENAME = vars['DEFAULTS_FILENAME']
+    """
+    JSON_START_YEAR = vars['start_year']  # remains the same unless earlier data added
+    LAST_KNOWN_YEAR = vars['start_year']  # last year for which indexed param vals are known
+    LAST_BUDGET_YEAR = vars['end_year']  # increases by one for every new assessment year
+    DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1    
 
     def __init__(self,DEFAULTS_FILENAME=None,
                  gfactors=None,
@@ -62,7 +70,13 @@ class Policy(ParametersBase):
         
         if DEFAULTS_FILENAME is not None:
             self.DEFAULTS_FILENAME = DEFAULTS_FILENAME
-            
+        
+        f = open('global_vars.json')
+        vars = json.load(f)
+        #print("vars in policy", vars)
+        SALARY_VARIABLE = vars["SALARY_VARIABLE"]
+        #print('SALARY_VARIABLE ',SALARY_VARIABLE)
+        
         super(Policy, self).__init__()
          
         if gfactors is None:
@@ -84,7 +98,7 @@ class Policy(ParametersBase):
         syr = start_year
         lyr = start_year + num_years - 1
         self._inflation_rates = self._gfactors.price_inflation_rates(syr, lyr)
-        self._wage_growth_rates = self._gfactors.wage_growth_rates(syr, lyr)
+        self._wage_growth_rates = self._gfactors.wage_growth_rates(syr, lyr, SALARY_VARIABLE)
 
         self.initialize(start_year, num_years)
 
@@ -223,7 +237,10 @@ class Policy(ParametersBase):
             self.set_year(year)
             reform_parameters.update(reform[year].keys())
             self._update({year: reform[year]})
+            #print(self._tbrk3, year)
+        #print(self._vals["_tbrk3"]["value"])
         self.set_year(precall_current_year)
+        #print(self._tbrk3, year)
         # validate reform parameter values
         self._validate_parameter_values(reform_parameters)
         if self.parameter_warnings and print_warnings:

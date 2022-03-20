@@ -188,7 +188,7 @@
       "type": "float",
       "desc": "Taxable Total Income (TTI) taxed at special rates",
       "form": {"2017": "ITR-3 Part B-TI line 15"}
-    },
+    },    
     "Aggregate_Income": {
       "type": "float",
       "desc": "Income taxed at normal rates TTI minus TI_special_rates",

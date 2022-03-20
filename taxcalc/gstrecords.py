@@ -78,13 +78,17 @@ class GSTRecords(object):
     # suppress pylint warnings about too many class instance attributes:
     # pylint: disable=too-many-instance-attributes
 
+    f = open('global_vars.json')
+    vars = json.load(f)
+    #print("vars in gstrecords", vars)
+    
     GSTCSV_YEAR = 2017
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
-    GST_DATA_FILENAME = 'gst_cmie_august_2020.csv'
-    GST_WEIGHTS_FILENAME = 'gst_weights_cmie_august_2020.csv'
-    GST_BLOWFACTORS_FILENAME = 'gst_panel_blowup.csv'
-    VAR_INFO_FILENAME = 'gstrecords_variables_cmie.json'
+    GST_DATA_FILENAME = vars['vat_data_filename']
+    GST_WEIGHTS_FILENAME = vars['vat_weights_filename']
+    GST_BLOWFACTORS_FILENAME = 'vat_panel_blowup.csv'
+    VAR_INFO_FILENAME = vars['vat_records_variables_filename']
 
     def __init__(self,
                  data=GST_DATA_FILENAME,

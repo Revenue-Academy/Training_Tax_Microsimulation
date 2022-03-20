@@ -1,5 +1,9 @@
 {
     "policy": {
+	// reduce tax bracket3 from 1,000,000 to 800,000
+	"_tbrk3": {"2019": [800000], "2020":[700000], "2022":[600000]},
+	// increase marginal rate of fourth bracket to 0.4 from 0.3
+	"_rate4": {"2017": [0.4]},
 	// reduce rebate threshold from 500,000 to 350,000
 	"_rebate_thd": {"2017": [350000]},
 	// reduce rebate ceiling from 5,000 to 3,500
