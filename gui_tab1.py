@@ -1,0 +1,340 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan  4 20:56:40 2022
+
+@author: wb305167
+"""
+import json
+from tkinter import *
+import tkinter as tk
+from tkinter import ttk
+import tkinter.font as tkfont
+from tkinter.messagebox import showinfo
+from tkinter import filedialog
+
+from threading import Thread
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True})
+
+#from taxcalc import *
+
+from PIL import Image,ImageTk
+
+def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
+    self.title_pos_x = 0.5
+    self.title_pos_y = 0.0
+    self.sub_title_pos_x = 0.5
+    self.sub_title_pos_y = 0.05    
+    self.block_1_title_pos_x = block_1_title_pos_x
+    if block_1_title_pos_y is None:
+        self.block_1_title_pos_y = 0.20
+    else:
+        self.block_1_title_pos_y = block_1_title_pos_y
+    self.block_title_entry_gap_y = 0.05
+    self.block_entry_entry_gap_y = 0.05
+    self.block_1_entry_x = self.block_1_title_pos_x + 0.05
+    self.entry_entry_gap_y = 0.03
+    self.block_1_entry_1_y = (self.block_1_title_pos_y+self.block_title_entry_gap_y)
+    self.block_1_entry_2_y = (self.block_1_entry_1_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_3_y = (self.block_1_entry_2_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_4_y = (self.block_1_entry_3_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_5_y = (self.block_1_entry_4_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_6_y = (self.block_1_entry_5_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_7_y = (self.block_1_entry_6_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_8_y = (self.block_1_entry_7_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_9_y = (self.block_1_entry_8_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_10_y = (self.block_1_entry_9_y+self.block_entry_entry_gap_y)   
+    self.entry_button_gap = 0.02
+        
+def display_entry(self, widget, tax_type, block_1_title_pos_x):
+    self.vars[tax_type] = int(widget.get())
+    if not self.vars[tax_type]:
+        self.l1[tax_type].destroy()
+        self.entry_data_filename[tax_type].destroy()
+        self.button_data_filename[tax_type].destroy()
+        self.entry_weights_filename[tax_type].destroy()
+        self.button_weights_filename[tax_type].destroy()
+        self.entry_records_filename[tax_type].destroy()
+        self.button_records_filename[tax_type].destroy()
+        self.entry_policy_filename[tax_type].destroy()
+        self.button_policy_filename[tax_type].destroy()
+        self.entry_growfactors_filename[tax_type].destroy()
+        self.button_growfactors_filename[tax_type].destroy()
+        self.entry_functions_filename[tax_type].destroy()
+        self.button_functions_filename[tax_type].destroy() 
+        self.entry_functions_names_filename[tax_type].destroy() 
+        self.button_function_names_filename[tax_type].destroy() 
+        self.l2[tax_type].destroy() 
+        self.entry_salary_variable[tax_type].destroy() 
+        self.l3[tax_type].destroy() 
+        self.entry_start_year[tax_type].destroy() 
+        self.l31[tax_type].destroy() 
+        self.entry_end_year[tax_type].destroy()
+    else:
+        self.grid_placement(block_1_title_pos_x)
+        self.l1[tax_type]=Label(self.TAB1,text="Data Inputs "+ tax_type.upper(),
+                 font = self.fontStyle_sub_title)
+        self.l1[tax_type].place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
+        
+        self.entry_data_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_data_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                  rely = self.block_1_entry_1_y,
+                                  anchor = "e")
+        self.entry_data_filename[tax_type].insert(END, self.vars[tax_type+'_data_filename'])
+        self.button_data_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Data File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_data_filename[tax_type], tax_type+'_'+'data_filename'))
+        self.button_data_filename[tax_type].place(relx = self.block_1_entry_x,
+                                   rely = self.block_1_entry_1_y, anchor = "w")
+        #button.place(x=140,y=50)
+        
+        self.entry_weights_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_weights_filename[tax_type].place(relx = self.block_1_entry_x,
+                                     rely = self.block_1_entry_2_y, anchor = "e")
+        self.entry_weights_filename[tax_type].insert(END, self.vars[tax_type+'_weights_filename'])
+        self.button_weights_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Weights File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_weights_filename[tax_type], tax_type+'_'+'weights_filename'))
+        self.button_weights_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                      rely = self.block_1_entry_2_y, anchor = "w")
+    
+        self.entry_records_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_records_filename[tax_type].place(relx = self.block_1_entry_x,
+                                     rely = self.block_1_entry_3_y, anchor = "e")
+        self.entry_records_filename[tax_type].insert(END, self.vars[tax_type+'_records_variables_filename'])
+        
+        self.button_records_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Records JSON File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_records_filename[tax_type], tax_type+'_'+'records_variables_filename'))
+        self.button_records_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                      rely = self.block_1_entry_3_y, anchor = "w")
+        
+        self.entry_policy_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_policy_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_4_y, anchor = "e")
+        self.entry_policy_filename[tax_type].insert(END, self.vars['DEFAULTS_FILENAME'])
+        self.button_policy_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Policy File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_policy_filename[tax_type], 'DEFAULTS_FILENAME', tax_type))
+        self.button_policy_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_4_y, anchor = "w")
+        
+        self.entry_growfactors_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_growfactors_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_5_y, anchor = "e")
+        self.entry_growfactors_filename[tax_type].insert(END, self.vars['GROWFACTORS_FILENAME'])
+        self.button_growfactors_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Growfactors File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_growfactors_filename[tax_type], 'GROWFACTORS_FILENAME', tax_type))
+        self.button_growfactors_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_5_y, anchor = "w")
+        
+        self.entry_functions_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_functions_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_6_y, anchor = "e")
+        self.entry_functions_filename[tax_type].insert(END, self.vars[tax_type+'_functions_filename'])
+        self.button_functions_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Functions File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_functions_filename[tax_type], tax_type+'_'+'functions_filename'))
+        self.button_functions_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_6_y, anchor = "w")
+    
+        self.entry_functions_names_filename[tax_type] = Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_functions_names_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_7_y, anchor = "e")
+        self.entry_functions_names_filename[tax_type].insert(END, self.vars[tax_type+'_function_names_filename'])
+        self.button_function_names_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Functions Names File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_functions_names_filename[tax_type], tax_type+'_'+'function_names_filename'))
+        self.button_function_names_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_7_y, anchor = "w")
+
+        self.l2[tax_type]=Label(self.TAB1, text="Salary Variable: ", font = self.fontStyle)
+        self.l2[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
+                 rely = self.block_1_entry_8_y, anchor = "e")
+    
+        self.entry_salary_variable[tax_type] = ttk.Combobox(self.TAB1, value=self.show_salary_options(tax_type), font=self.text_font)
+        self.entry_salary_variable[tax_type].current(2)
+        self.entry_salary_variable[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
+                        rely = self.block_1_entry_8_y, anchor = "w", width=100)
+        self.entry_salary_variable[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_salary_variable[tax_type], 'SALARY_VARIABLE'))
+          
+        self.l3[tax_type]=Label(self.TAB1, text="Start Year: ", font = self.fontStyle)
+        self.l3[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
+                 rely = self.block_1_entry_9_y, anchor = "e")
+    
+        self.entry_start_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
+        self.entry_start_year[tax_type].current(1)
+        self.entry_start_year[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
+                        rely = self.block_1_entry_9_y, anchor = "w", width=80)
+        self.entry_start_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_start_year[tax_type], 'start_year'))
+    
+        self.l31[tax_type]=Label(self.TAB1, text="End Year: ", font = self.fontStyle)
+        self.l31[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
+                 rely = self.block_1_entry_9_y, anchor = "e")
+        
+        self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
+        self.entry_end_year[tax_type].current(4)
+        self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
+                        rely = self.block_1_entry_9_y, anchor = "w", width=80)
+        self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
+
+def tab1(self):    
+    self.number = 0
+    self.widgets = []
+    #self.grid()
+    #self.createWidgets()
+
+    self.reform={}
+    self.selected_item = ""
+    self.selected_value = ""
+    self.selected_year = 2019
+    self.sub_directory = "taxcalc"
+    self.year_list = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
+    # Include a check whether the years are valid by looking at the 
+    # selected growfactors file
+    """    
+    self.data_filename = "pit.csv"
+    self.weights_filename = "pit_weights1.csv"
+    self.records_variables_filename = "records_variables.json"
+    self.cit_data_filename = "cit_cross.csv"
+    self.cit_weights_filename = "cit_cross_wgts1.csv"
+    self.cit_records_variables_filename = "corprecords_variables.json"
+    self.gst_data_filename = "gst.csv"
+    self.gst_weights_filename = "gst_weights.csv"
+    self.gst_records_variables_filename = "gstrecords_variables.json"         
+    self.policy_filename = "current_law_policy_cmie.json"
+    self.growfactors_filename = "growfactors1.csv"             
+    self.benchmark_filename = "tax_incentives_benchmark.json"
+    self.elasticity_filename = "elasticity.json"
+    self.pit_functions_filename = "functions.py"
+    self.pit_function_names = "function_names.json"
+    self.start_year = 2019
+    self.end_year=2023
+    self.SALARY_VARIABLE = "SALARY"
+    """
+
+    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
+    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
+    
+    self.vars['pit'] = 0
+    self.vars['cit'] = 0
+    self.vars['vat'] = 0
+    
+    ##### NOTE 'Year' is a key word for year in records variable
+    
+    self.vars['pit_data_filename'] = "pit_macedonia.csv"
+    self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
+    self.vars['pit_records_variables_filename'] = "pit_records_variables_macedonia.json"
+    self.vars['pit_benchmark_filename'] = "pit_tax_incentives_benchmark.json"
+    self.vars['pit_elasticity_filename'] = "pit_elasticity_macedonia.json"
+    self.vars['pit_functions_filename'] = "pit_functions_macedonia.py"
+    self.vars['pit_function_names_filename'] = "pit_function_names_macedonia.json"       
+
+    self.vars['cit_data_filename'] = "cit_egypt.csv"
+    self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
+    self.vars['cit_records_variables_filename'] = "cit_records_variables_egypt.json"    
+    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
+    self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
+    self.vars['cit_functions_filename'] = "cit_functions_egypt.py"
+    self.vars['cit_function_names_filename'] = "cit_function_names_egypt.json"
+
+    self.vars['cit_max_lag_years'] = 10
+
+    self.vars['vat_data_filename'] = "vat.csv"
+    self.vars['vat_weights_filename'] = "vat_weights.csv"
+    self.vars['vat_records_variables_filename'] = "vat_records_variables.json"   
+    self.vars['vat_benchmark_filename'] = "vat_tax_incentives_benchmark.json"
+    self.vars['vat_elasticity_filename'] = "vat_elasticity_macedonia.json"
+    self.vars['vat_functions_filename'] = "vat_functions.py"
+    self.vars['vat_function_names_filename'] = "vat_function_names.json"
+    
+    self.vars['start_year'] = 2020
+    self.vars['end_year']=2025
+    
+    #self.vars['SALARY_VARIABLE'] = "gross_i_w"
+    self.vars['SALARY_VARIABLE'] = "SALARY"
+    
+    self.vars['pit_adjust_behavior'] = 0
+    self.vars['pit_distribution_table'] = 0
+    self.vars['cit_adjust_behavior'] = 0
+    self.vars['cit_distribution_table'] = 0
+    self.vars['vat_adjust_behavior'] = 0
+    self.vars['vat_distribution_table'] = 0  
+    #self.total_revenue_text1 = ""
+    #self.reform_revenue_text1 = ""
+    #self.reform_filename = "app01_reform.json"
+    
+    self.fontStyle = tkfont.Font(family="Calibri", size="12")
+    self.fontStyle_sub_title = tkfont.Font(family="Calibri", size="14", weight="bold")         
+    self.fontStyle_title = tkfont.Font(family="Calibri", size="18", weight="bold")
+    self.s = ttk.Style()
+    self.s.configure('my.TButton', font=self.fontStyle)        
+    self.text_font = ('Calibri', '12')
+            
+    #initializing the display widgets    
+    self.l1 = {}
+    self.l2 = {}
+    self.l3 = {}
+    self.l31 = {}
+    self.entry_data_filename = {}
+    self.button_data_filename = {}
+    self.entry_weights_filename = {}
+    self.button_weights_filename = {}
+    self.entry_records_filename = {}
+    self.button_records_filename = {}
+    self.entry_policy_filename = {}
+    self.button_policy_filename = {}
+    self.entry_growfactors_filename = {}
+    self.button_growfactors_filename = {}
+    self.entry_functions_filename = {}
+    self.button_functions_filename = {}
+    self.entry_functions_names_filename = {}
+    self.button_function_names_filename = {}
+    self.entry_salary_variable = {}
+    self.entry_start_year = {}
+    self.entry_end_year = {}
+    self.block_settings_pos_x = {}
+    self.status = {}
+    
+    self.tax_list = ['pit', 'cit', 'vat']
+    
+    pos_x = [0.10, 0.40, 0.70]
+
+    self.status['pit'] = tk.DISABLED
+    self.status['cit'] = tk.NORMAL
+    self.status['vat'] = tk.DISABLED
+    
+    self.block_settings_pos_x = self.allocate_pos_x(pos_x, self.status,
+                                                    self.block_settings_pos_x)
+   
+    self.block_1_title_pos_x = 0.15
+    self.block_1_title_box_y = 0.15
+
+    self.block_2_title_pos_x = 0.45
+    
+    self.block_3_title_pos_x = 0.75
+
+    self.TAB1_root_title=Label(self.TAB1,text="Tax Microsimulation Model",
+             font = self.fontStyle_title)
+    self.TAB1_root_title.place(relx = self.title_pos_x, rely = self.title_pos_y, anchor = "n")
+
+    self.TAB1_root_title=Label(self.TAB1,text="Setting",
+             font = self.fontStyle_sub_title)
+    self.TAB1_root_title.place(relx = self.title_pos_x, rely = self.sub_title_pos_y, anchor = "n")
+
+    self.pit_chk = tk.IntVar()
+    
+    self.pit_chk_box = tk.Checkbutton(self.TAB1, text='Personal Income Tax', 
+                                      font = self.fontStyle, variable=self.pit_chk,
+                                      state = self.status['pit'],
+                                      command=lambda: self.display_entry(self.pit_chk, 'pit', self.block_settings_pos_x['pit']))
+    self.pit_chk_box.place(relx = self.block_settings_pos_x['pit'], rely = self.block_1_title_box_y, anchor = "w")
+
+    self.cit_chk = tk.IntVar()
+    self.cit_chk_box = tk.Checkbutton(self.TAB1, text='Corporate Income Tax', 
+                                      font = self.fontStyle, variable=self.cit_chk,
+                                      state = self.status['cit'],
+                                      command=lambda: self.display_entry(self.cit_chk, 'cit', self.block_settings_pos_x['cit']))
+    self.cit_chk_box.place(relx = self.block_settings_pos_x['cit'], rely = self.block_1_title_box_y, anchor = "w")
+
+    self.vat_chk = tk.IntVar()
+    self.vat_chk_box = tk.Checkbutton(self.TAB1, text='Value Added Tax', 
+                                      font = self.fontStyle, variable=self.vat_chk,
+                                      state = self.status['vat'],
+                                      command=lambda: self.display_entry(self.vat_chk, 'vat', self.block_settings_pos_x['vat']))
+    self.vat_chk_box.place(relx = self.block_settings_pos_x['vat'], rely = self.block_1_title_box_y, anchor = "w")    
+
+
+
