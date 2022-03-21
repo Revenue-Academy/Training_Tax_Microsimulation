@@ -19,6 +19,7 @@ from tkinter import filedialog
 from functools import partial
 from threading import Thread
 import time
+import ctypes
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -81,7 +82,9 @@ class Application(Frame):
     from gui_tab4 import tab4
     from gui_tab4 import display_tax_expenditure   
     from gui_tab5 import tab5
-    from gui_tab5 import display_distribution      
+    from gui_tab5 import display_distribution
+    from gui_tab6 import tab6
+    from gui_tab6 import display_chart
     
 
     
@@ -112,7 +115,11 @@ class Application(Frame):
 
         self.TAB5 = ttk.Frame(TAB_CONTROL)
         TAB_CONTROL.add(self.TAB5, text=' Distribution ')
-        TAB_CONTROL.pack(expand=1, fill="both")      
+        TAB_CONTROL.pack(expand=1, fill="both")  
+        
+        self.TAB6 = ttk.Frame(TAB_CONTROL)
+        TAB_CONTROL.add(self.TAB6, text=' Charts ')
+        TAB_CONTROL.pack(expand=1, fill="both")  
                 
         self.text = scrolledtext.ScrolledText(self.TAB2, 
                                       wrap = tk.WORD, 
@@ -147,6 +154,9 @@ class Application(Frame):
 
         # TAB Distribution
         self.tab5()
+        
+        # TAB Charts
+        self.tab6()
 
     def print_stdout(self):
         '''Illustrate that using 'print' writes to stdout'''
@@ -309,9 +319,12 @@ class Application(Frame):
             self.block_selected_dict[num]['selected_value']= self.block_widget_dict[num][3].get()
             self.block_selected_dict[num]['selected_year']= self.block_widget_dict[num][2].get()
         
-        #print("self.block_selected_dict in policy selection: ", self.block_selected_dict)        
+        self.logger.clear()
+        #print("self.block_selected_dict in policy selection: ", self.block_selected_dict)   
+        self.get_inputs()
         with open('reform.json', 'w') as f:
             json.dump(self.block_selected_dict, f)
+        
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
         #self.foo_thread = Thread(target=self.generate_policy_revenues)
@@ -321,7 +334,11 @@ class Application(Frame):
         self.progressbar.start(interval=10)
         self.foo_thread.start()
         self.master.after(20, self.check_thread)
-
+        # self.image = tk.PhotoImage(file="world_bank.png")
+        # self.pic = tk.Label(self.TAB6,image=self.image)
+        # self.pic.place(relx = 0.45, rely = 0.2, anchor = "nw")
+        # self.pic.image = self.image 
+        
     def clicked_generate_policy_revenues_behavior_pit(self):
         #Capture the latest Reform Selection
         for num in range(1, self.num_reforms):
@@ -357,7 +374,10 @@ class Application(Frame):
         self.progressbar.start(interval=10)
         self.foo_thread.start()
         self.master.after(20, self.check_thread)
-
+        
+    def clicked_display_charts(self):
+        pass
+    
     """        
     def Add_Reform(self, event=None):
         self.num_reforms.set(self.num_reforms.get() + 1)
@@ -682,7 +702,7 @@ class Application(Frame):
     
  
 def main():
-
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
     root = tk.Tk()
     root.geometry('1000x600')
     root.title("World Bank Microsimulation Model")
