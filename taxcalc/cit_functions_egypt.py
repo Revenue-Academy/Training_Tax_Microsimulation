@@ -251,15 +251,7 @@ DEBUG_IDX = 0
 
 
 @iterate_jit(nopython=True)
-def mat_liability(Net_accounting_profit, mat_rate, mat_liability):
-    """
-    Compute Minimum Alternate Tax liability as a % of Net accounting profit
-    """
-    mat_liability = Net_accounting_profit * mat_rate
-    return mat_liability
-
-@iterate_jit(nopython=True)
-def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus, Sector, Net_tax_base_Egyp_Pounds, mat_liability, citax):
+def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus, Sector, Net_tax_base_Egyp_Pounds, citax):
     """
     Compute tax liability given the corporate rate
     """
@@ -275,8 +267,6 @@ def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus
     elif Sector == 3:
         citax = cit_rate_genbus * taxinc
         
-    if citax < mat_liability:
-        citax = mat_liability
     return citax
 
 
