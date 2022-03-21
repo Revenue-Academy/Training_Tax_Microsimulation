@@ -163,7 +163,7 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
                  rely = self.block_1_entry_9_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        self.entry_end_year[tax_type].current(4)
+        self.entry_end_year[tax_type].current(6)
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
                         rely = self.block_1_entry_9_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
@@ -206,7 +206,7 @@ def tab1(self):
     #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
     #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
     self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
     
     self.vars['pit'] = 0
     self.vars['cit'] = 0
@@ -295,6 +295,12 @@ def tab1(self):
     self.status['pit'] = tk.DISABLED
     self.status['cit'] = tk.NORMAL
     self.status['vat'] = tk.DISABLED
+    if self.status['pit'] == tk.NORMAL:
+        self.vars['pit'] = 1
+    if self.status['cit'] == tk.NORMAL:
+        self.vars['cit'] = 1
+    if self.status['vat'] == tk.NORMAL:
+        self.vars['vat'] = 1
     
     self.block_settings_pos_x = self.allocate_pos_x(pos_x, self.status,
                                                     self.block_settings_pos_x)

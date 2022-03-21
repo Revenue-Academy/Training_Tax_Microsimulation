@@ -113,14 +113,17 @@ def tab2(self):
     self.button_clear_reform = ttk.Button(self.TAB2, text="Reset", style='my.TButton', command=self.reset_policy_widgets, width=6)
     self.button_clear_reform.place(relx = self.button_clear_reform_x, rely = self.block_2_TAB2_entry_1_1_y, anchor = "w")
         
-    self.button_generate_revenue_policy = ttk.Button(self.TAB2, text = "Generate Revenue under Reform", style='my.TButton', command=self.clicked_generate_policy_revenues_behavior_pit)
+    self.button_generate_revenue_policy = ttk.Button(self.TAB2, text = "Generate Revenue under Reform", style='my.TButton', command=self.clicked_generate_policy_revenues)
     self.button_2_TAB2_pos_x = self.button_1_pos_x
     self.button_2_TAB2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_reforms-1)*(self.entry_entry_gap_y)) +self.entry_button_gap
     self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x,
                                                 rely = self.button_2_TAB2_pos_y, anchor = "w")       
     
-    self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
+    #self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
+    self.image = ImageTk.PhotoImage(Image.open("egypt_flag.jpg"))
+    #self.image = self.image.resize((400, 400), Image.ANTIALIAS)
     #image = tk.PhotoImage(file="blank.png")
     self.pic = tk.Label(self.TAB2,image=self.image)
-    self.pic.place(relx = 0.45, rely = 0.2, anchor = "nw")
+    self.pic.place(relx = 0.45, rely = 0.15, anchor = "nw")
     self.pic.image = self.image
+     
