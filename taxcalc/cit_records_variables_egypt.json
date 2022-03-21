@@ -571,13 +571,6 @@
       "form": {
         "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
       }
-    },
-    "mat_liability": {
-      "type": "float",
-      "desc": "Minimum Alternate Tax liability",
-      "form": {
-        "2020": ""
-      }
     }
   }
 }

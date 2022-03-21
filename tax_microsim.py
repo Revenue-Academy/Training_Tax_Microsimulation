@@ -290,16 +290,17 @@ class Application(Frame):
         return (record_variables_list)
         
     def clicked_generate_revenues(self):
-        self.get_inputs()
-        progress_bar = Progress_Bar(self.master)
-        self.progressbar, self.progress_label = progress_bar.progressbar
-        #self.foo_thread = Thread(target=self.generate_policy_revenues)
-        from generate_revenues import generate_revenues    
-        self.foo_thread = Thread(target=generate_revenues)        
-        self.foo_thread.daemon = True
-        self.progressbar.start(interval=10)
-        self.foo_thread.start()
-        self.master.after(20, self.check_thread)
+        # self.get_inputs()
+        # progress_bar = Progress_Bar(self.master)
+        # self.progressbar, self.progress_label = progress_bar.progressbar
+        # #self.foo_thread = Thread(target=self.generate_policy_revenues)
+        # from generate_revenues import generate_revenues    
+        # self.foo_thread = Thread(target=generate_revenues)        
+        # self.foo_thread.daemon = True
+        # self.progressbar.start(interval=10)
+        # self.foo_thread.start()
+        # self.master.after(20, self.check_thread)
+        pass
 
     def check_thread(self):
         if self.foo_thread.is_alive():
