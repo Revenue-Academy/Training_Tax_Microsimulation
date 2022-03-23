@@ -17,7 +17,8 @@ from taxcalc.utilsprvt import (weighted_count_lt_zero,
                                weighted_count_gt_zero,
                                weighted_count)
 
-
+"""
+print("in global of utils")
 f = open('global_vars.json')
 vars = json.load(f)
 
@@ -29,17 +30,24 @@ if vars['vat']:
     tax_type = 'vat'
     
 if vars[tax_type+'_distribution_table']:
-    DIST_VARIABLES = vars['DIST_VARIABLES']
-    DIST_TABLE_COLUMNS = vars['DIST_TABLE_COLUMNS']
-    DIST_TABLE_LABELS = vars['DIST_TABLE_LABELS']
-    DECILE_ROW_NAMES = vars['DECILE_ROW_NAMES']
-    STANDARD_ROW_NAMES = vars['STANDARD_ROW_NAMES']
-    STANDARD_INCOME_BINS = vars['STANDARD_INCOME_BINS']
+    print('inside utils distribution table variables')
+    #CIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['cit_records_variables_filename']
+    #self.max_lag_years = vars['cit_max_lag_years']
+    distribution_json_filename = 'taxcalc/'+vars[tax_type+'_distribution_json_filename']
+    f = open(distribution_json_filename)
+    distribution_vars = json.load(f)
+    
+    DIST_VARIABLES = distribution_vars['DIST_VARIABLES']
+    DIST_TABLE_COLUMNS = distribution_vars['DIST_TABLE_COLUMNS']
+    DIST_TABLE_LABELS = distribution_vars['DIST_TABLE_LABELS']
+    DECILE_ROW_NAMES = distribution_vars['DECILE_ROW_NAMES']
+    STANDARD_ROW_NAMES = distribution_vars['STANDARD_ROW_NAMES']
+    STANDARD_INCOME_BINS = distribution_vars['STANDARD_INCOME_BINS']
         
 # Items in the DIST_TABLE_COLUMNS list below correspond to the items in the
 # DIST_TABLE_LABELS list below; this correspondence allows us to use this
 # labels list to map a label to the correct column in a distribution table.
-
+"""
 """
 DIST_VARIABLES = ['weight', 'GTI', 'TTI',
                   'TI_special_rates', 'tax_TI_special_rates',
@@ -75,6 +83,33 @@ STANDARD_ROW_NAMES = ['<0', '=0', '0-5L', '5-10L', '10-15L',
 STANDARD_INCOME_BINS = [-9e99, -1e-9, 1e-9, 5e5, 10e5, 15e5, 20e5, 30e5,
                         40e5, 50e5, 100e5, 9e99]
 """
+
+def dist_variables():
+    f = open('global_vars.json')
+    vars = json.load(f)    
+    if vars['pit']:
+        tax_type = 'pit'
+    if vars['cit']:
+        tax_type = 'cit'
+    if vars['vat']:
+        tax_type = 'vat'
+        
+    if vars[tax_type+'_distribution_table']:
+        print('inside utils distribution table variables')
+        #CIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['cit_records_variables_filename']
+        #self.max_lag_years = vars['cit_max_lag_years']
+        distribution_json_filename = 'taxcalc/'+vars[tax_type+'_distribution_json_filename']
+        f = open(distribution_json_filename)
+        distribution_vars = json.load(f)
+        
+        DIST_VARIABLES = distribution_vars['DIST_VARIABLES']
+        DIST_TABLE_COLUMNS = distribution_vars['DIST_TABLE_COLUMNS']
+        DIST_TABLE_LABELS = distribution_vars['DIST_TABLE_LABELS']
+        DECILE_ROW_NAMES = distribution_vars['DECILE_ROW_NAMES']
+        STANDARD_ROW_NAMES = distribution_vars['STANDARD_ROW_NAMES']
+        STANDARD_INCOME_BINS = distribution_vars['STANDARD_INCOME_BINS']
+    return(DIST_VARIABLES, DIST_TABLE_COLUMNS, DIST_TABLE_LABELS, 
+           DECILE_ROW_NAMES,STANDARD_ROW_NAMES,STANDARD_INCOME_BINS)
 
 def unweighted_sum(pdf, col_name):
     """
@@ -184,8 +219,9 @@ def get_sums(pdf):
     return pd.Series(sums, name='ALL')
 
 
-def create_distribution_table(vdf, groupby, income_measure,
+def create_distribution_table(vdf, groupby, distribution_vardict, income_measure,
                               averages=False, scaling=True):
+
     """
     Get results from vdf, sort them by expanded_income based on groupby,
     and return them as a table containing entries as specified by the
@@ -235,7 +271,7 @@ def create_distribution_table(vdf, groupby, income_measure,
     """
     # pylint: disable=too-many-statements,too-many-branches
     # nested function that returns calculated column statistics as a DataFrame
-    def stat_dataframe(gpdf):
+    def stat_dataframe(gpdf, DIST_TABLE_COLUMNS):
         """
         Returns calculated distribution table column statistics derived from
         the specified grouped Dataframe object, gpdf.
@@ -256,15 +292,16 @@ def create_distribution_table(vdf, groupby, income_measure,
     assert income_measure in vdf
     assert 'table_row' not in list(vdf.columns.values)
     # sort the data given specified groupby and income_measure
+    #print('vdf \n', vdf)
     if groupby == 'weighted_deciles':
         pdf = add_quantile_table_row_variable(vdf, income_measure,
                                               10, decile_details=True)
     elif groupby == 'standard_income_bins':
         pdf = add_income_table_row_variable(vdf, income_measure,
-                                            STANDARD_INCOME_BINS)
+                                            distribution_vardict['STANDARD_INCOME_BINS'])
     # construct grouped DataFrame
     gpdf = pdf.groupby('table_row', as_index=False)
-    dist_table = stat_dataframe(gpdf)
+    dist_table = stat_dataframe(gpdf, distribution_vardict['DIST_TABLE_COLUMNS'])
     del pdf['table_row']
     # compute sum row
     sum_row = get_sums(dist_table)[dist_table.columns]
@@ -287,12 +324,12 @@ def create_distribution_table(vdf, groupby, income_measure,
         dist_table = dist_table.append(sum_row)
     del sum_row
     # ensure dist_table columns are in correct order
-    assert dist_table.columns.values.tolist() == DIST_TABLE_COLUMNS
+    assert dist_table.columns.values.tolist() == distribution_vardict['DIST_TABLE_COLUMNS']
     # add row names to table if using weighted_deciles or standard_income_bins
     if groupby == 'weighted_deciles':
-        rownames = DECILE_ROW_NAMES
+        rownames = distribution_vardict['DECILE_ROW_NAMES']
     elif groupby == 'standard_income_bins':
-        rownames = STANDARD_ROW_NAMES
+        rownames = distribution_vardict['STANDARD_ROW_NAMES']
     else:
         rownames = None
     if rownames:
@@ -304,7 +341,7 @@ def create_distribution_table(vdf, groupby, income_measure,
     del pdf
     # optionally convert table entries into averages (rather than aggregates)
     if averages:
-        for col in DIST_TABLE_COLUMNS:
+        for col in distribution_vardict['DIST_TABLE_COLUMNS']:
             if col != 'weight':
                 #print("DIST_TABLE_COLUMN: ",col)
                 #print(dist_table['weight'])
@@ -317,7 +354,7 @@ def create_distribution_table(vdf, groupby, income_measure,
 
     # optionally scale and round table entries
     if scaling:
-        for col in DIST_TABLE_COLUMNS:
+        for col in distribution_vardict['DIST_TABLE_COLUMNS']:
             if col == 'weight':
                 dist_table[col] *= 1e-5
                 dist_table.round({col: 3})

@@ -39,7 +39,7 @@ def grid_placement_tab3(self, block_1_title_pos_x, block_1_title_pos_y=None):
     self.block_2_TAB3_entry_1_1_y = (self.block_2_TAB3_title_pos_y+
                                 self.block_title_entry_gap_y+
                                 self.text_entry_gap)
-    self.block_2_TAB3_combo_entry_gap_x = 0.12
+    self.block_2_TAB3_combo_entry_gap_x = 0.14
     self.block_2_TAB3_entry_entry_gap_x = 0.05
     self.block_2_TAB3_entry_entry_gap_y = 0.06
     
@@ -55,8 +55,8 @@ def grid_placement_tab3(self, block_1_title_pos_x, block_1_title_pos_y=None):
        
 def display_elasticity(self, widget, tax_type, block_1_title_pos_x):
     self.active_tax = self.find_active_taxes()
-    print(self.active_tax)
-    print(tax_type)
+    #print(self.active_tax)
+    #print(tax_type)
     if (tax_type not in self.active_tax):
         self.msg_window = tk.Toplevel()
         self.msg_window.geometry("250x100+200+200")
@@ -182,6 +182,9 @@ def tab3(self):
     self.block_elasticity_pos_x = {}
 
     pos_x = [0.01, 0.34, 0.67]
+
+    for tax_type in self.tax_list:
+        self.vars[tax_type+'_adjust_behavior'] = 0
     
     self.block_elasticity_pos_x = self.allocate_pos_x(pos_x, self.status,
                                                     self.block_elasticity_pos_x)

@@ -69,7 +69,10 @@ if vars['vat']:
     vat_oname = vars["vat_functions_filename"][:-3]
     vat_imp_statement = "from taxcalc." + vat_oname + " import *"
     exec(vat_imp_statement)
-            
+
+
+
+print("global in calc ")                
 """
 #PIT_VAR_INFO_FILENAME = vars['pit_records_variables_filename']
 pit_function_names_file = vars['pit_function_names_filename']
@@ -186,9 +189,13 @@ class Calculator(object):
     def __init__(self, policy=None, records=None, corprecords=None,
                  gstrecords=None, verbose=True, sync_years=True):
         # pylint: disable=too-many-arguments,too-many-branches
+        print("inside init of calc ")
+        f = open('global_vars.json')
+        vars = json.load(f)
         self.records = records
         self.corprecords = corprecords
         self.gstrecords = gstrecords
+
         if self.records is not None:
             pit_function_names_file = 'taxcalc'+'/'+vars['pit_function_names_filename']
             f = open(pit_function_names_file)
@@ -196,8 +203,6 @@ class Calculator(object):
             pit_oname = vars["pit_functions_filename"][:-3]
             pit_imp_statement = "import taxcalc." + pit_oname
             exec(pit_imp_statement)
-            if vars['pit_distribution_table']:
-                from taxcalc.utils import DIST_VARIABLES, create_distribution_table
 
             """
             from taxcalc.functions import (net_salary_income, net_rental_income,
@@ -218,8 +223,6 @@ class Calculator(object):
             cit_oname = vars["cit_functions_filename"][:-3]
             cit_imp_statement = "import taxcalc." + cit_oname
             exec(cit_imp_statement)
-            if vars['cit_distribution_table']:
-                from taxcalc.utils import DIST_VARIABLES, create_distribution_table            
             """
             from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
                                                corp_income_business_profession,
@@ -232,9 +235,7 @@ class Calculator(object):
             self.vat_function_names = json.load(f)
             vat_oname = vars["vat_functions_filename"][:-3]
             vat_imp_statement = "import taxcalc." + vat_oname
-            exec(vat_imp_statement)
-            if vars['vat_distribution_table']:
-                from taxcalc.utils import DIST_VARIABLES, create_distribution_table            
+            exec(vat_imp_statement)           
             #from taxcalc.gstfunctions import (gst_liability_item)        
         gfactors=GrowFactors()
         self.gfactors = gfactors
@@ -735,13 +736,30 @@ class Calculator(object):
         pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable_list)
         del arys
         return pdf
+
+    def dataframe_gst(self, variable_list):
+        """
+        Return pandas DataFrame containing the listed variables from embedded
+        Records object.
+        """
+        assert isinstance(variable_list, list)
+        arys = [self.garray(vname) for vname in variable_list]
+        #print(arys)
+        pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable_list)
+        del arys
+        return pdf
     
-    def distribution_table_dataframe(self):
+    def distribution_table_dataframe(self, DIST_VARIABLES):
         """
         Return pandas DataFrame containing the DIST_TABLE_COLUMNS variables
         from embedded Records object.
         """
-        return self.dataframe(DIST_VARIABLES)
+        if self.records is not None:
+            return self.dataframe(DIST_VARIABLES)
+        if self.corprecords is not None:
+            return self.dataframe_cit(DIST_VARIABLES)
+        if self.gstrecords is not None:
+            return self.dataframe_gst(DIST_VARIABLES)            
 
     def array(self, variable_name, variable_value=None):
         """
@@ -850,7 +868,13 @@ class Calculator(object):
         """
         Length of arrays in embedded Records object.
         """
-        return self.__records.array_length
+        if self.records is not None:
+            return self.__records.array_length
+        if self.corprecords is not None:
+            return self.__corprecords.array_length
+        if self.gstrecords is not None:
+            return self.__gstrecords.array_length         
+
 
     def policy_param(self, param_name, param_value=None):
         """
@@ -934,7 +958,7 @@ class Calculator(object):
         del diag
         return pd.concat(tlist, axis=1)
 
-    def distribution_tables(self, calc, groupby, income_measure=None,
+    def distribution_tables(self, calc, groupby, distribution_vardict, income_measure=None,
                             averages=False, scaling=True):
         """
         Get results from self and calc, sort them by GTI into table
@@ -994,30 +1018,51 @@ class Calculator(object):
             otherwise, return false.  (Note that "same" means nobody's
             GTI differs by more than one cent.)
             """
-            im1 = calc1.array(imeasure)
-            im2 = calc2.array(imeasure)
+            if self.records is not None:
+                im1 = calc1.array(imeasure)
+                im2 = calc2.array(imeasure)
+            if self.corprecords is not None:
+                im1 = calc1.carray(imeasure)
+                im2 = calc2.carray(imeasure)
+            if self.gstrecords is not None:
+                im1 = calc1.garray(imeasure)
+                im2 = calc2.garray(imeasure)                
             return np.allclose(im1, im2, rtol=0.0, atol=0.01)
+        
         # main logic of method
+        from taxcalc.utils import create_distribution_table
+        """
+        (DIST_VARIABLES, DIST_TABLE_COLUMNS, DIST_TABLE_LABELS, 
+        DECILE_ROW_NAMES,STANDARD_ROW_NAMES,STANDARD_INCOME_BINS)=dist_variables()
+        """
         assert calc is None or isinstance(calc, Calculator)
         assert (groupby == 'weighted_deciles' or
                 groupby == 'standard_income_bins')
         if calc is not None:
-            assert np.allclose(self.array('weight'),
-                               calc.array('weight'))  # rows in same order
-        var_dataframe = self.distribution_table_dataframe()
+            if self.records is not None:
+                assert np.allclose(self.array('weight'),
+                                   calc.array('weight'))  # rows in same order
+            if self.corprecords is not None:
+                assert np.allclose(self.carray('weight'),
+                                   calc.carray('weight'))
+            if self.gstrecords is not None:
+                assert np.allclose(self.garray('weight'),
+                                   calc.garray('weight'))                 
+        var_dataframe = self.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'])
+        #print('var_dataframe \n', var_dataframe)
         if income_measure is None:
             imeasure = 'GTI'
         else:
             imeasure = income_measure
-        dt1 = create_distribution_table(var_dataframe, groupby, imeasure,
-                                        averages, scaling)
+        dt1 = create_distribution_table(var_dataframe, groupby, distribution_vardict,
+                                        imeasure, averages, scaling)
         del var_dataframe
         if calc is None:
             dt2 = None
         else:
             assert calc.current_year == self.current_year
             assert calc.array_len == self.array_len
-            var_dataframe = calc.distribution_table_dataframe()
+            var_dataframe = calc.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'])
             if have_same_income_measure(self, calc, imeasure):
                 if income_measure is None:
                     imeasure = 'GTI'
@@ -1027,8 +1072,9 @@ class Calculator(object):
                 imeasure = 'GTI'
                 #imeasure = 'GTI_baseline'
                 var_dataframe[imeasure] = self.array(imeasure)
-            dt2 = create_distribution_table(var_dataframe, groupby, imeasure,
-                                            averages, scaling)
+            dt2 = create_distribution_table(var_dataframe, groupby, 
+                                            distribution_vardict,
+                                            imeasure, averages, scaling)
             del var_dataframe
         return (dt1, dt2)
 
