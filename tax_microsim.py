@@ -49,24 +49,7 @@ class Progress_Bar:
     def progressbar(self):
         return self._progressbar, self._progress_label  # return value of private member
 
-class TextRedirector(object):
-    def __init__(self, widget, tag="stdout"):
-        self.widget = widget
-        self.tag = tag
-        self.terminal = sys.stderr
 
-    def write(self, str):
-        self.widget.configure(state="normal")
-        self.widget.insert("end", str, (self.tag,))
-        self.widget.configure(state="disabled")
-
-    def clear(self):
-        self.widget.configure(state="normal")
-        self.widget.delete('1.0', tk.END)
-        self.widget.configure(state="disabled")
-
-    def flush(self):
-        self.terminal.flush()
         #self.log.flush()
         
 class Application(Frame):
@@ -83,9 +66,12 @@ class Application(Frame):
     from gui_tab4 import display_tax_expenditure   
     from gui_tab5 import tab5
     from gui_tab5 import display_distribution
+    from gui_tab5 import display_distribution_table    
     from gui_tab6 import tab6
+    from gui_tab6 import update_chart_list    
     from gui_tab6 import display_chart
-    
+    from gui_tab7 import tab7
+    from gui_tab7 import display_error    
 
     
     def __init__(self, master=None):
@@ -99,7 +85,7 @@ class Application(Frame):
         TAB_CONTROL = ttk.Notebook(master)
 
         self.TAB1 = ttk.Frame(TAB_CONTROL)
-        TAB_CONTROL.add(self.TAB1, text=' Settings ')
+        TAB_CONTROL.add(self.TAB1, text=' Start ')
         TAB_CONTROL.pack(expand=1, fill="both")
 
         self.TAB2 = ttk.Frame(TAB_CONTROL)
@@ -120,7 +106,11 @@ class Application(Frame):
         self.TAB6 = ttk.Frame(TAB_CONTROL)
         TAB_CONTROL.add(self.TAB6, text=' Charts ')
         TAB_CONTROL.pack(expand=1, fill="both")  
-                
+
+        self.TAB7 = ttk.Frame(TAB_CONTROL)
+        TAB_CONTROL.add(self.TAB7, text=' Settings ')
+        TAB_CONTROL.pack(expand=1, fill="both")
+        """        
         self.text = scrolledtext.ScrolledText(self.TAB2, 
                                       wrap = tk.WORD, 
                                       width = 40, 
@@ -130,14 +120,17 @@ class Application(Frame):
         self.text.place(relx = 0.72, rely=0.70)
         #self.text.insert('end', "stderr")
 
+        
         #sys.stdout = TextRedirector(self.text, "stdout")
         self.logger = TextRedirector(self.text, "stderr")
         sys.stderr = self.logger
         #sys.stderr = TextRedirector(self.text, "stderr")
-             
+        """     
         #initializing json container to hold all selections
         self.vars = {}
-        # TAB settings
+        with open('global_vars.json', 'w') as f:
+            f.write(json.dumps(self.vars, indent=2))        
+        # TAB Start
         self.block_1_title_pos_x = 0.15
         self.grid_placement(self.block_1_title_pos_x)
         self.tab1()
@@ -157,6 +150,9 @@ class Application(Frame):
         
         # TAB Charts
         self.tab6()
+        
+        # TAB Settings
+        self.tab7()        
 
     def print_stdout(self):
         '''Illustrate that using 'print' writes to stdout'''
@@ -203,40 +199,13 @@ class Application(Frame):
         return pos_x_dict
         
     def get_inputs(self):
-        #self.vars = {}
-        print("in get_inputs: ",self.vars['pit_data_filename'])
-        """
-        #self.vars['DEFAULTS_FILENAME'] = self.policy_filename     
-        #self.vars['GROWFACTORS_FILENAME'] = self.growfactors_filename
-        #self.vars['pit_data_filename'] = self.data_filename
-        #self.vars['pit_weights_filename'] = self.weights_filename
-        #self.vars['records_variables_filename'] = self.records_variables_filename        
-        self.vars['cit_data_filename'] = self.cit_data_filename
-        self.vars['cit_weights_filename'] = self.cit_weights_filename
-        self.vars['corprecords_variables_filename'] = self.corprecords_variables_filename
-        self.vars['gst_data_filename'] = self.gst_data_filename
-        self.vars['gst_weights_filename'] = self.gst_weights_filename
-        self.vars['gstrecords_variables_filename'] = self.gstrecords_variables_filename        
-        self.vars['benchmark_filename'] = self.benchmark_filename
-        self.vars['elasticity_filename'] = self.elasticity_filename
-        #self.vars['functions_filename'] = self.functions_filename
-        #self.vars['function_names_filename'] = self.function_names_filename
-        #self.vars["start_year"] = self.start_year
-        #self.vars["end_year"] = self.end_year
-        self.vars["SALARY_VARIABLE"] = self.SALARY_VARIABLE
-        self.vars['DIST_VARIABLES'] = self.DIST_VARIABLES
-        self.vars['DIST_TABLE_COLUMNS'] = self.DIST_TABLE_COLUMNS
-        self.vars['DIST_TABLE_LABELS'] = self.DIST_TABLE_LABELS
-        self.vars['DECILE_ROW_NAMES'] = self.DECILE_ROW_NAMES
-        self.vars['STANDARD_ROW_NAMES'] = self.STANDARD_ROW_NAMES
-        self.vars['STANDARD_INCOME_BINS'] = self.STANDARD_INCOME_BINS
-        self.vars['income_measure'] = self.income_measure        
-        """
+        
         with open('global_vars.json', 'w') as f:
-            json.dump(self.vars, f)
-        f = open('global_vars.json')
-        vars = json.load(f)
-        #print("vars in gui", vars)
+            f.write(json.dumps(self.vars, indent=2))
+            #json.dump(self.vars, f)
+        #f = open('global_vars.json')
+        #vars = json.load(f)
+        #print("vars in gui", self.vars)
 
     def input_entry_data(self, widget, varname, tax_type=None):
         filez = filedialog.askopenfilenames(title='Choose a file')
@@ -307,7 +276,7 @@ class Application(Frame):
             self.master.after(20, self.check_thread)
             #print("Hello in progress")
         else:
-            print("Hello ended")
+            print("Run Completed")
             self.progressbar.stop()
             self.progressbar.destroy()
             self.progress_label.destroy()
@@ -320,7 +289,9 @@ class Application(Frame):
             self.block_selected_dict[num]['selected_value']= self.block_widget_dict[num][3].get()
             self.block_selected_dict[num]['selected_year']= self.block_widget_dict[num][2].get()
         
-        self.logger.clear()
+        if self.vars['show_error_log']:
+            self.logger.clear()
+        
         #print("self.block_selected_dict in policy selection: ", self.block_selected_dict)   
         self.get_inputs()
         with open('reform.json', 'w') as f:

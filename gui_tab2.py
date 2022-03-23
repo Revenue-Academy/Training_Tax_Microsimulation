@@ -119,11 +119,15 @@ def tab2(self):
     self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x,
                                                 rely = self.button_2_TAB2_pos_y, anchor = "w")       
     
-    #self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
-    self.image = ImageTk.PhotoImage(Image.open("egypt_flag.jpg"))
-    #self.image = self.image.resize((400, 400), Image.ANTIALIAS)
+ 
+    self.image1 = Image.open("egypt_flag.jpg")
+    self.image2 = self.image1.resize((700, 400), Image.ANTIALIAS)
+    self.image = ImageTk.PhotoImage(self.image2)
+    # "world_bank.png"
+    #self.image1 = ImageTk.PhotoImage(Image.open("egypt_flag.jpg"))
+
     #image = tk.PhotoImage(file="blank.png")
     self.pic = tk.Label(self.TAB2,image=self.image)
-    self.pic.place(relx = 0.45, rely = 0.15, anchor = "nw")
+    self.pic.place(relx = 0.50, rely = 0.10, anchor = "nw")
     self.pic.image = self.image
      

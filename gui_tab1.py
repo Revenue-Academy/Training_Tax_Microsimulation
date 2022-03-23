@@ -168,6 +168,10 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
                         rely = self.block_1_entry_9_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
 
+        self.chart_list = self.chart_list + [tax_type+'_revenue_projection']       
+        self.chart_list = self.chart_list + [tax_type+'_distribution_table']
+        #self.tab6()
+
 def tab1(self):    
     self.number = 0
     self.widgets = []
@@ -246,12 +250,8 @@ def tab1(self):
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"
     self.vars['SALARY_VARIABLE'] = "SALARY"
     
-    self.vars['pit_adjust_behavior'] = 0
-    self.vars['pit_distribution_table'] = 0
-    self.vars['cit_adjust_behavior'] = 0
-    self.vars['cit_distribution_table'] = 0
-    self.vars['vat_adjust_behavior'] = 0
-    self.vars['vat_distribution_table'] = 0  
+    self.vars['charts_ready'] = 0
+    self.chart_list = []
     #self.total_revenue_text1 = ""
     #self.reform_revenue_text1 = ""
     #self.reform_filename = "app01_reform.json"
@@ -290,18 +290,16 @@ def tab1(self):
     
     self.tax_list = ['pit', 'cit', 'vat']
     
-    pos_x = [0.10, 0.40, 0.70]
+    pos_x = [0.13, 0.40, 0.70]
 
     self.status['pit'] = tk.DISABLED
     self.status['cit'] = tk.NORMAL
     self.status['vat'] = tk.DISABLED
-    if self.status['pit'] == tk.NORMAL:
-        self.vars['pit'] = 1
-    if self.status['cit'] == tk.NORMAL:
-        self.vars['cit'] = 1
-    if self.status['vat'] == tk.NORMAL:
-        self.vars['vat'] = 1
-    
+    """
+    for tax_type in self.tax_list:
+        if self.status[tax_type] == tk.NORMAL:
+            self.vars[tax_type] = 1
+    """
     self.block_settings_pos_x = self.allocate_pos_x(pos_x, self.status,
                                                     self.block_settings_pos_x)
    
@@ -312,14 +310,14 @@ def tab1(self):
     
     self.block_3_title_pos_x = 0.75
 
-    self.TAB1_root_title=Label(self.TAB1,text="Tax Microsimulation Model",
+    self.TAB1_root_title=tk.Label(self.TAB1,text="Tax Microsimulation Model",
              font = self.fontStyle_title)
     self.TAB1_root_title.place(relx = self.title_pos_x, rely = self.title_pos_y, anchor = "n")
-
-    self.TAB1_root_title=Label(self.TAB1,text="Setting",
+    
+    self.TAB1_root_title=tk.Label(self.TAB1,text="Setting",
              font = self.fontStyle_sub_title)
     self.TAB1_root_title.place(relx = self.title_pos_x, rely = self.sub_title_pos_y, anchor = "n")
-
+    
     self.pit_chk = tk.IntVar()
     
     self.pit_chk_box = tk.Checkbutton(self.TAB1, text='Personal Income Tax', 
