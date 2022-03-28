@@ -12,7 +12,12 @@ import numpy as np
 from taxcalc.utils import read_egg_json
 
 #from utils import read_egg_json
+#print("global in parameter ")
 
+f = open('global_vars.json')
+vars = json.load(f)
+verbose = vars['verbose']
+        
 class ParametersBase(object):
     """
     Inherit from this class for Policy, Behavior, Consumption, GrowDiff, and
@@ -141,6 +146,7 @@ class ParametersBase(object):
         """
         ParametersBase class lasst parameter year property.
         """
+        #print("inside end_year in parameters ")
         return self._end_year
 
     def set_year(self, year):
@@ -171,6 +177,8 @@ class ParametersBase(object):
         """
         if year < self.start_year or year > self.end_year:
             msg = 'year {} passed to set_year() must be in [{},{}] range.'
+            if verbose:
+                print(msg.format(year, self.start_year, self.end_year))
             raise ValueError(msg.format(year, self.start_year, self.end_year))
         self._current_year = year
         year_zero_indexed = year - self._start_year

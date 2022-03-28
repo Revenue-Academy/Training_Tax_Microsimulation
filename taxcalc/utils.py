@@ -286,6 +286,7 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
     # main logic of create_distribution_table
     assert isinstance(vdf, pd.DataFrame)
     assert (groupby == 'weighted_deciles' or
+            groupby == 'weighted_percentiles' or
             groupby == 'standard_income_bins')
     #assert (income_measure == 'GTI' or
     #        income_measure == 'GTI_baseline')
@@ -296,6 +297,9 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
     if groupby == 'weighted_deciles':
         pdf = add_quantile_table_row_variable(vdf, income_measure,
                                               10, decile_details=True)
+    elif groupby == 'weighted_percentiles':
+        pdf = add_quantile_table_row_variable(vdf, income_measure,
+                                              100, decile_details=False)       
     elif groupby == 'standard_income_bins':
         pdf = add_income_table_row_variable(vdf, income_measure,
                                             distribution_vardict['STANDARD_INCOME_BINS'])
@@ -328,6 +332,9 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
     # add row names to table if using weighted_deciles or standard_income_bins
     if groupby == 'weighted_deciles':
         rownames = distribution_vardict['DECILE_ROW_NAMES']
+    elif groupby == 'weighted_percentiles':
+        rownames = [str(i) for i in range(0,101)]
+        rownames[100] = 'ALL'
     elif groupby == 'standard_income_bins':
         rownames = distribution_vardict['STANDARD_ROW_NAMES']
     else:

@@ -192,6 +192,8 @@ class Calculator(object):
         print("inside init of calc ")
         f = open('global_vars.json')
         vars = json.load(f)
+        self.verbose = vars['verbose']
+        verbose = self.verbose
         self.records = records
         self.corprecords = corprecords
         self.gstrecords = gstrecords
@@ -1037,6 +1039,7 @@ class Calculator(object):
         """
         assert calc is None or isinstance(calc, Calculator)
         assert (groupby == 'weighted_deciles' or
+                groupby == 'weighted_percentiles' or
                 groupby == 'standard_income_bins')
         if calc is not None:
             if self.records is not None:
