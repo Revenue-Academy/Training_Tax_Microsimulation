@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
-
+import numpy as np
 #from taxcalc import *
 
 from PIL import Image,ImageTk
@@ -116,7 +116,30 @@ def display_chart(self, event):
                self.image = ImageTk.PhotoImage(Image.open("egypt_dist.png"))
                self.pic = tk.Label(self.TAB6,image=self.image)
                self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-               self.pic.image = self.image 
+               self.pic.image = self.image
+        elif (selected_chart==tax_type+'_etr'):
+            df = pd.read_csv(selected_chart+'.csv', index_col=0)
+            df = df[['ETR', 'ETR_ref']]
+            df = df[:-1]
+            df['ETR'] = np.where(df['ETR']>1, np.nan, df['ETR'])
+            df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])            
+            df = df.reset_index()
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax = df.plot(kind="line", x = 'index'  , y='ETR', color="b", label="ETR")
+            df.plot(kind="line", x = 'index' , y="ETR_ref", color="r", label="ETR under Reform", ax=ax)            
+            #fig = plt.Figure()
+            #ax = fig.add_subplot(figsize=(5, 5))
+            plt.xlabel('Percentile')
+            plt.xticks(df.index[::5])
+            plt.title('Effective Tax Rates by Percentile')
+            # for index in range(len(year_list)):
+            #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
+            pic_filename1 = "egypt_etr.png"
+            plt.savefig(pic_filename1)
+            self.image = ImageTk.PhotoImage(Image.open("egypt_etr.png"))
+            self.pic = tk.Label(self.TAB6,image=self.image)
+            self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+            self.pic.image = self.image               
         # self.img1 = Image.open(pic_filename1)
         # self.img2 = self.img1.resize((500, 500), Image.ANTIALIAS)
         # self.img3 = ImageTk.PhotoImage(self.img2)

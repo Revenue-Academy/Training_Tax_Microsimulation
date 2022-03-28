@@ -12,6 +12,7 @@ from taxcalc.parameters import ParametersBase
 from taxcalc.growfactors import GrowFactors
 from taxcalc.utils import read_egg_json
 
+#print("global in policy ")  
 
 class Policy(ParametersBase):
     """
@@ -68,11 +69,21 @@ class Policy(ParametersBase):
                  start_year=JSON_START_YEAR,
                  num_years=DEFAULT_NUM_YEARS):
         
+        #print("inside init in policy ")
+        
         if DEFAULTS_FILENAME is not None:
             self.DEFAULTS_FILENAME = DEFAULTS_FILENAME
         
         f = open('global_vars.json')
         vars = json.load(f)
+        self.verbose = vars['verbose']
+
+        JSON_START_YEAR = vars['start_year']  # remains the same unless earlier data added
+        LAST_KNOWN_YEAR = vars['start_year']  # last year for which indexed param vals are known
+        LAST_BUDGET_YEAR = vars['end_year']  # increases by one for every new assessment year
+        DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
+        start_year=JSON_START_YEAR
+        num_years = DEFAULT_NUM_YEARS
         #print("vars in policy", vars)
         SALARY_VARIABLE = vars["SALARY_VARIABLE"]
         #print('SALARY_VARIABLE ',SALARY_VARIABLE)

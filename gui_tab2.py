@@ -74,14 +74,14 @@ def tab2(self):
     self.policy_options_list = self.policy_options()
     #self.policy_options_list.remove('gst_rate')
     self.block_widget_dict = {}
-    self.block_selected_dict = {}
-    self.num_reforms = 1
-    
+    #self.block_selected_dict = {}
+    self.num_reforms = 0
+    self.num_widgets = 1
    
     self.block_widget_dict[1] = {}
-    self.block_selected_dict[1] = {}
-    self.block_widget_dict[1][1] = ttk.Combobox(self.TAB2, value=self.policy_options_list, font=self.text_font, name=str(self.num_reforms))
-    self.block_widget_dict[1][1].current(0)
+    #self.block_selected_dict[1] = {}
+    self.block_widget_dict[1][1] = ttk.Combobox(self.TAB2, value=self.policy_options_list, font=self.text_font, name=str(self.num_widgets))
+    #self.block_widget_dict[1][1].current(0)
     self.block_widget_dict[1][1].place(relx = self.block_2_TAB2_entry_1_1_x, 
                     rely = self.block_2_TAB2_entry_1_1_y, anchor = "w", width=300)
     
@@ -98,12 +98,14 @@ def tab2(self):
              rely = self.block_2_TAB2_entry_1_1_y-self.text_entry_gap, anchor = "w")
     self.block_widget_dict[1][3] = Entry(self.TAB2, width=10, font = self.fontStyle)
     self.block_widget_dict[1][3].place(relx = self.block_2_TAB2_entry_1_3_x, rely = self.block_2_TAB2_entry_1_1_y, anchor = "w")
+
+    '''Create a Button for creating a new reform line item '''
     
-    self.num_reforms += 1
+    #self.num_reforms += 1
     self.button_add_reform = ttk.Button(self.TAB2, text="+", style='my.TButton', command= lambda: self.create_policy_widgets(self.TAB2), width=2)
     self.button_add_reform.place(relx = self.button_add_reform_x, rely = self.block_2_TAB2_entry_1_1_y, anchor = "w")        
 
-    '''Create a Button for deleting a reform '''
+    '''Create a Button for deleting a reform line item '''
 
     self.button_delete_reform = ttk.Button(self.TAB2, text="-", style='my.TButton', command=self.delete_policy_widgets, width=2)
     self.button_delete_reform.place(relx = self.button_del_reform_x, rely = self.block_2_TAB2_entry_1_1_y, anchor = "w") 
@@ -115,7 +117,7 @@ def tab2(self):
         
     self.button_generate_revenue_policy = ttk.Button(self.TAB2, text = "Generate Revenue under Reform", style='my.TButton', command=self.clicked_generate_policy_revenues)
     self.button_2_TAB2_pos_x = self.button_1_pos_x
-    self.button_2_TAB2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_reforms-1)*(self.entry_entry_gap_y)) +self.entry_button_gap
+    self.button_2_TAB2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_widgets+1)*(self.entry_entry_gap_y)) +self.entry_button_gap
     self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x,
                                                 rely = self.button_2_TAB2_pos_y, anchor = "w")       
     

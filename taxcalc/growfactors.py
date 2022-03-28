@@ -39,6 +39,7 @@ class GrowFactors(object):
 
     f = open('global_vars.json')
     vars = json.load(f)
+ 
     #print("vars in growfactors", vars)
 
     GROWFACTORS_FILENAME = vars['GROWFACTORS_FILENAME']
@@ -69,7 +70,7 @@ class GrowFactors(object):
     else:
         set3 = set()    
 
-    set4 = set(['CPI', 'SALARY', 'Oil_Prices'])
+    set4 = set(['CPI', 'SALARY'])
     set5 = set(['CONSUMPTION', 'OTHER_CONS_ITEM'])
     VALID_NAMES = set.union(set1, set2, set3, set4, set5)
     """
@@ -82,6 +83,9 @@ class GrowFactors(object):
                        'INVESTMENT', 'CONSUMPTION', 'OTHER_CONS_ITEM'])
     """
     def __init__(self, growfactors_filename=GROWFACTORS_FILENAME):
+        f = open('global_vars.json')
+        vars = json.load(f)
+        self.verbose = vars['verbose']
         # read grow factors from specified growfactors_filename
         gfdf = pd.DataFrame()
         CUR_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -108,7 +112,10 @@ class GrowFactors(object):
             msg = ('missing names are: {} and invalid names are: {}')
             missing = GrowFactors.VALID_NAMES - gfdf_names
             invalid = gfdf_names - GrowFactors.VALID_NAMES
-            raise ValueError(msg.format(missing, invalid))
+            if self.verbose:
+                print("Record Variables not in Grow Factors File are", missing)
+                print("Non-Standard variables are declared", invalid)
+            #raise ValueError(msg.format(missing, invalid))
         # determine first_year and last_year from gfdf
         self._first_year = min(gfdf.index)
         self._last_year = max(gfdf.index)

@@ -8,18 +8,19 @@ import json
 
 
 #add parameter to json file
-def add_parameter():
-    with open('records_variables_egypt.json') as vfile:
+def add_parameter(json_filename):
+    with open(json_filename) as vfile:
         vardict = json.load(vfile)
         vfile.close()     
     for x, y in vardict["read"].items():
       #print("key: ", x, "value: ", y)
       print(vardict["read"][x])
       vardict["read"][x]["cross_year"]='No'
+      vardict["read"][x]["attribute"]='No'
       for p, q in y.items():
           print("second level key: ", p, "second level value: ", q)
         
-    with open('records_variables_egypt1.json', 'w') as f:
+    with open(json_filename, 'w') as f:
         f.write(json.dumps(vardict, indent=2))
 
     

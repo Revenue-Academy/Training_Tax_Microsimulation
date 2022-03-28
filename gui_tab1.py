@@ -48,6 +48,7 @@ def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
     self.block_1_entry_9_y = (self.block_1_entry_8_y+self.block_entry_entry_gap_y)
     self.block_1_entry_10_y = (self.block_1_entry_9_y+self.block_entry_entry_gap_y)   
     self.entry_button_gap = 0.02
+    #self.vars={}
         
 def display_entry(self, widget, tax_type, block_1_title_pos_x):
     self.vars[tax_type] = int(widget.get())
@@ -153,7 +154,7 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
                  rely = self.block_1_entry_9_y, anchor = "e")
     
         self.entry_start_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        self.entry_start_year[tax_type].current(1)
+        self.entry_start_year[tax_type].current(0)
         self.entry_start_year[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
                         rely = self.block_1_entry_9_y, anchor = "w", width=80)
         self.entry_start_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_start_year[tax_type], 'start_year'))
@@ -163,18 +164,21 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
                  rely = self.block_1_entry_9_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        self.entry_end_year[tax_type].current(6)
+        self.entry_end_year[tax_type].current(5)
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
                         rely = self.block_1_entry_9_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
 
         self.chart_list = self.chart_list + [tax_type+'_revenue_projection']       
         self.chart_list = self.chart_list + [tax_type+'_distribution_table']
+        self.chart_list = self.chart_list + [tax_type+'_etr']        
+        #self.completed_TAB1 = 1
         #self.tab6()
 
 def tab1(self):    
     self.number = 0
     self.widgets = []
+    self.completed_TAB1 = 0
     #self.grid()
     #self.createWidgets()
 
@@ -183,7 +187,7 @@ def tab1(self):
     self.selected_value = ""
     self.selected_year = 2019
     self.sub_directory = "taxcalc"
-    self.year_list = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
+    self.year_list = [2022, 2023, 2024, 2025, 2026, 2027]
     # Include a check whether the years are valid by looking at the 
     # selected growfactors file
     """    
@@ -244,7 +248,7 @@ def tab1(self):
     self.vars['vat_functions_filename'] = "vat_functions.py"
     self.vars['vat_function_names_filename'] = "vat_function_names.json"
     
-    self.vars['start_year'] = 2020
+    self.vars['start_year'] = 2022
     self.vars['end_year']=2025
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"
@@ -340,5 +344,5 @@ def tab1(self):
                                       command=lambda: self.display_entry(self.vat_chk, 'vat', self.block_settings_pos_x['vat']))
     self.vat_chk_box.place(relx = self.block_settings_pos_x['vat'], rely = self.block_1_title_box_y, anchor = "w")    
 
-
+    
 
