@@ -27,16 +27,18 @@ def make_float(item):
         return float(item)
     
 def read_reform_dict(block_selected_dict):
-    print('block_selected_dict in read_reform_dict: ',block_selected_dict)
+    #print('block_selected_dict in read_reform_dict: ',block_selected_dict)
     years=[]
     for k in block_selected_dict.keys():
         if (block_selected_dict[k]['selected_year'] not in years):
             years = years + [block_selected_dict[k]['selected_year']]
     ref = {}
     ref['policy']={}
+    #print(' years ', years)
     for year in years:
         policy_dict = {}
         for k in block_selected_dict.keys():
+            #print('block_selected_dict.keys() ', k)
             if block_selected_dict[k]['selected_year']==year:
                 policy_dict['_'+block_selected_dict[k]['selected_item']]=[make_float(block_selected_dict[k]['selected_value'])]
         ref['policy'][int(year)] = policy_dict
@@ -63,7 +65,6 @@ def fact():
     print("54321")
 
 def write_file(df, text_data, filename, window=None, footer_row_num=None):
-    print("I am inside write file")
     df.to_csv(filename+'.csv', mode='w')
     # a = open(filename+'.csv','w')
     # a.write("\n")
@@ -75,24 +76,6 @@ def write_file(df, text_data, filename, window=None, footer_row_num=None):
     if (window is not None) and (footer_row_num is not None):
         footer = ["footer", "*Data saved in file "+ filename]
         display_table(window, data=footer, footer=footer_row_num+2)
-
-def write_file1(df, text_data, filename, window=None, footer_row_num=None
-                ):
-    print("I am inside write file1")
-    """
-    print(df)
-    df.to_csv(filename+'.csv', mode='w')
-    # a = open(filename+'.csv','w')
-    # a.write("\n")
-    # a.write("\n")
-    # a.close
-    with open(filename+'.txt','w') as f:
-        f.write(text_data)
-    f.close
-    if (window is not None) and (footer_row_num is not None):
-        footer = ["footer", "*Data saved in file "+ filename]
-        display_table(window, data=footer, footer=footer_row_num+2)
-    """
     
 def weighted_total_tax(calc, tax_list, category, year, tax_dict):
     for tax_type in tax_list:
@@ -183,12 +166,12 @@ def generate_policy_revenues():
             distribution_json_filename[tax_type] = 'taxcalc/'+vars[tax_type+'_distribution_json_filename']
             f = open(distribution_json_filename[tax_type])
             distribution_vardict_dict[tax_type] = json.load(f)
-            print('distribution_vardict_dict[tax_type] ', distribution_vardict_dict[tax_type])
+            #print('distribution_vardict_dict[tax_type] ', distribution_vardict_dict[tax_type])
             income_measure[tax_type] = distribution_vardict_dict[tax_type]['income_measure']
  
     f = open('reform.json')
     block_selected_dict = json.load(f)
-    print("block_selected_dict from json",block_selected_dict)
+    #print("block_selected_dict from json",block_selected_dict)
     
     # create Policy object containing current-law policy
     pol = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])
@@ -212,9 +195,10 @@ def generate_policy_revenues():
             elasticity_dict[tax_type] = json.load(f)
             print(elasticity_dict)
             block_selected_dict = concat_dicts(block_selected_dict, elasticity_dict[tax_type])
-        print(block_selected_dict)
+        #print('block_selected_dict in adjust behavior',block_selected_dict)
         pol3 = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])   
         years, reform=read_reform_dict(block_selected_dict)
+        #print('reform dict in adjust behavior', reform)
         pol3.implement_reform(reform['policy'])
         calc3 = Calculator(policy=pol3, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
       
