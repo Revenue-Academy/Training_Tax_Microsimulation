@@ -70,59 +70,8 @@ if vars['vat']:
     vat_imp_statement = "from taxcalc." + vat_oname + " import *"
     exec(vat_imp_statement)
 
+#print("global in calc ")                
 
-
-print("global in calc ")                
-"""
-#PIT_VAR_INFO_FILENAME = vars['pit_records_variables_filename']
-pit_function_names_file = vars['pit_function_names_filename']
-f = open(pit_function_names_file)
-pit_function_names = json.load(f)
-#print(function_names[str(0)])
-
-CIT_VAR_INFO_FILENAME = vars['cit_records_variables_filename']
-cit_function_names_file = vars['cit_function_names_filename']
-f = open(cit_function_names_file)
-cit_function_names = json.load(f)
-
-#VAT_VAR_INFO_FILENAME = vars['vat_records_variables_filename']
-vat_function_names_file = vars['vat_function_names_filename']
-f = open(vat_function_names_file)
-vat_function_names = json.load(f)
-
-max_lag_years = vars['cit_max_lag_years']
-
-#oname = "taxcalc.functions"
-pit_oname = vars["pit_functions_filename"][:-3]
-pit_imp_statement = "from taxcalc." + pit_oname + " import *"
-exec(pit_imp_statement)
-            
-cit_oname = vars["cit_functions_filename"][:-3]
-cit_imp_statement = "from taxcalc." + cit_oname + " import *"
-exec(cit_imp_statement)
-
-vat_oname = vars["vat_functions_filename"][:-3]
-vat_imp_statement = "from taxcalc." + vat_oname + " import *"
-exec(vat_imp_statement)
-"""
-"""
-#from taxcalc.functions import *
-#import taxcalc.functions
-from taxcalc.functions import (net_rental_income,
-                               income_business_profession,
-                               total_other_income, gross_total_income,
-                               itemized_deductions, deduction_10AA,
-                               taxable_total_income, 
-                               tax_stcg_splrate, tax_ltcg_splrate,
-                               tax_specialrates, taxable_income,
-                               current_year_losses, brought_fwd_losses, 
-                               agri_income, pit_liability)
-from taxcalc.corpfunctions import (total_other_income_cit, depreciation_PM,
-                                   corp_income_business_profession,
-                                   corp_GTI_before_set_off, GTI_and_losses,
-                                   cit_liability)
-from taxcalc.gstfunctions import (gst_liability_item)
-"""
 from taxcalc.policy import Policy
 from taxcalc.records import Records
 from taxcalc.corprecords import CorpRecords
@@ -189,7 +138,7 @@ class Calculator(object):
     def __init__(self, policy=None, records=None, corprecords=None,
                  gstrecords=None, verbose=True, sync_years=True):
         # pylint: disable=too-many-arguments,too-many-branches
-        print("inside init of calc ")
+        #print("inside init of calc ")
         f = open('global_vars.json')
         vars = json.load(f)
         self.verbose = vars['verbose']

@@ -175,7 +175,7 @@ class CorpRecords(object):
         """
         # move to next year
         self.__current_year += 1
-        print('self.__current_year: ',self.__current_year)
+        #print('self.__current_year: ',self.__current_year)
         if self.data_type == 'cross-section':
             # apply variable extrapolation grow factors
             if self.gfactors is not None:

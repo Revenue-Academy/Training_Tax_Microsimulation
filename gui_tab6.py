@@ -68,7 +68,7 @@ def display_chart(self, event):
     # self.Label1=Label(self.TAB6, text="Charts", font = self.fontStyle_sub_title)
     # self.Label1.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
     selected_chart = self.chart_selection.get()
-    print('selected_chart ', selected_chart)
+    #print('selected_chart ', selected_chart)
     tax_type = selected_chart[:3]
     f = open('global_vars.json')
     vars = json.load(f)
@@ -81,7 +81,7 @@ def display_chart(self, event):
         if (selected_chart==tax_type+'_revenue_projection'):
             df = pd.read_csv(selected_chart+'.csv')
             df = df.T
-            print(df)  
+            #print(df)  
             if vars[tax_type+'_adjust_behavior']:
                 df.columns=['Current', 'Reform', 'Behavior']
             else:

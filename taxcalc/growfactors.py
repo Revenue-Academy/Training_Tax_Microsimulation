@@ -123,6 +123,7 @@ class GrowFactors(object):
         self.gfdf = pd.DataFrame()
         setattr(self, 'gfdf',
                 gfdf.astype(np.float64))  # pylint: disable=no-member
+        #print(self.gfdf)
         del gfdf
         # specify factors as being unused (that is, not yet accessed)
         self.used = False
