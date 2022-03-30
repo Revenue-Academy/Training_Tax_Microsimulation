@@ -418,6 +418,13 @@
         "2020": "Item 315 - Tax Return Legal Persons"
       }
     },
+    "mat": {
+      "type": "float",
+      "desc": "minimum alternate tax liability",
+      "form": {
+        "2020": "010 - Tax Return Legal Persons"
+      }
+    },
     "citax": {
       "type": "float",
       "desc": "tax due on net tax base",
