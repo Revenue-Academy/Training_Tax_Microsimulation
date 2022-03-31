@@ -8,15 +8,56 @@ Created on Fri Nov 12 13:45:56 2021
 import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
-
-from taxcalc import *
+import json
+import numpy as np
+import copy
+#from taxcalc import *
 
 from PIL import Image,ImageTk
+from tkinter import ttk
 
 def generate_tax_expenditures(self):
-    
+    from taxcalc.growfactors import GrowFactors
+    from taxcalc.policy import Policy
+    from taxcalc.records import Records
+    from taxcalc.gstrecords import GSTRecords
+    from taxcalc.corprecords import CorpRecords
+    from taxcalc.parameters import ParametersBase
+    from taxcalc.calculator import Calculator
+    from taxcalc.utils import dist_variables    
     # create Records object containing pit.csv and pit_weights.csv input data
     #recs = Records()
+    f = open('global_vars.json')
+    vars = json.load(f)
+    verbose = vars['verbose']
+    start_year = vars['start_year']
+    end_year = vars['end_year']
+    tax_list=[]
+    tax_collection_var_list = []  
+    # start the simulation for pit/cit/vat    
+    if vars['pit']:
+        tax_list = tax_list + ['pit']
+        tax_collection_var_list = tax_collection_var_list + ['pitax']
+        recs = Records(data=vars['pit_data_filename'], weights=vars['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
+        #elasticity_filename = vars['pit_elasticity_filename']
+    else:
+        recs = None
+    if vars['cit']:
+        tax_list = tax_list + ['cit']
+        tax_collection_var_list = tax_collection_var_list + ['citax']
+        crecs = CorpRecords(data=vars['cit_data_filename'], weights=vars['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
+        #print("crecs is created ")
+        #elasticity_filename = vars['cit_elasticity_filename']
+    else:
+        crecs = None
+    if vars['vat']:
+        tax_list = tax_list + ['vat']
+        tax_collection_var_list = tax_collection_var_list + ['vatax']
+        grecs = GSTRecords(data=vars['vat_data_filename'], weights=vars['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
+        #elasticity_filename = vars['vat_elasticity_filename']
+    else:
+        grecs = None 
+        
     recs = Records(data=self.data_filename, weights=self.weights_filename, gfactors=GrowFactors(growfactors_filename=self.growfactors_filename))
     
     grecs = GSTRecords()
@@ -32,10 +73,10 @@ def generate_tax_expenditures(self):
     pol = Policy()
     
     # specify Calculator objects for current-law policy
-    calc1 = Calculator(policy=pol, records=recs, corprecords=crecs1,
-                       gstrecords=grecs, verbose=False)
+    calc1 = Calculator(policy=pol, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)    
+
     assert isinstance(calc1, Calculator)
-    assert calc1.current_year == 2017
+    assert calc1.current_year ==  vars["start_year"]
 
     np.seterr(divide='ignore', invalid='ignore')
 
@@ -56,7 +97,8 @@ def generate_tax_expenditures(self):
     base_year = list(benchmark['policy'].keys())[0]
     #reform = dict(benchmark)
     reform = copy.deepcopy(benchmark)
-    with open('taxcalc/'+self.policy_filename) as f:
+        
+    with open(self.vars['cit_benchmark_filename']) as f:
         current_law_policy = json.load(f)             
     ref_dict = benchmark['policy']
     var_list = []
@@ -218,13 +260,13 @@ def generate_tax_expenditures(self):
         
         revenue_dict[year]={}
         revenue_dict[year]['current_law'] = {}
-        revenue_dict[year]['current_law']['Label'] = Label(window, text=total_revenue_text[year], font=self.fontStyle)
+        revenue_dict[year]['current_law']['Label'] = tk.Label(window, text=total_revenue_text[year], font=self.fontStyle)
         revenue_dict[year]['current_law']['Label'].place(relx = 0.05, rely = 0.1+(num-1)*0.2, anchor = "w") 
         revenue_dict[year]['benchmark'] = {}
-        revenue_dict[year]['benchmark']['Label'] = Label(window, text=reform_revenue_text[year], font=self.fontStyle)
+        revenue_dict[year]['benchmark']['Label'] = tk.Label(window, text=reform_revenue_text[year], font=self.fontStyle)
         revenue_dict[year]['benchmark']['Label'].place(relx = 0.05, rely = 0.13+(num-1)*0.2, anchor = "w") 
         revenue_dict[year]['tax_expenditure'] = {}
-        revenue_dict[year]['tax_expenditure']['Label'] = Label(window, text=tax_expenditure_text[year], font=self.fontStyle)
+        revenue_dict[year]['tax_expenditure']['Label'] = tk.Label(window, text=tax_expenditure_text[year], font=self.fontStyle)
         revenue_dict[year]['tax_expenditure']['Label'].place(relx = 0.05, rely = 0.16+(num-1)*0.2, anchor = "w")            
         num += 1
     

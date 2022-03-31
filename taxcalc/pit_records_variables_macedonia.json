@@ -1,0 +1,163 @@
+{
+  "read": { 
+    "id_n": {  
+      "required": true, 
+      "type": "int",
+      "desc": "Unique positive numeric identifier for filing unit",
+      "form": {"2019": "Private Info"}
+    },
+    "YEAR": { 
+      "required": true,
+      "type": "int",
+      "desc": "Assessment Year", 
+      "form": {"2019": "private info"}
+    },   
+    "gross_i_w": {  
+      "type": "float",   
+      "desc": "Gross income from wages",
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },   
+    "gross_i_I": {
+      "type": "float",  
+      "desc": "Gross income from 'other income of labour'",
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "ssc_w": {    
+      "type": "float",
+      "desc": "Social Security Wages from dataset", 
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "personal_allowance_I": {
+      "type": "float",
+      "desc": "Currently there is no personal allowance for 'other income of labour'", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },   
+    "deductions_I": {
+      "type": "float",
+      "desc": "deductions from 'other income of labour'", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}  
+    },   
+    "gross_i_c": {
+      "type": "float",  
+      "desc": "Gross income from 'capital'",
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },   
+    "deductions_c": { 
+      "type": "float",  
+      "desc": "deductions from 'capital'", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}     
+    },
+    "total_pit_input": { 
+      "type": "float",  
+      "desc": "PIT from database/tax returns", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}     
+    },    
+    "weight": {
+      "type": "float",
+      "desc": "Filing unit sampling weight",
+      "form": {"2019": "not used in filing unit tax calculations"}
+    }
+  },
+  "calc": {
+    "ssc_w_calc": {    
+      "type": "float",
+      "desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income", 
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "tti_w": { 
+      "type": "float",
+      "desc": "Total taxable income from wages (pit-ssc-personal allowance)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "pit_w": {
+      "type": "float", 
+      "desc": "Pit liability from wages (pit-ssc-personal allowance)*tax rate", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "net_i_w": {
+      "type": "float",
+      "desc": "post tax income from wages(gross income-ssc-pit)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "ssc_I": {
+      "type": "float",
+      "desc": "Currently there is no ssc for 'other income of labour'", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "tti_I": {
+      "type": "float",
+      "desc": "Total taxable income from 'other income of labour'(gross income-deductions)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "tti_w_I": {
+      "type": "float",
+      "desc": "Total taxable income from labor and 'other income of labour'", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "tti_w_I_behavior": {
+      "type": "float",
+      "desc": "Total taxable income from labor and 'other income of labour' adjusted for behavior", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "pit_I": { 
+      "type": "float",
+      "desc": "Pit liability from 'other income of labour'(gross income-deductions)*tax rate", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "net_i_I": {
+      "type": "float",
+      "desc": "post tax income from 'other income of labour'(gross income-pit)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "pit_w_I": { 
+      "type": "float",
+      "desc": "Pit liability from labor and 'other income of labour'(gross income-deductions)*tax rate", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },    
+    "tti_c": { 
+      "type": "float", 
+      "desc": "Total taxable income from 'capital'(gross income-deductions)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    }, 
+    "tti_c_behavior": { 
+      "type": "float", 
+      "desc": "Total taxable income from 'capital'(gross income-deductions) adjusted for behavior", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "pit_c": {
+      "type": "float", 
+      "desc": "Pit liability from 'capital'(gross income-deductions)*tax rate", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "net_i_c": {
+      "type": "float", 
+      "desc": "post tax income from 'capital'(gross income-pit)", 
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "total_gross_income": { 
+      "type": "float",
+      "desc": "Gross Total Income (GTI) (gross_i_w + gross_i_l + gross_i_c)",
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "total_taxable_income": {
+      "type": "float",
+      "desc": "Taxable Total Income (TTI)(tti_w+ tti_l+tti_c) ",
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },
+    "total_taxable_income_marginal": {
+      "type": "float",
+      "desc": "Taxable Total Income taxed at Marginal rates (TTI) (tti_w + tti_I) ",
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    },    
+    "total_net_income": {
+      "type": "float",
+      "desc": "Total post tax income (TTI)(net_i_w+ net_i_I+net_i_c)",
+      "form": {"2019": "Obtained from data on Salaries & codes"}
+    },
+    "pitax": {
+      "type": "float",
+      "desc": "PIT liability (pit_w+ pit_l+pit_c)",
+      "form": {"2019": "Obtained from data on Salaries & codes"} 
+    }
+  }
+}

@@ -132,7 +132,7 @@ def generate_policy_revenues():
         tax_list = tax_list + ['pit']
         tax_collection_var_list = tax_collection_var_list + ['pitax']
         recs = Records(data=vars['pit_data_filename'], weights=vars['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
-        elasticity_filename = vars['pit_elasticity_filename']
+        #elasticity_filename = vars['pit_elasticity_filename']
     else:
         recs = None
     if vars['cit']:
@@ -140,14 +140,14 @@ def generate_policy_revenues():
         tax_collection_var_list = tax_collection_var_list + ['citax']
         crecs = CorpRecords(data=vars['cit_data_filename'], weights=vars['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
         #print("crecs is created ")
-        elasticity_filename = vars['cit_elasticity_filename']
+        #elasticity_filename = vars['cit_elasticity_filename']
     else:
         crecs = None
     if vars['vat']:
         tax_list = tax_list + ['vat']
         tax_collection_var_list = tax_collection_var_list + ['vatax']
         grecs = GSTRecords(data=vars['vat_data_filename'], weights=vars['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
-        elasticity_filename = vars['vat_elasticity_filename']
+        #elasticity_filename = vars['vat_elasticity_filename']
     else:
         grecs = None  
     

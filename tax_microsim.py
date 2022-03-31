@@ -191,7 +191,7 @@ class Application(Frame):
         pos_x_dict['vat']=pos_x[2]        
         if status['pit'] == tk.NORMAL:
             if status['cit'] != tk.NORMAL:
-                if elf.status['vat'] == tk.NORMAL:
+                if self.status['vat'] == tk.NORMAL:
                     pos_x_dict['vat']=pos_x[1]
                     pos_x_dict['cit']=pos_x[2]                
         else:
