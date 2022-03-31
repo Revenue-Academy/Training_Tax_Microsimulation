@@ -212,10 +212,10 @@ def tab1(self):
     self.SALARY_VARIABLE = "SALARY"
     """
 
-    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
-    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia.csv"
+    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
     
     self.vars['pit'] = 0
     self.vars['cit'] = 0
@@ -233,11 +233,11 @@ def tab1(self):
 
     self.vars['cit_data_filename'] = "cit_egypt.csv"
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
-    self.vars['cit_records_variables_filename'] = "cit_records_variables_egypt.json"    
-    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
-    self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
-    self.vars['cit_functions_filename'] = "cit_functions_egypt.py"
-    self.vars['cit_function_names_filename'] = "cit_function_names_egypt.json"
+    self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
+    self.vars['cit_benchmark_filename'] = "tax_incentives_benchmark_cit_egypt.json"
+    #self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
+    self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
+    self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
 
     self.vars['cit_max_lag_years'] = 10
 
@@ -297,8 +297,8 @@ def tab1(self):
     
     pos_x = [0.13, 0.40, 0.70]
 
-    self.status['pit'] = tk.DISABLED
-    self.status['cit'] = tk.NORMAL
+    self.status['pit'] = tk.NORMAL
+    self.status['cit'] = tk.DISABLED
     self.status['vat'] = tk.DISABLED
     """
     for tax_type in self.tax_list:

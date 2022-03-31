@@ -94,7 +94,7 @@ def display_chart(self, event):
             
             plt.plot(df.Year, df.Current, color='r', marker='x')
             plt.plot(df.Year, df.Reform, color='b', marker='x')
-            plt.title('Corporate tax forecast (in billion EGP)')
+            plt.title('Corporate tax forecast (in billion)')
             # for index in range(len(year_list)):
             #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
             pic_filename1 = "egypt_rev_forecast.png"
