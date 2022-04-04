@@ -75,7 +75,7 @@ def display_chart(self, event):
     #print("vars['charts_ready'] ", vars['charts_ready'])
     self.image = ImageTk.PhotoImage(Image.open("blank.png"))
     self.pic = tk.Label(self.TAB6,image=self.image)
-    self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+    self.pic.place(relx = 0.30, rely = 0.1, anchor = "nw")
     self.pic.image = self.image     
     if vars['charts_ready']:
         if (selected_chart==tax_type+'_revenue_projection'):
@@ -94,14 +94,14 @@ def display_chart(self, event):
             
             plt.plot(df.Year, df.Current, color='r', marker='x')
             plt.plot(df.Year, df.Reform, color='b', marker='x')
-            plt.title('Corporate tax forecast (in billion EGP)')
+            plt.title('Corporate tax forecast (in billion)')
             # for index in range(len(year_list)):
             #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
             pic_filename1 = "egypt_rev_forecast.png"
             plt.savefig(pic_filename1)
             self.image = ImageTk.PhotoImage(Image.open("egypt_rev_forecast.png"))
             self.pic = tk.Label(self.TAB6,image=self.image)
-            self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+            self.pic.place(relx = 0.30, rely = 0.1, anchor = "nw")
             self.pic.image = self.image             
         elif (selected_chart==tax_type+'_distribution_table'):
             if vars[tax_type+'_distribution_table']:
@@ -115,7 +115,7 @@ def display_chart(self, event):
                plt.savefig(pic_filename1)
                self.image = ImageTk.PhotoImage(Image.open("egypt_dist.png"))
                self.pic = tk.Label(self.TAB6,image=self.image)
-               self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+               self.pic.place(relx = 0.30, rely = 0.1, anchor = "nw")
                self.pic.image = self.image
         elif (selected_chart==tax_type+'_etr'):
             df = pd.read_csv(selected_chart+'.csv', index_col=0)
@@ -138,7 +138,7 @@ def display_chart(self, event):
             plt.savefig(pic_filename1)
             self.image = ImageTk.PhotoImage(Image.open("egypt_etr.png"))
             self.pic = tk.Label(self.TAB6,image=self.image)
-            self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+            self.pic.place(relx = 0.30, rely = 0.1, anchor = "nw")
             self.pic.image = self.image               
         # self.img1 = Image.open(pic_filename1)
         # self.img2 = self.img1.resize((500, 500), Image.ANTIALIAS)

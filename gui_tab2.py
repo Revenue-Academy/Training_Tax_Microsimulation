@@ -80,10 +80,11 @@ def tab2(self):
    
     self.block_widget_dict[1] = {}
     #self.block_selected_dict[1] = {}
-    self.block_widget_dict[1][1] = ttk.Combobox(self.TAB2, value=self.policy_options_list, font=self.text_font, name=str(self.num_widgets))
+    self.block_widget_dict[1][1] = ttk.Combobox(self.TAB2, value=self.policy_options_list, 
+                                                font=self.text_font, name=str(self.num_widgets))
     #self.block_widget_dict[1][1].current(0)
     self.block_widget_dict[1][1].place(relx = self.block_2_TAB2_entry_1_1_x, 
-                    rely = self.block_2_TAB2_entry_1_1_y, anchor = "w", width=300)
+                    rely = self.block_2_TAB2_entry_1_1_y, anchor = "w", width=250)
     
     self.block_widget_dict[1][1].bind("<<ComboboxSelected>>", self.show_policy_selection)
     
@@ -115,14 +116,16 @@ def tab2(self):
     self.button_clear_reform = ttk.Button(self.TAB2, text="Reset", style='my.TButton', command=self.reset_policy_widgets, width=6)
     self.button_clear_reform.place(relx = self.button_clear_reform_x, rely = self.block_2_TAB2_entry_1_1_y, anchor = "w")
         
-    self.button_generate_revenue_policy = ttk.Button(self.TAB2, text = "Generate Revenue under Reform", style='my.TButton', command=self.clicked_generate_policy_revenues)
+    self.button_generate_revenue_policy = ttk.Button(self.TAB2, text = "Generate Revenue under Reform",
+                                                     style='my.TButton', command=self.clicked_generate_policy_revenues)
     self.button_2_TAB2_pos_x = self.button_1_pos_x
     self.button_2_TAB2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_widgets+1)*(self.entry_entry_gap_y)) +self.entry_button_gap
     self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x,
                                                 rely = self.button_2_TAB2_pos_y, anchor = "w")       
     
  
-    self.image1 = Image.open("egypt_flag.jpg")
+    #self.image1 = Image.open("egypt_flag.jpg")
+    self.image1 = Image.open("Macedonia_Flag.jpg")
     self.image2 = self.image1.resize((700, 400), Image.ANTIALIAS)
     self.image = ImageTk.PhotoImage(self.image2)
     # "world_bank.png"

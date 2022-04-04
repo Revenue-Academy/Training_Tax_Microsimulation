@@ -191,7 +191,7 @@ class Application(Frame):
         pos_x_dict['vat']=pos_x[2]        
         if status['pit'] == tk.NORMAL:
             if status['cit'] != tk.NORMAL:
-                if elf.status['vat'] == tk.NORMAL:
+                if self.status['vat'] == tk.NORMAL:
                     pos_x_dict['vat']=pos_x[1]
                     pos_x_dict['cit']=pos_x[2]                
         else:
@@ -363,7 +363,7 @@ class Application(Frame):
             #self.block_widget_dict[num][1].current(1)
             self.block_widget_dict[num][1].place(relx = self.block_2_TAB2_entry_1_1_x, 
                             rely = (self.block_2_TAB2_entry_1_1_y+
-                                    (num-1)*(self.entry_entry_gap_y)), anchor = "w", width=300)
+                                    (num-1)*(self.entry_entry_gap_y)), anchor = "w", width=250)
             self.block_widget_dict[num][1].bind("<<ComboboxSelected>>", self.show_policy_selection)
     
             self.block_widget_dict[num][2] = tk.Entry(tab, width=6, font=self.fontStyle)

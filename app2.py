@@ -76,7 +76,8 @@ calc2 = Calculator(policy=pol2, records=recs, verbose=False)
 #calc2.adjust_behavior('SALARY', elasticity_dict)
       
 # loop through years 2017, 2018, and 2019 and print out pitax
-for year in range(2019, 2021):
+# for year in range(2019, 2021):
+for year in range(2018, 2021):
     calc1.advance_to_year(year)
     calc2.advance_to_year(year)
     calc1.calc_all()
@@ -86,7 +87,8 @@ for year in range(2019, 2021):
     calc2_behv = copy.deepcopy(calc2)
     #print("without reform: ",calc1.array('SALARY'))
     #print("before adj: ",calc2.array('SALARY'))
-    first_year=2019
+    #first_year=2019
+    first_year=2018
     print("starting behavior adjustment")
     calc2_behv.adjust_behavior(first_year=2019, elasticity_filename=elasticity_filename)
     # Recalculate post-reform taxes incorporating behavioral responses
