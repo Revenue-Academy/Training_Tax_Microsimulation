@@ -193,7 +193,7 @@ def generate_policy_revenues():
         for tax_type in tax_list:
             f = open(tax_type+'_elasticity_selection.json')
             elasticity_dict[tax_type] = json.load(f)
-            print(elasticity_dict)
+            #print(elasticity_dict)
             block_selected_dict = concat_dicts(block_selected_dict, elasticity_dict[tax_type])
         #print('block_selected_dict in adjust behavior',block_selected_dict)
         pol3 = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])   

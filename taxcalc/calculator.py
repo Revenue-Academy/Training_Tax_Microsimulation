@@ -297,183 +297,7 @@ class Calculator(object):
             self.__corprecords.set_current_year(year)
         if self.gstrecords is not None:      
             self.__gstrecords.set_current_year(year)
-        
-    def adjust_pit(self, pit_adjustment):
-        """
-        Adjust PIT for distributed Dividends under a Corporate Tax Change.
-        """
-        #next_year = self.__policy.current_year
-        if self.records is not None:                    
-            self.__records.adjust_pit(pit_adjustment)
-        #self.__gstrecords.increment_year()
-        #self.__corprecords.increment_year()
-        #self.__policy.set_year(next_year)
 
-    def adjust_behavior(self, first_year, elasticity_filename):
-        def make_float(element_name, element_value):
-            try:
-                float(element_value)
-                return float(element_value)
-            except ValueError:
-                if element_name=="threshold":
-                    return 9e99
-                elif element_name=="elasticity":
-                    return 0.0
-                else:
-                    return 0.0
-    
-        """
-        Adjust for behavior.
-        """
-        curr_year = self.__policy.current_year
-        #print(self.__policy._vals.keys())
-        #elasticity_dict = 0.61
-        #variable_value = getattr(self.__records, variable_name)
-        #print(variable_value)        
-        
-        # This is the json file with the selected variables on which the 
-        # elasticity will be applied
-        f = open('elasticity_selection.json')
-        elasticity_dict = json.load(f)
-        # This is the json file with all the variables with the pre-populated
-        # elasticity values and other parameters
-        f = open('taxcalc/'+elasticity_filename)
-        elasticity_master = json.load(f)
-        policy_keys = set(self.__policy._vals.keys())
-        # We first need to look if a group of variables are selected or 
-        # individual variables. If a variable group (LABOR_INCOME or 
-        # CAPITAL_INCOME) is selected we need to 
-        # apply the elasticities to all variables of that group
-        for j in range(len(elasticity_dict)):
-            variable_name_main = elasticity_dict[str(j+1)]['selected_elasticity_item']
-            var_list = []
-            var_list_marginal = []
-            if (variable_name_main=='Taxable_Income'):
-                for var in elasticity_master.keys():
-                    if (elasticity_master[var]["group"]=="Marginal Rates"):
-                        #print(var)
-                        # This is needed to allocate the incomes to the 
-                        # components of Aggregate_Income as the elasticity 
-                        # applies to Aggregate_Income
-                        var_list_marginal = var_list_marginal + [var]
-                # For the estimation pick up the variable name on which the 
-                # marginal tax rates are applied. This is captured under the 
-                # var_name field in the json file
-                var_list = [elasticity_master[variable_name_main]["var_name"]]
-            elif (variable_name_main=='Capital_Income'):
-                for var in elasticity_master.keys():
-                    if (elasticity_master[var]["group"]=="Special Rates"):
-                        var_list = var_list + [var]
-            else:
-                var_list = [elasticity_master[variable_name_main]["var_name"]]
-
-            for variable_name in var_list:
-            # We first find the relevant elasticity applicable to each 
-            # variable value (individual record)
-                #print(variable_name)
-                variable_value = self.array(variable_name, variable_value=None)
-                #variable_value = getattr(self.__records, variable_name)
-                #print(type(variable_value))
-                rate_list_pre = [99.0 for i in range(len(variable_value))]
-                rate_list_post = [99.0 for i in range(len(variable_value))]
-                elasticity_list = [99.0 for i in range(len(variable_value))]                
-                for k in range(1,4):
-                    threshold_str = elasticity_dict[str(j+1)]['selected_threshold'+str(k)]
-                    elasticity_str= elasticity_dict[str(j+1)]['selected_elasticity'+str(k)]                    
-                    threshold = make_float("threshold", threshold_str)
-                    elasticity = make_float("elasticity", elasticity_str)
-                    elasticity_list = np.where((np.isclose(elasticity_list,99.0))&(variable_value <= threshold), elasticity, elasticity_list)
-                #print(elasticity_list)
-                # Once we got the relevant elasticities applicable to each 
-                # variable value (individual record)
-                # We then look for the changes in the applicable rates for 
-                # each variable value (individual record) due to reform 
-                keep_going = True
-                i=1
-                while keep_going:
-                # We check the tax bracket and applicable rate and apply
-                # them to the relevant variable value
-                # Note that the pre-reform values of the policy will be the 
-                # first policy value for the first year. For subsequent years
-                # the previous year's reform value will become the previous 
-                # value.     
-                    if '_tbrk'+str(i) in policy_keys:
-                        #print("Pre Reform")
-                        #print(self.__records.current_year)
-                        if (self.__records.current_year==first_year):
-                            tbrk_pre = self.__policy._vals['_tbrk'+str(i)]['value'][0]
-                            rate_pre = self.__policy._vals['_rate'+str(i)]['value'][0]
-                        else:
-                            # Reform values for policy are shown as a list
-                            # The previous year's reform value will become the 
-                            # previous value.     
-                            tbrk_pre = getattr(self.__policy, '_tbrk'+str(i))[self.__records.current_year - self.__records.data_year - 1]
-                            rate_pre = getattr(self.__policy, '_rate'+str(i))[self.__records.current_year - self.__records.data_year - 1]                    
-                        #print('_tbrk'+str(i)+': ', tbrk_pre)
-                        #print('_rate'+str(i)+': ', rate_pre)                
-                        rate_list_pre = np.where((np.isclose(rate_list_pre,99.0))&(variable_value <= tbrk_pre), rate_pre, rate_list_pre)
-                        #print("rate_list pre: ", rate_list_pre)
-                        
-                        #print("Reform")
-                        tbrk_post = getattr(self.__policy, '_tbrk'+str(i))[self.__records.current_year - self.__records.data_year]
-                        rate_post = getattr(self.__policy, '_rate'+str(i))[self.__records.current_year - self.__records.data_year]
-                        #print('_tbrk'+str(i)+': ', tbrk_post)
-                        #print('_rate'+str(i)+': ', rate_post)                 
-                        rate_list_post = np.where((np.isclose(rate_list_post,99.0))&(variable_value <= tbrk_post), rate_post, rate_list_post)
-                        #print("rate_list post: ", rate_list_post)
-                        i=i+1
-                    else:
-                        keep_going = False
-          
-                # compute the behavioral response
-                percent_chng = (rate_list_pre - rate_list_post)/(1-rate_list_pre)     
-                sub_effect = elasticity_list*percent_chng*variable_value
-                #print(variable_name, " before: \n", variable_value)
-                #print("sub_effect: \n", sub_effect)
-                # add the variable and the substution effect and save 
-                # the results                
-                self.incarray(variable_name, sub_effect)
-                #print("percent change in rate: ", variable_delta_percent)
-                new_variable_value = self.array(variable_name)
-                #print(variable_name, " after: \n", new_variable_value)
-                #if self.records is not None:                    
-                    #self.__records.adjust_behavior(variable_name, new_variable_value)
-                    # for Taxable Income allocate the 
-                    # response to the individual line items
-                    # this is necessary because functions calculates the tax
-                    # using these individual veriables
-                if (variable_name_main=='Taxable_Income'):
-                    for var in var_list_marginal:
-                        var_value_marginal = self.array(var)
-                        #print(var, " before: \n", var_value_marginal)
-                        variable_value = np.where(np.isclose(variable_value,0),-99,variable_value)
-                        sub_effect_marginal = np.where(np.isclose(variable_value,-99),0, ((var_value_marginal/variable_value)*sub_effect))        
-                        # add the variable and the substution effect and save 
-                        # the results
-                        self.incarray(var, sub_effect_marginal)
-                        new_var_value_marginal = self.array(var)
-                        #print(var, " after: \n", new_var_value_marginal)                            
-                       
-                #print(variable_name, " after: \n", new_variable_value)
-                
-                #testing
-                """
-                var_val_pre = np.array(variable_value).tolist()
-                var_val_post = np.array(new_variable_value).tolist()                
-                elast = np.array(elasticity_list).tolist()
-                rate_pre = np.array(rate_list_pre).tolist()
-                rate_post = np.array(rate_list_post).tolist()
-                dict = {'elasticity': elast, 'rate_pre': rate_pre, 'rate_post': rate_post, 'variable_value_pre': var_val_pre, 'variable_value_post': var_val_post}  
-                df = pd.DataFrame(dict) 
-                df.to_csv('test_elasticity_'+variable_name+'_'+str(curr_year)+'.csv')
-                """
-            
-
-        #print(rate_list)
-        #print(variable_value)
-        #setattr(self.__records, variable_name, variable_value)
-        #print(self.__records.SALARY)
-        return 
         
     def increment_year(self):
         """
@@ -561,24 +385,6 @@ class Calculator(object):
                 #print(self.cit_function_names[str(i)])
                 func_name(self.__policy, self.__corprecords)
         
-        """
-        if self.corprecords is not None:   
-            net_rental_income(self.__policy, self.__corprecords)
-            depreciation_PM(self.__policy, self.__corprecords)
-            corp_income_business_profession(self.__policy, self.__corprecords)
-            total_other_income_cit(self.__policy, self.__corprecords)
-            current_year_losses(self.__policy, self.__corprecords)
-            brought_fwd_losses(self.__policy, self.__corprecords)
-            corp_GTI_before_set_off(self.__policy, self.__corprecords)
-            GTI_and_losses(self.__policy, self.__corprecords)
-            itemized_deductions(self.__policy, self.__corprecords)
-            deduction_10AA(self.__policy, self.__corprecords)
-            taxable_total_income(self.__policy, self.__corprecords)
-            tax_stcg_splrate(self.__policy, self.__corprecords)
-            tax_ltcg_splrate(self.__policy, self.__corprecords)
-            tax_specialrates(self.__policy, self.__corprecords)
-            cit_liability(self.__policy, self.__corprecords)
-        """
         # Individual calculations
         # Note that the order of calling these functions is important
         # as some functions require values calculated by those before
@@ -609,7 +415,7 @@ class Calculator(object):
         """
         Return all-filing-unit weighted total of named Records variable.
         """
-        if self.records is not None:         
+        if self.records is not None:
             return (self.array(variable_name) * self.array('weight')).sum()
 
     def weighted_gst(self, variable_name):

@@ -13,7 +13,7 @@ from taxcalc.decorators import iterate_jit
 
 "Calculation for wages" 
 @iterate_jit(nopython=True)
-def cal_ssc_w(ssc_rate_w, gross_i_w, ssc_w_calc):
+def cal_ssc_w(ssc_rate_w, kind_1, ssc_w_calc):
     """
     Compute ssc as gross salary minus deductions u/s 16.
     """
@@ -29,12 +29,13 @@ def cal_ssc_w(ssc_rate_w, gross_i_w, ssc_w_calc):
     AY 2019 and of 2020 thus resulting in no change for those years.
     """
 
-    ssc_w_calc = ssc_rate_w*gross_i_w
+    
+    ssc_w_calc = ssc_rate_w*kind_1
     return ssc_w_calc
 
 
 @iterate_jit(nopython=True)
-def cal_tti_w(personal_allowance_w, gross_i_w, ssc_w_calc, tti_w):
+def cal_tti_w(personal_allowance_labour, kind_1, ssc_w_calc, tti_w):
     """
     Compute ssc as gross salary minus deductions u/s 16.
     """
@@ -49,14 +50,15 @@ def cal_tti_w(personal_allowance_w, gross_i_w, ssc_w_calc, tti_w):
     intruduced only from AY 2021 onwards, "std_deduction" is set as 30000 for
     AY 2019 and of 2020 thus resulting in no change for those years.
     """
-
-    tti_w = gross_i_w - ssc_w_calc - personal_allowance_w
+    
+    tti_w = kind_1 - ssc_w_calc - personal_allowance_labour
     tti_w = max(tti_w,0)
+    
     return tti_w
 
 
 @iterate_jit(nopython=True)
-def cal_tti_I(gross_i_I, deductions_I, tti_I):
+def cal_tti_I(kind_2,kind_3,kind_4,kind_5,kind_6,kind_7,kind_14,kind_19,kind_20,kind_23, tti_I):
     """
     Compute ssc as gross salary minus deductions u/s 16.
     """
@@ -72,7 +74,7 @@ def cal_tti_I(gross_i_I, deductions_I, tti_I):
     AY 2019 and of 2020 thus resulting in no change for those years.
     """
 
-    tti_I = gross_i_I - deductions_I
+    tti_I = kind_2+kind_3+kind_4+kind_5+kind_6+kind_7+kind_14+kind_19+kind_20+kind_23
     tti_I = max(tti_I,0)
     return tti_I
 
@@ -162,7 +164,7 @@ def cal_pit_w(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3, tti_w, pit_w):
 
 
 @iterate_jit(nopython=True)
-def cal_net_i_w(gross_i_w, ssc_w, pit_w):
+def cal_net_i_w(kind_1, ssc_labour, pit_w):
     """
     Compute tax liability given the progressive tax rate schedule specified
     by the (marginal tax) rate* and (upper tax bracket) brk* parameters and
@@ -170,7 +172,7 @@ def cal_net_i_w(gross_i_w, ssc_w, pit_w):
     """
     # subtract TI_special_rates from TTI to get Aggregate_Income, which is
     # the portion of TTI that is taxed at normal rates
-    net_i_w = gross_i_w- ssc_w- pit_w 
+    net_i_w = kind_1-ssc_labour-pit_w 
     return net_i_w
 
 
@@ -193,7 +195,7 @@ def cal_pit_I(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3, tti_I, pit_I):
 
 
 @iterate_jit(nopython=True)
-def cal_net_i_I(gross_i_I, ssc_I, pit_I, net_i_I):
+def cal_net_i_I(kind_2,kind_3,kind_4,kind_5,kind_6,kind_7,kind_14,kind_19,kind_20,kind_23, ssc_I, pit_I, net_i_I):
     """
     Compute tax liability given the progressive tax rate schedule specified
     by the (marginal tax) rate* and (upper tax bracket) brk* parameters and
@@ -201,7 +203,9 @@ def cal_net_i_I(gross_i_I, ssc_I, pit_I, net_i_I):
     """
     # subtract TI_special_rates from TTI to get Aggregate_Income, which is
     # the portion of TTI that is taxed at normal rates
-    net_i_I = gross_i_I - pit_I
+    net_i_I = (kind_2+kind_3+kind_4+kind_5+kind_6+kind_7+kind_14+kind_19+kind_20+kind_23) - pit_I
+    
+    
     return net_i_I
 
 
@@ -225,7 +229,7 @@ def cal_pit_w_I(rate1, rate2, rate3, rate4, tbrk1, tbrk2, tbrk3,
     
 "Calculation for Income from Capital"
 @iterate_jit(nopython=True)
-def cal_tti_c(gross_i_c, deductions_c, tti_c):
+def cal_tti_c(kind_8,kind_9,kind_10,kind_11,kind_12,kind_13,kind_25,kind_26,deductions_capital, tti_c):
     """
     Compute ssc as gross salary minus deductions u/s 16.
     """
@@ -241,7 +245,8 @@ def cal_tti_c(gross_i_c, deductions_c, tti_c):
     AY 2019 and of 2020 thus resulting in no change for those years.
     """
 
-    tti_c = gross_i_c - deductions_c 
+    tti_c = (kind_8+kind_9+kind_10+kind_11+kind_12+kind_13+kind_25+kind_26)-deductions_capital
+    
     return tti_c
 
 @iterate_jit(nopython=True)
@@ -298,7 +303,7 @@ def cal_pit_c(capital_income_rate, tti_c_behavior, pit_c):
     return pit_c
 
 @iterate_jit(nopython=True)
-def cal_net_i_c(gross_i_c, pit_c, net_i_c):
+def cal_net_i_c(kind_8,kind_9,kind_10,kind_11,kind_12,kind_13,kind_25,kind_26,pit_c, net_i_c):
     """
     Compute tax liability given the progressive tax rate schedule specified
     by the (marginal tax) rate* and (upper tax bracket) brk* parameters and
@@ -306,16 +311,18 @@ def cal_net_i_c(gross_i_c, pit_c, net_i_c):
     """
     # subtract TI_special_rates from TTI to get Aggregate_Income, which is
     # the portion of TTI that is taxed at normal rates
-    net_i_c = gross_i_c - pit_c   
+    net_i_c = (kind_8+kind_9+kind_10+kind_11+kind_12+kind_13+kind_25+kind_26)-pit_c
+    
     return net_i_c
 
 "total"
 @iterate_jit(nopython=True)
-def cal_total_gross_income(gross_i_w, gross_i_I, gross_i_c, total_gross_income):
+def cal_total_gross_income(kind_1, kind_2,kind_3,kind_4,kind_5,kind_6,kind_7,kind_14,kind_19,kind_20,kind_23, kind_8,kind_9,kind_10,kind_11,kind_12,kind_13,kind_25,kind_26,total_gross_income):
     """
     Compute GTI including capital gains amounts taxed at special rates.
     """
-    total_gross_income = gross_i_w + gross_i_I + gross_i_c
+    total_gross_income = kind_1+kind_2+kind_3+kind_4+kind_5+kind_6+kind_7+kind_14+kind_19+kind_20+kind_23+kind_8+kind_9+kind_10+kind_11+kind_12+kind_13+kind_25+kind_26
+   
     return total_gross_income
 
 @iterate_jit(nopython=True)
@@ -342,10 +349,3 @@ def cal_total_net_income(net_i_w, net_i_I, net_i_c, total_net_income):
     """
     total_net_income = net_i_w + net_i_I + net_i_c
     return total_net_income
-
-
-
-
-
-
-
