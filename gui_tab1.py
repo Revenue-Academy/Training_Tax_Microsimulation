@@ -223,7 +223,7 @@ def tab1(self):
     
     ##### NOTE 'Year' is a key word for year in records variable
     
-    self.vars['pit_data_filename'] = "pit_macedonia.csv"
+    self.vars['pit_data_filename'] = "pit_macedonia_new.csv"
     self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
     self.vars['pit_records_variables_filename'] = "pit_records_variables_macedonia.json"
     self.vars['pit_benchmark_filename'] = "pit_tax_incentives_benchmark.json"
