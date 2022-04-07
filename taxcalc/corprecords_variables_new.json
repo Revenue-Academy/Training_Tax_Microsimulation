@@ -1,0 +1,1044 @@
+{
+  "read": {
+    "ID_NO": {
+      "required": true,
+      "type": "int",
+      "desc": "Unique positive numeric identifier for filing unit",
+      "form": {"2017": "private info"},
+      "cross_year": "No"
+    },
+    "Year": {
+      "required": true,
+      "type": "int",
+      "desc": "Tax Year",
+      "form": {
+        "2017": "private info"
+      },
+      "cross_year": "No"
+    },
+    "INCOME_HP": {
+      "type": "float",
+      "desc": "Income from house property",
+      "form": {"2017": "ITR-6, Part B-TI, line 1"},
+      "cross_year": "No"
+    },
+    "ST_CG_AMT_1": {
+      "type": "float",
+      "desc": "Income from Short Term Capital Gains at Special rate1",
+      "form": {"2017": "ITR-6, Part B-TI, line 3(a)(i)"},
+      "cross_year": "No"
+    },
+    "ST_CG_AMT_2": {
+      "type": "float",
+      "desc": "Income from Short Term Capital Gains at Special rate2",
+      "form": {"2017": "ITR-6, Part B-TI, line 3(a)(ii)"},
+      "cross_year": "No"
+    },
+    "ST_CG_AMT_APPRATE": {
+      "type": "float",
+      "desc": "STCG at regular rates as per current law",
+      "form": {"2017": "ITR-6 Part B-TI-3a-iii"},
+      "cross_year": "No"
+    },
+    "LT_CG_AMT_1": {
+      "type": "float",
+      "desc": "Income from Long Term Capital Gains at Special rate1",
+      "form": {"2017": "ITR-6, Part B-TI, line 3(b)(i)"},
+      "cross_year": "No"
+    },
+    "LT_CG_AMT_2": {
+      "type": "float",
+      "desc": "Income from Long Term Capital Gains at Special rate2",
+      "form": {"2017": "ITR-6, Part B-TI, line 3(b)(ii)"},
+      "cross_year": "No"
+    },
+    "PRFT_GAIN_BP_OTHR_SPECLTV_BUS": {
+      "type": "float",
+      "desc": "Profits and Gains from BP other than speculative business",
+      "form": {"2017": "ITR-6 Part B-TI-2i"},
+      "cross_year": "No"
+    },
+    "PRFT_GAIN_BP_SPECLTV_BUS": {
+      "type": "float",
+      "desc": "Profits and Gains from speculative business",
+      "form": {"2017": "ITR-6 Part B-TI-2ii"},
+      "cross_year": "No"
+    },
+    "PRFT_GAIN_BP_SPCFD_BUS": {
+      "type": "float",
+      "desc": "Income from specified Business",
+      "form": {"2017": "ITR-6 Part B-TI-2iii"},
+      "cross_year": "No"
+    },
+    "PRFT_GAIN_BP_INC_115BBF": {
+      "type": "float",
+      "desc": "Income from patents u/s 115BBF",
+      "form": {"2017": "ITR-6 Part B-TI-2iv"},
+      "cross_year": "No"
+    },
+    "TOTAL_INCOME_OS": {
+      "type": "float",
+      "desc": "Income from Other Sources",
+      "form": {"2017": "ITR-6 Part B-TI-4d"},
+      "cross_year": "No"
+    },
+    "CYL_SET_OFF": {
+      "type": "float",
+      "desc": "Current Year Losses to be set off",
+      "form": {"2017": "ITR-6 Part B-TI 6"},
+      "cross_year": "No"
+    },
+    "BFL_SET_OFF_BALANCE": {
+      "type": "float",
+      "desc": "Brought Forward Losses to be set off",
+      "form": {"2017": "ITR-6 Part B-TI 8"},
+      "cross_year": "No"
+    },
+    "NET_AGRC_INCOME": {
+      "type": "float",
+      "desc": "Agricultural income used for rate purpose",
+      "form": {"2017": "ITR-6 Part B-TI 16"},
+      "cross_year": "No"
+    },
+    "TOTAL_DEDUC_VIA": {
+      "type": "float",
+      "desc": "Total itemized deductions",
+      "form": {"2017": "ITR-6 Part Part B-TI 12c"},
+      "cross_year": "No"
+    },
+    "DEDUCT_SEC_10A_OR_10AA": {
+      "type": "float",
+      "desc": "Total deduction u/s 10AA",
+      "form": {"2017": "Column 11 of Part B-TI of ITR-6"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG1": {
+      "type": "float",
+      "desc": "Loss lagged 1 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG2": {
+      "type": "float",
+      "desc": "Loss lagged 2 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG3": {
+      "type": "float",
+      "desc": "Loss lagged 3 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG4": {
+      "type": "float",
+      "desc": "Loss lagged 4 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG5": {
+      "type": "float",
+      "desc": "Loss lagged 5 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG6": {
+      "type": "float",
+      "desc": "Loss lagged 6 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG7": {
+      "type": "float",
+      "desc": "Loss lagged 7 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "LOSS_LAG8": {
+      "type": "float",
+      "desc": "Loss lagged 8 year",
+      "form": {"2017": "ITR-6 Sch. CFL"},
+      "cross_year": "No"
+    },
+    "MAT_LAG1": {
+      "type": "float",
+      "desc": "MAT credit lagged 1 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG2": {
+      "type": "float",
+      "desc": "MAT credit lagged 2 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG3": {
+      "type": "float",
+      "desc": "MAT credit lagged 3 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG4": {
+      "type": "float",
+      "desc": "MAT credit lagged 4 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG5": {
+      "type": "float",
+      "desc": "MAT credit lagged 5 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG6": {
+      "type": "float",
+      "desc": "MAT credit lagged 6 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG7": {
+      "type": "float",
+      "desc": "MAT credit lagged 7 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG8": {
+      "type": "float",
+      "desc": "MAT credit lagged 8 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG9": {
+      "type": "float",
+      "desc": "MAT credit lagged 1 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG10": {
+      "type": "float",
+      "desc": "MAT credit lagged 2 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG11": {
+      "type": "float",
+      "desc": "MAT credit lagged 3 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG12": {
+      "type": "float",
+      "desc": "MAT credit lagged 4 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG13": {
+      "type": "float",
+      "desc": "MAT credit lagged 5 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG14": {
+      "type": "float",
+      "desc": "MAT credit lagged 6 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "MAT_LAG15": {
+      "type": "float",
+      "desc": "MAT credit lagged 7 year",
+      "form": {"2017": "ITR-6 Sch. MATC"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_15P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 15%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(i)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_15P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 15% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(i)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_15P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 15% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(i)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_15P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 15% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(i)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_15P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 15% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(i)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_15P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 15%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(i)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_15P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 15%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(i)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_15P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 15%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(i)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_15P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 15%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(i)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_15P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 30%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(ii)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_30P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 30%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(ii)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_30P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 30% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(ii)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_30P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 30% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(ii)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_30P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 30% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(ii)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_30P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 30% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(ii)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_30P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 30%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(ii)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_30P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 30%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(ii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_30P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 30%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(ii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_30P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 30%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(ii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_30P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 30%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(ii)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_40P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 40%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(iii)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_40P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 40% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(iii)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_40P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 40% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(iii)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_40P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 40% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(iii)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_40P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 40% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(iii)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_40P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 40%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(iii)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_40P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 40%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(iii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_40P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 40%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(iii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_40P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 40%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(iii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_40P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 40%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(iii)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_50P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 50%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(iv)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_50P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 50% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(iv)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_50P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 50% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(iv)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_50P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 50% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(iv)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_50P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 50% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(iv)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_50P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 50%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(iv)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_50P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 50%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(iv)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_50P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 50%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(iv)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_50P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 50%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(iv)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_50P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 50%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(iv)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_60P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 60%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(v)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_60P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 60% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(v)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_60P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 60% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(v)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_60P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 60% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(v)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_60P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 60% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(v)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_60P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 60%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(v)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_60P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 60%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(v)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_60P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 60%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(v)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_60P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 60%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(v)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_60P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 60%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(v)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_80P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 80%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(vi)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_80P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 80% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(vi)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_80P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 80% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(vi)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_80P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 80% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(vi)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_80P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 80% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(vi)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_80P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 80%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(vi)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_80P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 80%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(vi)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_80P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 80%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(vi)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_80P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 80%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(vi)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_80P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 80%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(vi)"},
+      "cross_year": "No"
+    },
+    "PWR_DOWN_VAL_1ST_DAY_PY_100P": {
+      "type": "float",
+      "desc": "Opening WDV for Plant and Machinery for Block 100%",
+      "form": {"2017": "ITR-6 Sch. DPM 3(vii)"},
+      "cross_year": "Yes"
+    },
+    "PADDTNS_180_DAYS__MOR_PY_100P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 100% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 4(vii)"},
+      "cross_year": "No"
+    },
+    "PCR34_PY_100P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 100% > 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 5(vii)"},
+      "cross_year": "No"
+    },
+    "PADDTNS_LESS_180_DAYS_100P": {
+      "type": "float",
+      "desc": "Addition to Plant and Machinery for Block 100% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 7(vii)"},
+      "cross_year": "No"
+    },
+    "PCR7_PY_100P": {
+      "type": "float",
+      "desc": "Considerations for WDV/Additions to Plant and Machinery Block 100% < 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 8(vii)"},
+      "cross_year": "No"
+    },
+    "PEXP_INCURRD_TRF_ASSTS_100P": {
+      "type": "float",
+      "desc": "Expenditure in connection with transfer of Plant and Machinery for Block 100%",
+      "form": {"2017": "ITR-6 Sch. DPM 16(vii)"},
+      "cross_year": "No"
+    },
+    "PCAP_GAINS_LOSS_SEC50_100P": {
+      "type": "float",
+      "desc": "Capital Gains on Sale of Plant and Machinery for Block 100%",
+      "form": {"2017": "ITR-6 Sch. DPM 17(vii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_4_100P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 100%, more than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 12(vii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_ANY_7_100P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 100%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(vii)"},
+      "cross_year": "No"
+    },
+    "PADDTNL_DEPRECTN_LESS_180_DAYS_100P": {
+      "type": "float",
+      "desc": "Additional Depreciation for Plant and Machinery for Block 100%, less than 180 days",
+      "form": {"2017": "ITR-6 Sch. DPM 13(vii)"},
+      "cross_year": "No"
+    },
+    "DEEMED_TI_SEC115JB": {
+      "type": "float",
+      "desc": "Book Profit on which MAT is calculated",
+      "form": {"2017": "ITR-6 Sch. MAT 7"},
+      "cross_year": "No"
+    },
+    "RELIEF_90": {
+      "type": "float",
+      "desc": "Relief under section 90",
+      "form": {"2017": "ITR-6 Sch. MAT 7"},
+      "cross_year": "No"
+    },
+    "RELIEF_91": {
+      "type": "float",
+      "desc": "Relief under section 90",
+      "form": {"2017": "ITR-6 Sch. MAT 7"},
+      "cross_year": "No"
+    }
+  },
+  "calc": {
+    "Income_BP": {
+      "type": "float",
+      "desc": "Computed income from Business and Profession)",
+      "form": {"2017": "ITR-6 Part B-TI-2vi"}
+    },
+    "GTI_Before_Loss": {
+      "type": "float",
+      "desc": "Gross Total Income (GTI)",
+      "form": {"2017": "ITR-6 Part B-TI line 5"}
+    },
+    "CY_Losses": {
+      "type": "float",
+      "desc": "Computed Current Year Losses to be set off",
+      "form": {"2017": "ITR-6 Part B-TI line 6"}
+    },
+    "BF_Losses": {
+      "type": "float",
+      "desc": "Computed Brought Forward Losses to be set off",
+      "form": {"2017": "ITR-6 Part B-TI line 8"}
+    },
+    "newloss1": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss2": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss3": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss4": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss5": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss6": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss7": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "newloss8": {
+      "type": "float",
+      "desc": "Computed carried forward loss",
+      "form": {"2017": "ITR-6 Sch. CFL"}
+    },
+    "NEW_MAT_CR1": {
+      "type": "float",
+      "desc": "MAT Credit Year-0 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR2": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 1 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR3": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 2 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR4": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 3 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR5": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 4 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR6": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 5 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR7": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 6 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR8": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 7 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR9": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 8 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR10": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 9 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR11": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 10 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR12": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 11 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR13": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 12 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR14": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 13 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "NEW_MAT_CR15": {
+      "type": "float",
+      "desc": "MAT Credit Year minus 14 Carried Forward",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR1": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year-0 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR2": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 1 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR3": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 2 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR4": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 3 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR5": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 4 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR6": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 5 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR7": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 6 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR8": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 7 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR9": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 8 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR10": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 9 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR11": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 10 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR12": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 11 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR13": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 12 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR14": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 13 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "USE_MAT_CR15": {
+      "type": "float",
+      "desc": "MAT Credit used out of Year minus 14 ",
+      "form": {"2017": "ITR-6 Sch. MATC"}
+    },
+    "GTI": {
+      "type": "float",
+      "desc": "Gross Total Income (GTI)",
+      "form": {"2017": "ITR-6 Part B-TI line 9"}
+    },
+    "dep_amt_pm15": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 15%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(i)"}
+    },
+    "dep_amt_pm30": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 30%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(ii)"}
+    },
+    "dep_amt_pm40": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 40%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(iii)"}
+    },
+    "dep_amt_pm50": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 50%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(iv)"}
+    },
+    "dep_amt_pm60": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 60%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(v)"}
+    },
+    "dep_amt_pm80": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 80%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(vi)"}
+    },
+    "dep_amt_pm100": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery Block 100%",
+      "form": {"2017": "ITR-6 Schedule DPM 15(vii)"}
+    },
+    "dep_amt_pm": {
+      "type": "float",
+      "desc": "Depreciation allowance for Plant and Machinery all blocks",
+      "form": {"2017": "ITR-6 sum of Schedule DPM 18(i) to 18(vii)"}
+    },
+    "close_wdv_pm15": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 15%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(i)"}
+    },
+    "close_wdv_pm30": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 30%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(ii)"}
+    },
+    "close_wdv_pm40": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 40%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(iii)"}
+    },
+    "close_wdv_pm50": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 50%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(iv)"}
+    },
+    "close_wdv_pm60": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 60%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(v)"}
+    },
+    "close_wdv_pm80": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 80%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(vi)"}
+    },
+    "close_wdv_pm100": {
+      "type": "float",
+      "desc": "Closing Balance of WDV for Plant and Machinery Block 100%",
+      "form": {"2017": "ITR-6 Schedule DPM 18(vii)"}
+    },
+    "tax_cg": {
+      "type": "float",
+      "desc": "Total tax on capital gains",
+      "form": {"2017": "ITR-6 Part B-TI-12c"}
+    },
+    "TTI_normal_rates": {
+      "type": "float",
+      "desc": "Taxable Total Income (TTI)",
+      "form": {"2017": "ITR-6 Part B-TI line 13"}
+    },
+    "cit_rate": {
+      "type": "float",
+      "desc": "Taxable Total Income (TTI) taxed at special rates",
+      "form": {"2017": "ITR-6 Part B-TI line 14"}
+    },
+    "TTI": {
+      "type": "float",
+      "desc": "Total Taxable Income",
+      "form": {"2017": "ITR-6 Part B TTI-2a"}
+    },
+    "TTI_behavior": {
+      "type": "float",
+      "desc": "Total Taxable Income",
+      "form": {"2017": "ITR-6 Part B TTI-2a"}
+    },
+    "surcharge": {
+      "type": "float",
+      "desc": "Surcharge on income above surcharge_thd",
+      "form": {"2017": "ITR-6 Part B TTI-2diii"}
+    },
+    "cess": {
+      "type": "float",
+      "desc": "cess on tax and surcharge",
+      "form": {"2017": "ITR-6 Part B TTI-2e"}
+    },
+    "citax": {
+      "type": "float",
+      "desc": "PIT liability",
+      "form": {"2017": "ITR-6 Part B TTI-2f"}
+    },
+    "MAT": {
+      "type": "float",
+      "desc": "MAT liability",
+      "form": {"2017": "ITR-6 Schedule MAT-8"}
+    },
+    "citax_after_MAT": {
+      "type": "float",
+      "desc": "CIT liability after adjusting for MAT",
+      "form": {"2017": "ITR-6 Part B TTI-3"}
+    },
+    "net_citax": {
+      "type": "float",
+      "desc": "CIT liability after adjusting for MAT",
+      "form": {"2017": "ITR-6 Part B TTI-3"}
+    },
+    "additions_pm": {
+      "type": "float",
+      "desc": "Additions to Plant & M/c",
+      "form": {"2017": "ITR-6 Part B TTI-3"}
+    }
+  }
+}

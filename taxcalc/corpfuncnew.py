@@ -1,0 +1,503 @@
+"""
+Functions that calculate corporate income tax liability.
+"""
+# CODING-STYLE CHECKS:
+# pycodestyle corpfunctions.py
+# pylint --disable=locally-disabled corpfunctions.py
+
+import math
+import copy
+import numpy as np
+from taxcalc.decorators import iterate_jit
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM15(dep_rate_pm15, PWR_DOWN_VAL_1ST_DAY_PY_15P,
+                      PADDTNS_180_DAYS__MOR_PY_15P, PCR34_PY_15P,
+                      PADDTNS_LESS_180_DAYS_15P, PCR7_PY_15P,
+                      PEXP_INCURRD_TRF_ASSTS_15P, PCAP_GAINS_LOSS_SEC50_15P,
+                      PADDTNL_DEPRECTN_ANY_4_15P, PADDTNL_DEPRECTN_ANY_7_15P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_15P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate15 = (PWR_DOWN_VAL_1ST_DAY_PY_15P +
+                       PADDTNS_180_DAYS__MOR_PY_15P - PCR34_PY_15P)
+    amt_half_rate15 = PADDTNS_LESS_180_DAYS_15P - PCR7_PY_15P
+    dep_amt_pm15 = amt_full_rate15 * dep_rate_pm15
+    dep_amt_pm15 += amt_half_rate15 * (dep_rate_pm15 / 2)
+    addl_dep15 = (PADDTNL_DEPRECTN_ANY_4_15P + PADDTNL_DEPRECTN_ANY_7_15P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_15P)
+    dep_amt_pm15 += addl_dep15
+    close_wdv_pm15 = (PWR_DOWN_VAL_1ST_DAY_PY_15P +
+                      PADDTNS_180_DAYS__MOR_PY_15P - PCR34_PY_15P +
+                      PADDTNS_LESS_180_DAYS_15P - PCR7_PY_15P - dep_amt_pm15)
+    cap_gain_pm15 = (PCR34_PY_15P + PCR7_PY_15P - PWR_DOWN_VAL_1ST_DAY_PY_15P -
+                     PADDTNS_180_DAYS__MOR_PY_15P -
+                     PEXP_INCURRD_TRF_ASSTS_15P -
+                     PADDTNS_LESS_180_DAYS_15P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_15P >= 0):
+        cap_gain_pm15 = max(0.0, cap_gain_pm15)
+    return (dep_amt_pm15, close_wdv_pm15)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM30(dep_rate_pm30, PWR_DOWN_VAL_1ST_DAY_PY_30P,
+                      PADDTNS_180_DAYS__MOR_PY_30P, PCR34_PY_30P,
+                      PADDTNS_LESS_180_DAYS_30P, PCR7_PY_30P,
+                      PEXP_INCURRD_TRF_ASSTS_30P, PCAP_GAINS_LOSS_SEC50_30P,
+                      PADDTNL_DEPRECTN_ANY_4_30P, PADDTNL_DEPRECTN_ANY_7_30P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_30P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate30 = (PWR_DOWN_VAL_1ST_DAY_PY_30P +
+                       PADDTNS_180_DAYS__MOR_PY_30P - PCR34_PY_30P)
+    amt_half_rate30 = PADDTNS_LESS_180_DAYS_30P - PCR7_PY_30P
+    dep_amt_pm30 = amt_full_rate30 * dep_rate_pm30
+    dep_amt_pm30 += amt_half_rate30 * (dep_rate_pm30 / 2)
+    addl_dep30 = (PADDTNL_DEPRECTN_ANY_4_30P + PADDTNL_DEPRECTN_ANY_7_30P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_30P)
+    dep_amt_pm30 += addl_dep30
+    close_wdv_pm30 = (PWR_DOWN_VAL_1ST_DAY_PY_30P +
+                      PADDTNS_180_DAYS__MOR_PY_30P - PCR34_PY_30P +
+                      PADDTNS_LESS_180_DAYS_30P - PCR7_PY_30P - dep_amt_pm30)
+    cap_gain_pm30 = (PCR34_PY_30P + PCR7_PY_30P - PWR_DOWN_VAL_1ST_DAY_PY_30P -
+                     PADDTNS_180_DAYS__MOR_PY_30P -
+                     PEXP_INCURRD_TRF_ASSTS_30P -
+                     PADDTNS_LESS_180_DAYS_30P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_30P >= 0):
+        cap_gain_pm30 = max(0.0, cap_gain_pm30)
+    return (dep_amt_pm30, close_wdv_pm30)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM40(dep_rate_pm40, PWR_DOWN_VAL_1ST_DAY_PY_40P,
+                      PADDTNS_180_DAYS__MOR_PY_40P, PCR34_PY_40P,
+                      PADDTNS_LESS_180_DAYS_40P, PCR7_PY_40P,
+                      PEXP_INCURRD_TRF_ASSTS_40P, PCAP_GAINS_LOSS_SEC50_40P,
+                      PADDTNL_DEPRECTN_ANY_4_40P, PADDTNL_DEPRECTN_ANY_7_40P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_40P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate40 = (PWR_DOWN_VAL_1ST_DAY_PY_40P +
+                       PADDTNS_180_DAYS__MOR_PY_40P - PCR34_PY_40P)
+    amt_half_rate40 = PADDTNS_LESS_180_DAYS_40P - PCR7_PY_40P
+    dep_amt_pm40 = amt_full_rate40 * dep_rate_pm40
+    dep_amt_pm40 += amt_half_rate40 * (dep_rate_pm40 / 2)
+    addl_dep40 = (PADDTNL_DEPRECTN_ANY_4_40P + PADDTNL_DEPRECTN_ANY_7_40P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_40P)
+    dep_amt_pm40 += addl_dep40
+    close_wdv_pm40 = (PWR_DOWN_VAL_1ST_DAY_PY_40P +
+                      PADDTNS_180_DAYS__MOR_PY_40P - PCR34_PY_40P +
+                      PADDTNS_LESS_180_DAYS_40P - PCR7_PY_40P - dep_amt_pm40)
+    cap_gain_pm40 = (PCR34_PY_40P + PCR7_PY_40P - PWR_DOWN_VAL_1ST_DAY_PY_40P -
+                     PADDTNS_180_DAYS__MOR_PY_40P -
+                     PEXP_INCURRD_TRF_ASSTS_40P -
+                     PADDTNS_LESS_180_DAYS_40P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_40P >= 0):
+        cap_gain_pm40 = max(0.0, cap_gain_pm40)
+    return (dep_amt_pm40, close_wdv_pm40)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM50(dep_rate_pm50, PWR_DOWN_VAL_1ST_DAY_PY_50P,
+                      PADDTNS_180_DAYS__MOR_PY_50P, PCR34_PY_50P,
+                      PADDTNS_LESS_180_DAYS_50P, PCR7_PY_50P,
+                      PEXP_INCURRD_TRF_ASSTS_50P, PCAP_GAINS_LOSS_SEC50_50P,
+                      PADDTNL_DEPRECTN_ANY_4_50P, PADDTNL_DEPRECTN_ANY_7_50P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_50P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate50 = (PWR_DOWN_VAL_1ST_DAY_PY_50P +
+                       PADDTNS_180_DAYS__MOR_PY_50P - PCR34_PY_50P)
+    amt_half_rate50 = PADDTNS_LESS_180_DAYS_50P - PCR7_PY_50P
+    dep_amt_pm50 = amt_full_rate50 * dep_rate_pm50
+    dep_amt_pm50 += amt_half_rate50 * (dep_rate_pm50 / 2)
+    addl_dep50 = (PADDTNL_DEPRECTN_ANY_4_50P + PADDTNL_DEPRECTN_ANY_7_50P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_50P)
+    dep_amt_pm50 += addl_dep50
+    close_wdv_pm50 = (PWR_DOWN_VAL_1ST_DAY_PY_50P +
+                      PADDTNS_180_DAYS__MOR_PY_50P - PCR34_PY_50P +
+                      PADDTNS_LESS_180_DAYS_50P - PCR7_PY_50P - dep_amt_pm50)
+    cap_gain_pm50 = (PCR34_PY_50P + PCR7_PY_50P - PWR_DOWN_VAL_1ST_DAY_PY_50P -
+                     PADDTNS_180_DAYS__MOR_PY_50P -
+                     PEXP_INCURRD_TRF_ASSTS_50P -
+                     PADDTNS_LESS_180_DAYS_50P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_50P >= 0):
+        cap_gain_pm50 = max(0.0, cap_gain_pm50)
+    return (dep_amt_pm50, close_wdv_pm50)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM60(dep_rate_pm60, PWR_DOWN_VAL_1ST_DAY_PY_60P,
+                      PADDTNS_180_DAYS__MOR_PY_60P, PCR34_PY_60P,
+                      PADDTNS_LESS_180_DAYS_60P, PCR7_PY_60P,
+                      PEXP_INCURRD_TRF_ASSTS_60P, PCAP_GAINS_LOSS_SEC50_60P,
+                      PADDTNL_DEPRECTN_ANY_4_60P, PADDTNL_DEPRECTN_ANY_7_60P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_60P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate60 = (PWR_DOWN_VAL_1ST_DAY_PY_60P +
+                       PADDTNS_180_DAYS__MOR_PY_60P - PCR34_PY_60P)
+    amt_half_rate60 = PADDTNS_LESS_180_DAYS_60P - PCR7_PY_60P
+    dep_amt_pm60 = amt_full_rate60 * dep_rate_pm60
+    dep_amt_pm60 += amt_half_rate60 * (dep_rate_pm60 / 2)
+    addl_dep60 = (PADDTNL_DEPRECTN_ANY_4_60P + PADDTNL_DEPRECTN_ANY_7_60P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_60P)
+    dep_amt_pm60 += addl_dep60
+    close_wdv_pm60 = (PWR_DOWN_VAL_1ST_DAY_PY_60P +
+                      PADDTNS_180_DAYS__MOR_PY_60P - PCR34_PY_60P +
+                      PADDTNS_LESS_180_DAYS_60P - PCR7_PY_60P - dep_amt_pm60)
+    cap_gain_pm60 = (PCR34_PY_60P + PCR7_PY_60P - PWR_DOWN_VAL_1ST_DAY_PY_60P -
+                     PADDTNS_180_DAYS__MOR_PY_60P -
+                     PEXP_INCURRD_TRF_ASSTS_60P -
+                     PADDTNS_LESS_180_DAYS_60P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_60P >= 0):
+        cap_gain_pm60 = max(0.0, cap_gain_pm60)
+    return (dep_amt_pm60, close_wdv_pm60)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM80(dep_rate_pm80, PWR_DOWN_VAL_1ST_DAY_PY_80P,
+                      PADDTNS_180_DAYS__MOR_PY_80P, PCR34_PY_80P,
+                      PADDTNS_LESS_180_DAYS_80P, PCR7_PY_80P,
+                      PEXP_INCURRD_TRF_ASSTS_80P, PCAP_GAINS_LOSS_SEC50_80P,
+                      PADDTNL_DEPRECTN_ANY_4_80P, PADDTNL_DEPRECTN_ANY_7_80P,
+                      PADDTNL_DEPRECTN_LESS_180_DAYS_80P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate80 = (PWR_DOWN_VAL_1ST_DAY_PY_80P +
+                       PADDTNS_180_DAYS__MOR_PY_80P - PCR34_PY_80P)
+    amt_half_rate80 = PADDTNS_LESS_180_DAYS_80P - PCR7_PY_80P
+    dep_amt_pm80 = amt_full_rate80 * dep_rate_pm80
+    dep_amt_pm80 += amt_half_rate80 * (dep_rate_pm80 / 2)
+    addl_dep80 = (PADDTNL_DEPRECTN_ANY_4_80P + PADDTNL_DEPRECTN_ANY_7_80P +
+                  PADDTNL_DEPRECTN_LESS_180_DAYS_80P)
+    dep_amt_pm80 += addl_dep80
+    close_wdv_pm80 = (PWR_DOWN_VAL_1ST_DAY_PY_80P +
+                      PADDTNS_180_DAYS__MOR_PY_80P - PCR34_PY_80P +
+                      PADDTNS_LESS_180_DAYS_80P - PCR7_PY_80P - dep_amt_pm80)
+    cap_gain_pm80 = (PCR34_PY_80P + PCR7_PY_80P - PWR_DOWN_VAL_1ST_DAY_PY_80P -
+                     PADDTNS_180_DAYS__MOR_PY_80P -
+                     PEXP_INCURRD_TRF_ASSTS_80P -
+                     PADDTNS_LESS_180_DAYS_80P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_80P >= 0):
+        cap_gain_pm80 = max(0.0, cap_gain_pm80)
+    return (dep_amt_pm80, close_wdv_pm80)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM100(dep_rate_pm100, PWR_DOWN_VAL_1ST_DAY_PY_100P,
+                       PADDTNS_180_DAYS__MOR_PY_100P, PCR34_PY_100P,
+                       PADDTNS_LESS_180_DAYS_100P, PCR7_PY_100P,
+                       PEXP_INCURRD_TRF_ASSTS_100P, PCAP_GAINS_LOSS_SEC50_100P,
+                       PADDTNL_DEPRECTN_ANY_4_100P,
+                       PADDTNL_DEPRECTN_ANY_7_100P,
+                       PADDTNL_DEPRECTN_LESS_180_DAYS_100P):
+    '''
+    Schedule DPM of ITR-6 for A.Y. 2017-18
+    '''
+    amt_full_rate100 = (PWR_DOWN_VAL_1ST_DAY_PY_100P +
+                        PADDTNS_180_DAYS__MOR_PY_100P - PCR34_PY_100P)
+    amt_half_rate100 = PADDTNS_LESS_180_DAYS_100P - PCR7_PY_100P
+    dep_amt_pm100 = amt_full_rate100 * dep_rate_pm100
+    dep_amt_pm100 += amt_half_rate100 * (dep_rate_pm100 / 2)
+    addl_dep100 = (PADDTNL_DEPRECTN_ANY_4_100P + PADDTNL_DEPRECTN_ANY_7_100P +
+                   PADDTNL_DEPRECTN_LESS_180_DAYS_100P)
+    dep_amt_pm100 += addl_dep100
+    close_wdv_pm100 = (PWR_DOWN_VAL_1ST_DAY_PY_100P +
+                       PADDTNS_180_DAYS__MOR_PY_100P - PCR34_PY_100P +
+                       PADDTNS_LESS_180_DAYS_100P - PCR7_PY_100P -
+                       dep_amt_pm100)
+    cap_gain_pm100 = (PCR34_PY_100P + PCR7_PY_100P -
+                      PWR_DOWN_VAL_1ST_DAY_PY_100P -
+                      PADDTNS_180_DAYS__MOR_PY_100P -
+                      PEXP_INCURRD_TRF_ASSTS_100P -
+                      PADDTNS_LESS_180_DAYS_100P)
+    # Consider unusual cases when Capital Gains is negative and block DNE
+    if (PCAP_GAINS_LOSS_SEC50_100P >= 0):
+        cap_gain_pm100 = max(0.0, cap_gain_pm100)
+    return (dep_amt_pm100, close_wdv_pm100)
+
+
+@iterate_jit(nopython=True)
+def depreciation_PM(dep_amt_pm15, dep_amt_pm30, dep_amt_pm40, dep_amt_pm50,
+                    dep_amt_pm60, dep_amt_pm80, dep_amt_pm100, dep_amt_pm):
+    dep_amt_pm = (dep_amt_pm15 + dep_amt_pm30 + dep_amt_pm40 + dep_amt_pm50 +
+                  dep_amt_pm60 + dep_amt_pm80 + dep_amt_pm100)
+    return dep_amt_pm
+
+@iterate_jit(nopython=True)
+def additions_PM(PADDTNS_180_DAYS__MOR_PY_15P, PCR34_PY_15P, PADDTNS_LESS_180_DAYS_15P, PCR7_PY_15P,
+                 PADDTNS_180_DAYS__MOR_PY_30P, PCR34_PY_30P, PADDTNS_LESS_180_DAYS_30P, PCR7_PY_30P,
+                 PADDTNS_180_DAYS__MOR_PY_40P, PCR34_PY_40P, PADDTNS_LESS_180_DAYS_40P, PCR7_PY_40P,
+                 PADDTNS_180_DAYS__MOR_PY_50P, PCR34_PY_50P, PADDTNS_LESS_180_DAYS_50P, PCR7_PY_50P,
+                 PADDTNS_180_DAYS__MOR_PY_60P, PCR34_PY_60P, PADDTNS_LESS_180_DAYS_60P, PCR7_PY_60P,
+                 PADDTNS_180_DAYS__MOR_PY_80P, PCR34_PY_80P, PADDTNS_LESS_180_DAYS_80P, PCR7_PY_80P,
+                 PADDTNS_180_DAYS__MOR_PY_100P, PCR34_PY_100P, PADDTNS_LESS_180_DAYS_100P, PCR7_PY_100P):
+    additions_pm = PADDTNS_180_DAYS__MOR_PY_15P - PCR34_PY_15P + PADDTNS_LESS_180_DAYS_15P - PCR7_PY_15P + \
+                   PADDTNS_180_DAYS__MOR_PY_30P - PCR34_PY_30P + PADDTNS_LESS_180_DAYS_30P - PCR7_PY_30P + \
+                   PADDTNS_180_DAYS__MOR_PY_40P - PCR34_PY_40P + PADDTNS_LESS_180_DAYS_40P - PCR7_PY_40P + \
+                   PADDTNS_180_DAYS__MOR_PY_50P - PCR34_PY_50P + PADDTNS_LESS_180_DAYS_50P - PCR7_PY_50P + \
+                   PADDTNS_180_DAYS__MOR_PY_60P - PCR34_PY_60P + PADDTNS_LESS_180_DAYS_60P - PCR7_PY_60P + \
+                   PADDTNS_180_DAYS__MOR_PY_80P - PCR34_PY_80P + PADDTNS_LESS_180_DAYS_80P - PCR7_PY_80P + \
+                   PADDTNS_180_DAYS__MOR_PY_100P - PCR34_PY_100P + PADDTNS_LESS_180_DAYS_100P - PCR7_PY_100P
+    return additions_pm
+
+@iterate_jit(nopython=True)
+def corp_income_business_profession(dep_amt_pm, PRFT_GAIN_BP_OTHR_SPECLTV_BUS,
+                                    PRFT_GAIN_BP_SPECLTV_BUS,
+                                    PRFT_GAIN_BP_SPCFD_BUS, Income_BP):
+    """
+    Compute Income from Business and Profession by adding the different
+    sub-heads (i.e speculative, non-speculative, specified, patents, etc)
+    """
+    # TODO: when reading from schedule BP, calculate Income_BP from the read
+    # TODO: variables of the schedule
+    Income_BP = (PRFT_GAIN_BP_OTHR_SPECLTV_BUS + PRFT_GAIN_BP_SPECLTV_BUS +
+                 PRFT_GAIN_BP_SPCFD_BUS - dep_amt_pm)
+    return Income_BP
+
+
+@iterate_jit(nopython=True)
+def corp_GTI_before_set_off(INCOME_HP, Income_BP, ST_CG_AMT_1, ST_CG_AMT_2,
+                            ST_CG_AMT_APPRATE, LT_CG_AMT_1, LT_CG_AMT_2,
+                            TOTAL_INCOME_OS, GTI_Before_Loss):
+    """
+    Compute GTI including capital gains amounts taxed at special rates.
+    """
+    GTI_Before_Loss = (INCOME_HP + Income_BP + ST_CG_AMT_1 + ST_CG_AMT_2 +
+                       ST_CG_AMT_APPRATE + LT_CG_AMT_1 + LT_CG_AMT_2 +
+                       TOTAL_INCOME_OS)
+    return GTI_Before_Loss
+
+
+@iterate_jit(nopython=True)
+def GTI_and_losses(Loss_CFLimit, GTI_Before_Loss, CY_Losses,
+                   LOSS_LAG1, LOSS_LAG2, LOSS_LAG3, LOSS_LAG4,
+                   LOSS_LAG5, LOSS_LAG6, LOSS_LAG7, LOSS_LAG8,
+                   GTI, newloss1, newloss2, newloss3, newloss4,
+                   newloss5, newloss6, newloss7, newloss8):
+    LOSS_LAGS = [LOSS_LAG1, LOSS_LAG2, LOSS_LAG3, LOSS_LAG4, LOSS_LAG5,
+                 LOSS_LAG6, LOSS_LAG7, LOSS_LAG8]
+    GTI1 = max(GTI_Before_Loss - CY_Losses, 0.)
+    newloss1 = GTI1 - GTI_Before_Loss + CY_Losses
+    USELOSS = np.zeros(8)
+    Loss_CFLimit = int(Loss_CFLimit)
+    for i in range(8, 0, -1):
+        if Loss_CFLimit >= i:
+            USELOSS[i-1] = min(GTI1, LOSS_LAGS[i-1])
+        GTI1 = GTI1 - USELOSS[i-1]
+    NETLOSSES = np.array(LOSS_LAGS) - USELOSS
+    (newloss2, newloss3, newloss4, newloss5, newloss6,
+     newloss7, newloss8) = NETLOSSES[:7]
+    GTI = GTI1
+    return (GTI, newloss1, newloss2, newloss3, newloss4,
+            newloss5, newloss6, newloss7, newloss8)
+
+@iterate_jit(nopython=True)
+def TTI(GTI, ST_CG_AMT_1, LT_CG_AMT_1, LT_CG_AMT_2,
+        DEDUCT_SEC_10A_OR_10AA, TOTAL_DEDUC_VIA, TTI_normal_rates):
+    """
+    Compute taxable total income after reducing deductions under ChpVIA and section 10AA
+    from the GTI. Deductions are capped at GTI at normal rates.
+    """
+    GTI = max(GTI, 0.)
+    ST_CG_AMT_1 = max(ST_CG_AMT_1, 0.)
+    LT_CG_AMT_1 = max(LT_CG_AMT_1, 0.)
+    LT_CG_AMT_2 = max(LT_CG_AMT_2, 0.)
+    GTI_normal_rates = (GTI - ST_CG_AMT_1 - LT_CG_AMT_1 - LT_CG_AMT_2)
+    TOTAL_DEDUCTIONS = DEDUCT_SEC_10A_OR_10AA + TOTAL_DEDUC_VIA
+    GTI_total = [LT_CG_AMT_1, ST_CG_AMT_1, LT_CG_AMT_2, GTI_normal_rates]
+    # Deductions to be allowed against income sorted by tax rate i.e LTCG1@10%, STCG1@15%, LTCG2@20%, Normal@30%)
+    for i in range(len(GTI_total)):
+        if TOTAL_DEDUCTIONS <= GTI_total[i]:
+            GTI_total[i] -= TOTAL_DEDUCTIONS
+            TOTAL_DEDUCTIONS = 0
+        else:
+            TOTAL_DEDUCTIONS -= GTI_total[i]
+            GTI_total[i] = 0
+    LT_CG_AMT_1, ST_CG_AMT_1, LT_CG_AMT_2, TTI_normal_rates = GTI_total[:]            
+    
+    return(LT_CG_AMT_1, ST_CG_AMT_1, LT_CG_AMT_2, TTI_normal_rates)
+
+@iterate_jit(nopython=True)
+def TTI_behavior(cit_rate, cit_rate_curr_law, elasticity_cit_taxable_income_threshold,
+                elasticity_cit_taxable_income_value, TTI_normal_rates, TTI_behavior):
+    """
+    Compute net taxable profits afer allowing deductions.
+    """
+    NP = TTI_normal_rates   
+    elasticity_taxable_income_threshold0 = elasticity_cit_taxable_income_threshold[0]
+    elasticity_taxable_income_threshold1 = elasticity_cit_taxable_income_threshold[1]
+    elasticity_taxable_income_threshold2 = elasticity_cit_taxable_income_threshold[2]
+    elasticity_taxable_income_value0=elasticity_cit_taxable_income_value[0]
+    elasticity_taxable_income_value1=elasticity_cit_taxable_income_value[1]
+    elasticity_taxable_income_value2=elasticity_cit_taxable_income_value[2]
+    if NP<=0:
+        elasticity=0
+    elif NP<elasticity_taxable_income_threshold0:
+        elasticity=elasticity_taxable_income_value0
+    elif NP<elasticity_taxable_income_threshold1:
+        elasticity=elasticity_taxable_income_value1
+    else:
+        elasticity=elasticity_taxable_income_value2
+
+    frac_change_net_of_cit_rate = ((1-cit_rate)-(1-cit_rate_curr_law))/(1-cit_rate_curr_law)
+    frac_change_TTI = elasticity*(frac_change_net_of_cit_rate)
+    TTI_behavior = NP*(1+frac_change_TTI)
+    return TTI_behavior
+
+@iterate_jit(nopython=True)
+def cit_liability(cit_rate, cit_surcharge_rate, cit_surcharge_thd, cess_rate,
+                  TTI_behavior, LT_CG_AMT_1, LT_CG_AMT_2, ST_CG_AMT_1, ST_CG_AMT_2, ST_CG_AMT_APPRATE,
+                  LT_CG_RATE1, LT_CG_RATE2, ST_CG_RATE1, ST_CG_RATE2, stcg_app_rate, 
+                  tax_cg, surcharge, cess, citax):
+    """
+    Compute tax liability given the progressive tax rate schedule specified
+    by the (marginal tax) rate* and (upper tax bracket) brk* parameters and
+    given taxable income (taxinc)
+    Subtract 'TI_special_rates' from 'TTI' to get the portion of total income
+    that is taxed at normal rates. Now add agricultural income (income used for
+    rate purpose only) to get Aggregate_Income.
+    """
+    # subtract TI_special_rates from TTI to get Aggregate_Income, which is
+    # the portion of TTI that is taxed at normal rates
+    TTI = TTI_behavior + LT_CG_AMT_1 + LT_CG_AMT_2 + ST_CG_AMT_1 + ST_CG_AMT_2 + ST_CG_AMT_APPRATE
+    taxinc = max(0., TTI)
+    
+    surcharge_rate1 = cit_surcharge_rate[0]
+    surcharge_rate2 = cit_surcharge_rate[1]
+    surcharge_rate3 = cit_surcharge_rate[2]
+    surcharge_thd1 = cit_surcharge_thd[0]
+    surcharge_thd2 = cit_surcharge_thd[1]
+    # compute tax on income taxed at normal rates
+    tax_normal_rates = cit_rate * taxinc
+    # compute tax on income taxed at special rates
+    
+    tax_LTCG1 = LT_CG_RATE1 * LT_CG_AMT_1
+    tax_LTCG2 = LT_CG_RATE2 * LT_CG_AMT_2
+    tax_STCG1 = ST_CG_RATE1 * ST_CG_AMT_1
+    tax_STCG2 = ST_CG_RATE2 * ST_CG_AMT_2
+    tax_STCGapp = stcg_app_rate * ST_CG_AMT_APPRATE
+
+    # compute tax_TTI
+    tax_cg = tax_LTCG1 + tax_LTCG2 + tax_STCG1 + tax_STCG2 + tax_STCGapp
+    tax_TTI = tax_normal_rates + tax_cg
+    tax = tax_TTI
+    # compute surcharge amount
+    if TTI < surcharge_thd1:
+        surcharge = tax * surcharge_rate1
+    else:
+        if TTI >= surcharge_thd1 and TTI < surcharge_thd2:
+            surcharge = tax * surcharge_rate2
+        else:
+            surcharge = tax * surcharge_rate3
+    tax += surcharge
+    # compute cess amount
+    cess = tax * cess_rate
+    # compute citax amount
+    citax = tax + cess
+    
+    return (TTI, citax, tax_cg, surcharge, cess)
+
+
+@iterate_jit(nopython=True)
+def MAT_liability(MAT_rate, cit_surcharge_rate, cit_surcharge_thd, cess_rate,
+                  TTI, DEEMED_TI_SEC115JB, MAT):
+    MAT = max(DEEMED_TI_SEC115JB, 0.) * MAT_rate
+
+    # compute MAT surcharge based on Total Income threshold
+    surcharge_rate1 = cit_surcharge_rate[0]
+    surcharge_rate2 = cit_surcharge_rate[1]
+    surcharge_rate3 = cit_surcharge_rate[2]
+    surcharge_thd1 = cit_surcharge_thd[0]
+    surcharge_thd2 = cit_surcharge_thd[1]
+
+    if TTI < surcharge_thd1:
+        surcharge = MAT * surcharge_rate1
+    else:
+        if TTI >= surcharge_thd1 and TTI < surcharge_thd2:
+            surcharge = MAT * surcharge_rate2
+        else:
+            surcharge = MAT * surcharge_rate3
+    MAT += surcharge
+
+    MAT += MAT * cess_rate
+    return (MAT)
+
+
+@iterate_jit(nopython=True)
+def MAT_liability_and_credit(MAT_CFLimit, MAT, citax, citax_after_MAT,
+                             MAT_LAG1, MAT_LAG2, MAT_LAG3, MAT_LAG4,
+                             MAT_LAG5, MAT_LAG6, MAT_LAG7, MAT_LAG8, MAT_LAG9,
+                             MAT_LAG10, MAT_LAG11, MAT_LAG12, MAT_LAG13,
+                             MAT_LAG14, MAT_LAG15,
+                             NEW_MAT_CR1, NEW_MAT_CR2, NEW_MAT_CR3,
+                             NEW_MAT_CR4, NEW_MAT_CR5, NEW_MAT_CR6,
+                             NEW_MAT_CR7, NEW_MAT_CR8, NEW_MAT_CR9,
+                             NEW_MAT_CR10, NEW_MAT_CR11, NEW_MAT_CR12,
+                             NEW_MAT_CR13, NEW_MAT_CR14, NEW_MAT_CR15,
+                             USE_MAT_CR1, USE_MAT_CR2, USE_MAT_CR3,
+                             USE_MAT_CR4, USE_MAT_CR5, USE_MAT_CR6,
+                             USE_MAT_CR7, USE_MAT_CR8, USE_MAT_CR9,
+                             USE_MAT_CR10, USE_MAT_CR11, USE_MAT_CR12,
+                             USE_MAT_CR13, USE_MAT_CR14, USE_MAT_CR15):
+    MAT_CFLimit = int(MAT_CFLimit)
+    MAT_CR_LAGS = np.zeros(15)
+    MAT_CR_LAGS = [MAT_LAG1, MAT_LAG2, MAT_LAG3, MAT_LAG4, MAT_LAG5,
+                   MAT_LAG6, MAT_LAG7, MAT_LAG8, MAT_LAG9, MAT_LAG10,
+                   MAT_LAG11, MAT_LAG12, MAT_LAG13, MAT_LAG14, MAT_LAG15]
+
+    citax_liability = max(MAT, citax)
+    NEW_MAT_CR = np.zeros(15)
+    USE_MAT_CR = np.zeros(15)
+    # MAT is greater than citax, MAT credit increases, NEW_MAT_CR gets updated
+    if MAT > citax:
+        MAT_CR_CY = MAT - citax
+        NEW_MAT_CR[0] = MAT_CR_CY
+        NEW_MAT_CR[1:15] = MAT_CR_LAGS[:14]
+    # else MAT credit will be used up, NEW_MAT_CR gets updated
+    else:
+        for i in range(15, 0, -1):
+            if MAT_CFLimit >= i:
+                USE_MAT_CR[i-1] = min(citax_liability, MAT_CR_LAGS[i-1])
+            citax_liability = citax_liability - USE_MAT_CR[i-1]
+        NETMAT_CR = np.array(MAT_CR_LAGS) - USE_MAT_CR
+        NEW_MAT_CR[1:15] = NETMAT_CR[:14]
+        NEW_MAT_CR[0] = 0
+    (NEW_MAT_CR1, NEW_MAT_CR2, NEW_MAT_CR3, NEW_MAT_CR4, NEW_MAT_CR5,
+     NEW_MAT_CR6, NEW_MAT_CR7, NEW_MAT_CR8, NEW_MAT_CR9, NEW_MAT_CR10,
+     NEW_MAT_CR11, NEW_MAT_CR12, NEW_MAT_CR13, NEW_MAT_CR14,
+     NEW_MAT_CR15) = NEW_MAT_CR
+    (USE_MAT_CR1, USE_MAT_CR2, USE_MAT_CR3, USE_MAT_CR4, USE_MAT_CR5,
+     USE_MAT_CR6, USE_MAT_CR7, USE_MAT_CR8, USE_MAT_CR9, USE_MAT_CR10,
+     USE_MAT_CR11, USE_MAT_CR12, USE_MAT_CR13, USE_MAT_CR14,
+     USE_MAT_CR15) = USE_MAT_CR
+    citax_after_MAT = citax_liability
+    return (citax_after_MAT, USE_MAT_CR1, USE_MAT_CR2, USE_MAT_CR3,
+            USE_MAT_CR4, USE_MAT_CR5, USE_MAT_CR6, USE_MAT_CR7, USE_MAT_CR8,
+            USE_MAT_CR9, USE_MAT_CR10, USE_MAT_CR11, USE_MAT_CR12,
+            USE_MAT_CR13, USE_MAT_CR14, USE_MAT_CR15, NEW_MAT_CR1, NEW_MAT_CR2,
+            NEW_MAT_CR3, NEW_MAT_CR4, NEW_MAT_CR5, NEW_MAT_CR6, NEW_MAT_CR7,
+            NEW_MAT_CR8, NEW_MAT_CR9, NEW_MAT_CR10, NEW_MAT_CR11, NEW_MAT_CR12,
+            NEW_MAT_CR13, NEW_MAT_CR14, NEW_MAT_CR15)
+
+@iterate_jit(nopython=True)
+def Net_tax_liability(citax_after_MAT, RELIEF_90, RELIEF_91, net_citax):
+    """
+    Compute Net Tax Liability after reducing relief under section 90 (DTAA)
+    """
+    net_citax = citax_after_MAT - RELIEF_90 - RELIEF_91
+    return net_citax

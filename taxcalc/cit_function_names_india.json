@@ -1,0 +1,20 @@
+{
+  "0": "depreciation_PM15",
+  "1": "depreciation_PM30",
+  "2": "depreciation_PM40",
+  "3": "depreciation_PM50",
+  "4": "depreciation_PM60",
+  "5": "depreciation_PM80",
+  "6": "depreciation_PM100",
+  "7": "depreciation_PM",
+  "8": "additions_PM",
+  "9": "corp_income_business_profession",
+  "10": "corp_GTI_before_set_off",
+  "11": "GTI_and_losses",
+  "12": "TTI",
+  "13": "TTI_behavior",
+  "14": "cit_liability",
+  "15": "MAT_liability",
+  "16": "MAT_liability_and_credit",
+  "17": "Net_tax_liability"
+}
