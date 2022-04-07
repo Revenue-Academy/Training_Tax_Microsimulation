@@ -214,8 +214,8 @@ def tab1(self):
 
     #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
     #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_new.json"    
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_new.csv"
     
     self.vars['pit'] = 0
     self.vars['cit'] = 0
@@ -231,15 +231,15 @@ def tab1(self):
     self.vars['pit_functions_filename'] = "pit_functions_macedonia.py"
     self.vars['pit_function_names_filename'] = "pit_function_names_macedonia.json"       
 
-    self.vars['cit_data_filename'] = "cit_egypt.csv"
-    self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
-    self.vars['cit_records_variables_filename'] = "cit_records_variables_egypt.json"    
+    self.vars['cit_data_filename'] = "cit_cross_new.csv"
+    self.vars['cit_weights_filename'] = "cit_cross_wgts1.csv"
+    self.vars['cit_records_variables_filename'] = "corprecords_variables_new.json"    
     self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
     self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
-    self.vars['cit_functions_filename'] = "cit_functions_egypt.py"
-    self.vars['cit_function_names_filename'] = "cit_function_names_egypt.json"
+    self.vars['cit_functions_filename'] = "corpfuncnew.py"
+    self.vars['cit_function_names_filename'] = "cit_function_names_india.json"
 
-    self.vars['cit_max_lag_years'] = 10
+    self.vars['cit_max_lag_years'] = 9
 
     self.vars['vat_data_filename'] = "vat.csv"
     self.vars['vat_weights_filename'] = "vat_weights.csv"
@@ -249,7 +249,7 @@ def tab1(self):
     self.vars['vat_functions_filename'] = "vat_functions.py"
     self.vars['vat_function_names_filename'] = "vat_function_names.json"
     
-    self.vars['start_year'] = 2022
+    self.vars['start_year'] = 2017
     self.vars['end_year']=2027
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"

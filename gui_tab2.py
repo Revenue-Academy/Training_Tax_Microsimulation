@@ -122,7 +122,7 @@ def tab2(self):
                                                 rely = self.button_2_TAB2_pos_y, anchor = "w")       
     
  
-    self.image1 = Image.open("egypt_flag.jpg")
+    self.image1 = Image.open("india.jpg")
     self.image2 = self.image1.resize((700, 400), Image.ANTIALIAS)
     self.image = ImageTk.PhotoImage(self.image2)
     # "world_bank.png"

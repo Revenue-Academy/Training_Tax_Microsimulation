@@ -54,6 +54,7 @@ if vars['cit']:
     cit_function_names = json.load(f)
     #print('self.cit_function_names ', self.cit_function_names)
     cit_oname = vars["cit_functions_filename"][:-3]
+    print(cit_oname)
     cit_imp_statement = "from taxcalc." + cit_oname + " import *"
     exec(cit_imp_statement)         
     """
@@ -489,9 +490,13 @@ class Calculator(object):
             
             #print(bf_loss)
             cl_wdv = {}
-            for var in self.CROSS_YEAR_VARS:
-                cl_wdv[var] = getattr(self.__corprecords, 'Cl'+var[2:])
+            y = [15,30,40,50,60,80,100]
+            for var in y:
+                cl_wdv[var] = getattr(self.__corprecords, 'close_wdv_pm'+str(var))
         #cl_wdv_bld = self.__records.Cl_WDV_Bld
+            bf_mat = {}
+            for i in range(1, 16):
+                bf_mat[i] = getattr(self.__corprecords, 'NEW_MAT_CR'+str(i))
 
         next_year = self.__policy.current_year + 1
         self.__policy.set_year(next_year)
@@ -506,12 +511,16 @@ class Calculator(object):
         # populate the opening values of loss and opening balance of
         # fixed assets from the previous year      
         if self.corprecords is not None:         
-            for i in range(1, self.max_lag_years):
-                setattr(self.__corprecords, 'Loss_lag'+str(i), bf_loss[i])                 
+            #for i in range(1, self.max_lag_years):
+            for i in range(1, 9):
+                setattr(self.__corprecords, 'LOSS_LAG'+str(i), bf_loss[i])                 
             #self.__records.Loss_lag1 = bf_loss1
-            for var in self.CROSS_YEAR_VARS:
-                setattr(self.__corprecords, var, cl_wdv[var])
-        
+            y = [15,30,40,50,60,80,100]
+            for var, j in zip(self.CROSS_YEAR_VARS, y):
+                setattr(self.__corprecords, var, cl_wdv[j])
+                
+            for i in range(1, 16):
+                setattr(self.__corprecords, 'MAT_LAG'+str(i), bf_mat[i]) 
         #self.__records.Op_WDV_Bld = cl_wdv_bld   
         #self.__records.increment_year()
         #self.__gstrecords.increment_year()
