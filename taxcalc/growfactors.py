@@ -94,11 +94,11 @@ class GrowFactors(object):
         if isinstance(growfactors_filepath, str):
             if os.path.isfile(growfactors_filepath):
                 gfdf = pd.read_csv(growfactors_filepath,
-                                   index_col='YEAR')
+                                   index_col='Year')
             else:
                 # cannot call read_egg_ function in unit tests
                 gfdf = read_egg_csv(GrowFactors.GROWFACTORS_FILENAME,
-                                    index_col='YEAR')  # pragma: no cover
+                                    index_col='Year')  # pragma: no cover
         else:
             raise ValueError('growfactors_filename is not a string')
         assert isinstance(gfdf, pd.DataFrame)

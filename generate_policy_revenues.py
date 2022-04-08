@@ -27,11 +27,11 @@ def make_float(item):
         return float(item)
     
 def read_reform_dict(block_selected_dict):
-    #print('block_selected_dict in read_reform_dict: ',block_selected_dict)
+    print('block_selected_dict in read_reform_dict: ',block_selected_dict)
     years=[]
     for k in block_selected_dict.keys():
         if (block_selected_dict[k]['selected_year'] not in years):
-            years = years + [block_selected_dict[k]['selected_year']]
+            years = years + [block_selected_dict[k]['selected_year'][0]]
     ref = {}
     ref['policy']={}
     #print(' years ', years)
@@ -39,8 +39,8 @@ def read_reform_dict(block_selected_dict):
         policy_dict = {}
         for k in block_selected_dict.keys():
             #print('block_selected_dict.keys() ', k)
-            if block_selected_dict[k]['selected_year']==year:
-                policy_dict['_'+block_selected_dict[k]['selected_item']]=[make_float(block_selected_dict[k]['selected_value'])]
+            if block_selected_dict[k]['selected_year'][0]==year:
+                policy_dict['_'+block_selected_dict[k]['selected_item']]=[make_float(block_selected_dict[k]['selected_value'][0])]
         ref['policy'][int(year)] = policy_dict
     years = [int(x) for x in years]
     years.sort()
