@@ -20,12 +20,13 @@ from functools import partial
 from threading import Thread
 import time
 import ctypes
+import csv
 
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
- 
+    
 #from taxcalc import *
 
 from PIL import Image,ImageTk
@@ -48,16 +49,16 @@ class Progress_Bar:
     def progressbar(self):
         return self._progressbar, self._progress_label  # return value of private member
 
-
-        #self.log.flush()
         
-class Application(Frame):
-    from gui_tab1 import tab1
+class Application(tk.Frame):
+    from guifuncs import save_inputs, get_inputs, get_inputs_after_saving_current_vars, get_growfactors_dict
+    
+    from gui_tab11 import tab1
     #from gui_tab1 import tab12
     from gui_tab1 import display_entry
     from gui_tab1 import grid_placement
     
-    from gui_tab2 import tab2
+    #from gui_tab21 import super_tab
     from gui_tab3 import tab3
     from gui_tab3 import display_elasticity
     from gui_tab3 import grid_placement_tab3
@@ -73,14 +74,12 @@ class Application(Frame):
     from gui_tab8 import tab8
     from gui_tab8 import display_error    
 
-    
+   
     def __init__(self, master=None):
         super().__init__()
 
-        Frame.__init__(self, master)
-        
+        tk.Frame.__init__(self, master)
 
-        
         #Create Tab Control
         TAB_CONTROL = ttk.Notebook(master)
 
@@ -114,36 +113,37 @@ class Application(Frame):
         self.TAB8 = ttk.Frame(TAB_CONTROL)
         TAB_CONTROL.add(self.TAB8, text=' Settings ')
         TAB_CONTROL.pack(expand=1, fill="both")        
-        """        
-        self.text = scrolledtext.ScrolledText(self.TAB2, 
-                                      wrap = tk.WORD, 
-                                      width = 40, 
-                                      height = 10, 
-                                      font = ("Times New Roman",
-                                              15))
-        self.text.place(relx = 0.72, rely=0.70)
-        #self.text.insert('end', "stderr")
-
-        
-        #sys.stdout = TextRedirector(self.text, "stdout")
-        self.logger = TextRedirector(self.text, "stderr")
-        sys.stderr = self.logger
-        #sys.stderr = TextRedirector(self.text, "stderr")
-        """     
+     
         #initializing json container to hold all selections
         self.vars = {}
         with open('global_vars.json', 'w') as f:
-            f.write(json.dumps(self.vars, indent=2))        
+            f.write(json.dumps(self.vars, indent=2))
+        
         # TAB Start
         self.block_1_title_pos_x = 0.15
         self.grid_placement(self.block_1_title_pos_x)
         self.tab1()
+        vars = self.get_inputs()
+        sub_directory = 'taxcalc'
+        if vars!={}:           
+            with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
+                self.current_law_policy = json.load(f)
+            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'])
+            #print('self.growfactors ', self.growfactors)
+        else:
+            self.current_law_policy={}
+            self.growfactors = {}
+        #print(vars)
         #self.tab12()
         
         # TAB Policy
-        self.tab2()
+        from super_combo import super_combo
+        self.year_value_pairs_policy_dict = 1       
+        self.tab_generate_revenue_policy = super_combo(self.TAB2, self.current_law_policy, 'row_label', 'value', 0.03, 0.20)
+        (self.button_generate_revenue_policy, self.block_widget_dict) = self.tab_generate_revenue_policy.display_widgets(self.TAB2)
+        self.button_generate_revenue_policy.configure(command=self.clicked_generate_policy_revenues)
 
-        # TAB Behavior
+         # TAB Behavior
         self.tab3()
         
         # TAB Tax Expenditure
@@ -156,7 +156,12 @@ class Application(Frame):
         self.tab6()
         
         # TAB Growfactors
-        self.tab7()        
+        #self.vars['GROWFACTORS_FILENAME']
+        self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year']) 
+        self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.03, 0.20)
+        (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
+        self.button_growfactors.configure(command=self.clicked_generate_policy_revenues)        
+        #self.tab7()      
 
         # TAB Settings
         self.tab8()  
@@ -191,7 +196,7 @@ class Application(Frame):
         pos_x_dict['vat']=pos_x[2]        
         if status['pit'] == tk.NORMAL:
             if status['cit'] != tk.NORMAL:
-                if self.status['vat'] == tk.NORMAL:
+                if status['vat'] == tk.NORMAL:
                     pos_x_dict['vat']=pos_x[1]
                     pos_x_dict['cit']=pos_x[2]                
         else:
@@ -205,22 +210,35 @@ class Application(Frame):
                     pos_x_dict['vat']=pos_x[2]  
         return pos_x_dict
 
-    def save_inputs(self):  
-        with open('global_vars.json', 'w') as f:
-            f.write(json.dumps(self.vars, indent=2))
-            
-    def get_inputs(self):
+# Once the the tax is selected populate the drop down lists
+    def gui_tab1_control(self, widget_var, tax_type, pos_x):
+        self.display_entry(widget_var, tax_type, pos_x)
         self.save_inputs()
-        f = open('global_vars.json')
-        vars = json.load(f)
-        return vars
-        
+        vars=self.get_inputs()
+        sub_directory = 'taxcalc'
+        if vars!={}:           
+            with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
+                self.current_law_policy = json.load(f)
+            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'])
+            #print(self.growfactors)
+        else:
+            self.current_law_policy={}
+            self.growfactors = {}        
+        self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options(self.current_law_policy))
+        self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options(self.growfactors))
+
+    def gui_tab6_control(self, widget_var, tax_type, pos_x):
+        self.display_entry(widget_var, tax_type, pos_x)
+        self.save_inputs()
+        vars=self.get_inputs()
+        self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options('taxcalc/'+vars['DEFAULTS_FILENAME']))
+
     def input_entry_data(self, widget, varname, tax_type=None):
         filez = filedialog.askopenfilenames(title='Choose a file')
         #self.master.update()
         #filename_path = tk.splitlist(filez)[0]
         old_filename = widget.get()
-        #print('Old filename is: ', widget.get())       
+        print('Old filename is: ', widget.get())       
         filename_path = filez[0]
         filename_list = filename_path.split('/')
         filename = filename_list[-1]
@@ -228,13 +246,13 @@ class Application(Frame):
         widget.insert(0,filename)
         self.vars[varname] = filename
         if (tax_type is not None) :
-            #print('new filename is :', widget.get())
+            print('new filename is :', widget.get())
             if (varname=='GROWFACTORS_FILENAME'):
                 if filename != old_filename:
                     self.entry_salary_variable[tax_type].config(values=self.show_salary_options(tax_type))
             if (varname=='DEFAULTS_FILENAME'):
                 if filename != old_filename:
-                    self.block_widget_dict[1][1].config(values=self.policy_options())
+                    self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options())
              
     def input_combo_data(self, event, widget, varname):
         #print("method is called")
@@ -243,7 +261,7 @@ class Application(Frame):
             self.vars[varname] = int(widget.get())
         else:
             self.vars[varname] = widget.get()
-        #print(varname, self.vars[varname])
+        #print(self.vars[varname])
 
     def input_checkbox(self, widget, varname):
         #print("check method is called")
@@ -291,30 +309,86 @@ class Application(Frame):
             self.progress_label.destroy()
             self.foo_thread.join()
 
+    def generate_changes_dict(self, widget_dict, year_value_pairs, year_check=None, start_year=None, end_year=None):
+        selected_dict={}
+        #print('block_widget_dict ', self.block_widget_dict)
+        #print('length block_widget_dict ', len(self.block_widget_dict))
+        num_changes = len(widget_dict)
+        for num in range(1, num_changes+1):
+            #print(num)
+            selected_dict[num]={}
+            selected_dict[num]['selected_item']= widget_dict[num][1].get()
+            selected_dict[num]['selected_year'] = []
+            selected_dict[num]['selected_value'] = []
+            for i in range(year_value_pairs):             
+                selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
+                selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]   
+                if year_check:
+                    if int(selected_dict[num]['selected_year'][i]) < int(start_year):
+                        showinfo("Warning", "Reform Year is earlier than Start Year")
+                        return
+                    if int(selected_dict[num]['selected_year'][i]) > int(end_year):
+                        showinfo("Warning", "Reform Year is later than End Year")            
+                        return
+        return selected_dict
+    
     def clicked_generate_policy_revenues(self):
         #Save all the GUI inputs into global_vars.json file"
         # and retrieve the saved inputs for use
-        vars = self.get_inputs()
+        vars = self.get_inputs_after_saving_current_vars()
         if vars['show_error_log']:
             self.logger.clear()
         self.verbose = vars['verbose']
+        self.block_selected_dict = self.generate_changes_dict(self.block_widget_dict, self.year_value_pairs_policy_dict, year_check=True, start_year=vars['start_year'], end_year=vars['end_year'])
+        """
         #Capture the latest Reform Selection
         self.block_selected_dict={}
+        #print('block_widget_dict ', self.block_widget_dict)
+        #print('length block_widget_dict ', len(self.block_widget_dict))
+        self.num_reforms = len(self.block_widget_dict)
         for num in range(1, self.num_reforms+1):
+            #print(num)
             self.block_selected_dict[num]={}
             self.block_selected_dict[num]['selected_item']= self.block_widget_dict[num][1].get()
-            self.block_selected_dict[num]['selected_value']= self.block_widget_dict[num][3].get()
-            self.block_selected_dict[num]['selected_year']= int(self.block_widget_dict[num][2].get())
-            if (int(self.block_selected_dict[num]['selected_year']) < int(vars['start_year'])):
-                showinfo("Warning", "Reform Year is earlier than Start Year")
-                return
-            if (int(self.block_selected_dict[num]['selected_year']) > int(vars['end_year'])):
-                showinfo("Warning", "Reform Year is later than End Year")            
-                return    
+            self.block_selected_dict[num]['selected_year'] = []
+            self.block_selected_dict[num]['selected_value'] = []
+            for i in range(self.year_value_pairs_policy_dict):
+                self.block_selected_dict[num]['selected_year']= self.block_selected_dict[num]['selected_year'] + [self.block_widget_dict[num][2][i].get()]
+                self.block_selected_dict[num]['selected_value']= self.block_selected_dict[num]['selected_value'] + [self.block_widget_dict[num][3][i].get()]
+                if (int(self.block_selected_dict[num]['selected_year'][i]) < int(vars['start_year'])):
+                    showinfo("Warning", "Reform Year is earlier than Start Year")
+                    return
+                if (int(self.block_selected_dict[num]['selected_year'][i]) > int(vars['end_year'])):
+                    showinfo("Warning", "Reform Year is later than End Year")            
+                    return  
+        """
         with open('reform.json', 'w') as f:
             f.write(json.dumps(self.block_selected_dict, indent=2))
+        
         if self.verbose:
             print('Reform dictionary: ', self.block_selected_dict)
+        
+        """
+        
+        self.growfactors_selected_dict = {}
+        #print('self.growfactors_widget_dict ', self.growfactors_widget_dict)
+        self.num_changes_gf = len(self.growfactors_widget_dict)
+        for num in range(1, self.num_changes_gf+1):
+            print(num)
+            self.growfactors_selected_dict[num]={}
+            self.growfactors_selected_dict[num]['selected_item']= self.growfactors_widget_dict[num][1].get()
+            self.growfactors_selected_dict[num]['selected_year'] = []
+            self.growfactors_selected_dict[num]['selected_value'] = []
+            for i in range(self.year_value_pairs_growfactors_dict):        
+                self.growfactors_selected_dict[num]['selected_year']= self.growfactors_selected_dict[num]['selected_year'] + [self.growfactors_widget_dict[num][2][i].get()]
+                self.growfactors_selected_dict[num]['selected_value']= self.growfactors_selected_dict[num]['selected_value'] + [self.growfactors_widget_dict[num][3][i].get()]          
+        """
+        self.growfactors_selected_dict = self.generate_changes_dict(self.growfactors_widget_dict, 
+                                                                    self.year_value_pairs_growfactors_dict, year_check=False)
+
+        if self.verbose:      
+            print("Growfactors Changes Dict ",self.growfactors_selected_dict)            
+        
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
         from generate_policy_revenues import generate_policy_revenues       
@@ -350,122 +424,6 @@ class Application(Frame):
         #self.cloneButton.grid()
         return
     """
-    def create_policy_widgets(self, tab):
-        #self.num_reforms += 1
-        #print("num_reforms in policy widget ", self.num_reforms)
-        #num is the counter for the widgets
-        if (self.num_widgets==self.num_reforms):
-            self.num_widgets += 1
-            num = self.num_widgets
-            self.block_widget_dict[num] = {}
-            #self.block_selected_dict[self.num_reforms] = {}
-            self.block_widget_dict[num][1] = ttk.Combobox(tab, value=self.policy_options_list, font=self.text_font, name=str(num))
-            #self.block_widget_dict[num][1].current(1)
-            self.block_widget_dict[num][1].place(relx = self.block_2_TAB2_entry_1_1_x, 
-                            rely = (self.block_2_TAB2_entry_1_1_y+
-                                    (num-1)*(self.entry_entry_gap_y)), anchor = "w", width=300)
-            self.block_widget_dict[num][1].bind("<<ComboboxSelected>>", self.show_policy_selection)
-    
-            self.block_widget_dict[num][2] = tk.Entry(tab, width=6, font=self.fontStyle)
-            self.block_widget_dict[num][2].place(relx = self.block_2_TAB2_entry_1_2_x,
-                                                              rely = (self.block_2_TAB2_entry_1_1_y+
-                                    (num-1)*(self.entry_entry_gap_y)), anchor = "w")
-    
-            self.block_widget_dict[num][3] = tk.Entry(tab, width=14, font=self.fontStyle)
-            self.block_widget_dict[num][3].place(relx = self.block_2_TAB2_entry_1_3_x,
-                                                              rely = (self.block_2_TAB2_entry_1_1_y+
-                                    (num-1)*(self.entry_entry_gap_y)), anchor = "w")
-            #self.num_reforms += 1
-            self.button_2_TAB2_pos_y = (self.block_2_TAB2_entry_1_1_y+(num)*(self.entry_entry_gap_y))+self.entry_button_gap        
-            self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x,
-                                                rely = self.button_2_TAB2_pos_y, anchor = "w")
-
-    def reset_policy_widgets(self):
-        #print('self.num_widgets ',self.num_widgets)
-        for num in range(2, self.num_widgets+1):
-            self.block_widget_dict[num][1].destroy()
-            self.block_widget_dict[num][2].destroy()
-            self.block_widget_dict[num][3].destroy()
-        self.num_reforms = 0
-        self.num_widgets = 1
-        self.block_widget_dict[1][1].delete(0, tk.END)
-        self.block_widget_dict[1][2].delete(0, tk.END)
-        self.block_widget_dict[1][3].delete(0, tk.END)
-        self.button_2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_widgets)*(self.entry_entry_gap_y))+self.entry_button_gap 
-        self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x, rely = self.button_2_TAB2_pos_y, anchor = "w")
-                
-    def delete_policy_widgets(self):
-        num = self.num_widgets
-        #print('num of reforms: ', num)
-        #print('self.num_widgets ',self.num_widgets)
-        #print('self.num_reforms ',self.num_reforms)        
-        if num == 1:
-            #showinfo("Warning", "cannot delete")
-            self.block_widget_dict[1][1].delete(0, tk.END)
-            self.block_widget_dict[1][2].delete(0, tk.END)
-            self.block_widget_dict[1][3].delete(0, tk.END)            
-            #self.num_reforms += 1                   # increase num_reforms by 1 so that it doesnt reduce to zero in the next step when it is reduced by 1
-        elif (num > 1) :
-            self.block_widget_dict[num][1].destroy()
-            self.block_widget_dict[num][2].destroy()
-            self.block_widget_dict[num][3].destroy()
-            self.num_widgets -= 1
-            if (self.num_reforms > 0):
-                self.num_reforms -= 1
-            self.button_2_pos_y = (self.block_2_TAB2_entry_1_1_y+(self.num_widgets)*(self.entry_entry_gap_y))+self.entry_button_gap 
-            self.button_generate_revenue_policy.place(relx = self.button_2_TAB2_pos_x, rely = self.button_2_TAB2_pos_y, anchor = "w")
-        
-    def policy_options(self):
-        with open(self.sub_directory+'/'+self.vars['DEFAULTS_FILENAME']) as f:
-            self.current_law_policy = json.load(f)
-        current_law_policy_sorted = dict(sorted(self.current_law_policy.items()))    
-        policy_options_list = []
-        for k, s in current_law_policy_sorted.items(): 
-            #print(k)
-            #print(current_law_policy[k]['description'])
-            #policy_option_list = policy_option_list + [current_law_policy[k]['description']]
-            if (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
-                policy_options_list = policy_options_list + [k[1:]]
-        return (policy_options_list)
-    
-    def policy_reform():
-        self.reform={}
-        self.reform['policy']={}
-        self.reform['policy']['_'+self.selected_item]={}
-        self.updated_year = self.block_widget_dict[1][2].get()
-        self.updated_value = self.block_widget_dict[1][3].get()
-        self.reform['policy']['_'+selected_item][self.updated_year]=[self.updated_value]
-        #print("Reform2: ", self.reform)
-
-  
-        
-    def show_policy_selection(self, event):
-        vars = self.get_inputs()
-        #print("inside policy selection")
-        active_widget_number = int(str(event.widget)[-1])
-        #print("active_widget_number: ", active_widget_number)
-        num = active_widget_number
-        #print('num ', num)
-        # update the number of reforms only if we change the entries
-        # beyond self.num_reforms
-        if num > self.num_reforms:
-            self.num_reforms += 1
-        
-        #if self.num_reforms == 0:
-        #    self.num_reforms += 1
-        #print('self.num_reforms ', self.num_reforms)
-        #for num in range(1, self.num_reforms):
-        self.selected_item = self.block_widget_dict[num][1].get()
-        self.selected_value = self.current_law_policy['_'+ self.selected_item]['value'][0]
-        self.selected_year = int(self.current_law_policy['_'+ self.selected_item]['row_label'][0])
-        if (int(self.selected_year) < int(vars['start_year'])):
-            self.selected_year = vars['start_year']
-        self.block_widget_dict[num][3].delete(0, tk.END)
-        self.block_widget_dict[num][3].insert(tk.END, self.selected_value)
-        self.block_widget_dict[num][2].delete(0, tk.END)
-        self.block_widget_dict[num][2].insert(tk.END, self.selected_year)
-        
-        return
 
     def elasticity_options(self, tax_type):
         with open(self.sub_directory+'/'+self.vars['DEFAULTS_FILENAME']) as f:
@@ -494,7 +452,7 @@ class Application(Frame):
                     elasticity_dict[k]['threshold2']= current_law_policy[v]['value'][0][2]
 
                     elasticity_items_list = elasticity_items_list + [item]
-        #print("elasticity_dict in elasticity_options: ", elasticity_dict)        
+        print("elasticity_dict in elasticity_options: ", elasticity_dict)        
         return (elasticity_dict, elasticity_items_list)
     
     def elasticity_reform():
@@ -504,17 +462,17 @@ class Application(Frame):
         self.updated_bracket1 = self.elasticity_widget_dict[1][2].get()
         self.updated_value = self.block_widget_dict[1][3].get()
         self.reform['policy']['_'+selected_item][self.updated_year]=[self.updated_value]
-        #print("Reform2: ", self.reform)
+        print("Reform2: ", self.reform)
            
     def show_elasticity_selection(self, event, elasticity_dict, selected_dict, widget, tax_type):
         active_widget_number = int(str(event.widget)[-1])
-        #print("active_widget_number in show_elasticity_selection: ", active_widget_number)
+        print("active_widget_number in show_elasticity_selection: ", active_widget_number)
         num = active_widget_number
         #print(elasticity_dict)
         #for num in range(1, self.num_reforms):
         self.selected_elasticity_item = '_'+widget[num][1].get()
-        #print('elasticity_dict in show_elasticity_selection',elasticity_dict)
-        #print('item in show_elasticity_selection', self.selected_elasticity_item) 
+        print('elasticity_dict in show_elasticity_selection',elasticity_dict)
+        print('item in show_elasticity_selection', self.selected_elasticity_item) 
         self.selected_threshold1 = elasticity_dict[self.selected_elasticity_item+'_value']['threshold0']
         self.selected_threshold2 = elasticity_dict[self.selected_elasticity_item+'_value']['threshold1']
         self.selected_threshold3 = elasticity_dict[self.selected_elasticity_item+'_value']['threshold2']
@@ -531,7 +489,15 @@ class Application(Frame):
         selected_dict[num]['selected_elasticity2']= self.selected_elasticity2
         selected_dict[num]['selected_elasticity3']= self.selected_elasticity3
         selected_dict[num]['selected_year']= self.selected_year
-                          
+                   
+        print("self.selected_item: ", self.selected_elasticity_item)
+        print("self.selected_threshold1: ", self.selected_threshold1)
+        print("self.selected_threshold2: ", self.selected_threshold2)
+        print("self.selected_threshold3: ", self.selected_threshold3)
+        print("self.selected_elasticity1: ", self.selected_elasticity1)
+        print("self.selected_elasticity2: ", self.selected_elasticity2)
+        print("self.selected_elasticity3: ", self.selected_elasticity3)
+        print("self.selected_year: ", self.selected_year)        
         widget[num][2].delete(0, END)
         widget[num][2].insert(END, self.selected_threshold1)
         widget[num][3].delete(0, END)
@@ -545,6 +511,15 @@ class Application(Frame):
         widget[num][7].delete(0, END)
         widget[num][7].insert(END, self.selected_elasticity3) 
         
+        """
+        for num in range(1, self.num_reforms):        
+            self.block_selected_dict[num]['selected_value']= self.block_widget_dict[num][3].get()
+            self.block_selected_dict[num]['selected_year']= self.block_widget_dict[num][2].get()
+        
+        print("self.block_selected_dict in policy selection: ", self.block_selected_dict)
+        """
+        #with open('reform.json', 'w') as f:
+        #    json.dump(self.block_selected_dict, f)
         return
 
     def show_elasticity_selection1(self, event):
@@ -552,15 +527,15 @@ class Application(Frame):
 
    
     def create_elasticity_widgets(self, tab, selected_dict, widget, num_elasticity, tax_type):
-        #print('tax type func: ',tax_type)
+        print('tax type func: ',tax_type)
         #t_type = str(event.widget)[-5:-2]
         #print('tax type widget: ',t_type)
         self.grid_placement_tab3(self.block_elasticity_pos_x[tax_type])
-        #print("entries in elasticity widget ", num_elasticity)
-        #print("num in create: ", num_elasticity)
-        #print("self num in create: ", self.num_elasticity_changes[tax_type])
+        print("entries in elasticity widget ", num_elasticity)
+        print("num in create: ", num_elasticity)
+        print("self num in create: ", self.num_elasticity_changes[tax_type])
         widget[num_elasticity] = {}
-        #print('selected_dict before', selected_dict)
+        print('selected_dict before', selected_dict)
         selected_dict[num_elasticity] = {}
         #print('selected_dict after', selected_dict)
         widget[num_elasticity][1] = ttk.Combobox(tab, value=self.elasticity_items_list[tax_type], font=self.text_font, name=tax_type+'_'+str(num_elasticity))
@@ -634,29 +609,27 @@ class Application(Frame):
     def clicked_generate_elasticity_dict(self, selected_dict, widget, tax_type):
         #Capture the latest Reform Selection
         #print("clicked: ", self.elasticity_widget_dict[tax_type][2][7].get())
-        #print('num reforms in clicked_generate_elasticity_dict', self.num_elasticity_changes[tax_type])          
-        vars = self.get_inputs()
+        print('num reforms in clicked_generate_elasticity_dict', self.num_elasticity_changes[tax_type])          
+
         adjusted_dict={}
         adj_num = 1
         for num in range(1, self.num_elasticity_changes[tax_type]):
             adjusted_dict[adj_num]={}
             adjusted_dict[adj_num+1] = {}
-            #print('num in clicked_generate_elasticity_dict', num)            
+            print('num in clicked_generate_elasticity_dict', num)            
             adjusted_dict[adj_num]['selected_item'] = widget[num][1].get() + '_value'
             adjusted_dict[adj_num]['selected_value'] = [widget[num][5].get(),
                                                     widget[num][6].get(),
                                                     widget[num][7].get()]
-            #for elasticity set the year to the start year
-            adjusted_dict[adj_num]['selected_year'] = vars['start_year']
+            adjusted_dict[adj_num]['selected_year'] = selected_dict[num]['selected_year']
             adjusted_dict[adj_num+1]['selected_item'] = widget[num][1].get() + '_threshold'
             adjusted_dict[adj_num+1]['selected_value'] = [widget[num][2].get(),
                                                       widget[num][3].get(),
                                                       widget[num][4].get()]          
-            adjusted_dict[adj_num+1]['selected_year'] = vars['start_year']
+            adjusted_dict[adj_num+1]['selected_year'] = selected_dict[num]['selected_year']
             adj_num = adj_num+2
-            #print('adjusted_dict in clicked_generate_elasticity_dict', adjusted_dict)       
-        if vars['verbose']:
-            print("elasticity dictionary: ", adjusted_dict)
+            print('adjusted_dict in clicked_generate_elasticity_dict', adjusted_dict)       
+        print("final adjusted_dict in clicked generate elasticity dict: ", adjusted_dict)
         with open(tax_type+'_elasticity_selection.json', 'w') as f:
             json.dump(adjusted_dict, f)
             

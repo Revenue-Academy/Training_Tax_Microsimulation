@@ -7,7 +7,7 @@ Created on Tue Mar  1 22:58:13 2022
 import json
 
 
-#add parameter to json file
+#add/edit parameter to json file and saves it under a new name
 def add_parameter(json_filename):
     with open(json_filename) as vfile:
         vardict = json.load(vfile)
@@ -20,10 +20,28 @@ def add_parameter(json_filename):
       for p, q in y.items():
           print("second level key: ", p, "second level value: ", q)
         
-    with open(json_filename, 'w') as f:
+    with open(json_filename[:-5]+"1"+".json", 'w') as f:
         f.write(json.dumps(vardict, indent=2))
 
-    
+#add/edit parameter to policy json file
+def edit_parameter(json_filename):
+    newdict={}
+    with open(json_filename) as vfile:
+        vardict = json.load(vfile)
+        vfile.close() 
+    for x, y in vardict.items():
+      newdict[x] = y
+      #print("key: ", x, "value: ", y)
+      print(x)
+      if x[1:11] !='elasticity':
+          print(newdict[x]["col_var"])
+          print(newdict[x]["col_label"])
+          newdict[x]["col_var"]='Value'
+          newdict[x]["col_label"]=['Value']
+    with open(json_filename[:-5]+"1"+".json", 'w') as f:
+        f.write(json.dumps(newdict, indent=2))
+
+        
 def make_functions_dict():
     func_list = ['Net_accounting_profit', 'Total_additions_to_GP',
                  'Total_taxable_profit','Op_WDV_depr','Tax_depr_Bld', 
