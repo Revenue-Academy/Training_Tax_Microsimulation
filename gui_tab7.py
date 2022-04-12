@@ -24,5 +24,9 @@ rcParams.update({'figure.autolayout': True})
 from PIL import Image,ImageTk
 
 def tab7(self):
+    self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year'])
+    self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.03, 0.20)
+    (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
+    self.button_growfactors.configure(command=self.clicked_generate_policy_revenues)
     return
      

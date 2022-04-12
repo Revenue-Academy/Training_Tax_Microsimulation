@@ -31,7 +31,7 @@ def get_growfactors_dict(self, filename):
         mydict['_'+df.columns[j]] = {}
         year_list = []
         value_list = []
-        for i in range(1, len(df)):
+        for i in range(0, len(df)):
             year_list = year_list + [df.iloc[i,0]]
             value_list = value_list + [df.iloc[i,j]]      
         mydict['_'+df.columns[j]][df.columns[0]] = year_list
@@ -50,6 +50,22 @@ def make_grow_factors_csv(mydict, index, value, filename):
         for i in range(len(transposed_values)):
             w.writerow(transposed_values[i])
         
-   
+def update_grow_factors_csv(self, mydict, update_dict, field_year, field_value, filename):    
+    for i in range(1, len(update_dict)+1):
+        k = '_' + update_dict[i]['selected_item']
+        v = update_dict[i]['selected_value']
+        mydict[k][field_value]=v
+    #print('mydict ', mydict)
+    output_dict={}
+    output_dict[field_year] = mydict[list(mydict.keys())[0]][field_year]
+    for k in mydict.keys():
+        output_dict[k[1:]] = mydict[k][field_value]
+    #print('output_dict ', output_dict)
+    with open(filename, 'w', newline='') as f:
+         w = csv.writer(f)
+         w.writerow(output_dict.keys())
+         transposed_values = (np.array(list(output_dict.values())).T).tolist()
+         for i in range(len(transposed_values)):
+             w.writerow(transposed_values[i])   
     
     

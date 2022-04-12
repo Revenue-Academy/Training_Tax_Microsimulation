@@ -46,7 +46,7 @@ class super_combo(tk.Frame):
         self.s = ttk.Style()
         self.s.configure('my.TButton', font=self.fontStyle)        
         self.text_font = ('Calibri', '12')
-
+        self.block_widget_dict = {}
         #print('self.width_json ', self.width_json)
         #print('self.input_json ', self.input_json)
         return
@@ -197,41 +197,51 @@ class super_combo(tk.Frame):
                                                     rely = self.generate_revenue_policy_button_new_y, anchor = "w")
 
     def reset_policy_widgets(self):
-        #print('self.num_widgets ',self.num_widgets)
+        self.num_widgets = len(self.block_widget_dict)
+        num = self.num_widgets
+        print('self.num_widgets in reset widgets', self.num_widgets)
         for num in range(2, self.num_widgets+1):
             self.block_widget_dict[num][1].destroy()
-            self.l4[num].destroy()
-            self.l5[num].destroy()
+            if (self.width_json>1):
+                self.l4[num].destroy()
+                self.l5[num].destroy()
             for i in range(self.width_json):
                 self.block_widget_dict[num][2][i].destroy()
                 self.block_widget_dict[num][3][i].destroy()
+            self.block_widget_dict.pop(num, None)
         self.num_reforms = 0
         self.num_widgets = 1
         self.block_widget_dict[1][1].delete(0, tk.END)
-        for i in range(self.width_json):        
-            self.block_widget_dict[1][2][i].delete(0, tk.END)
+        for i in range(self.width_json):
+            self.block_widget_dict[1][2][i].config(state=tk.NORMAL)
+            self.block_widget_dict[1][2][i].delete(0, tk.END)            
+            #if (self.width_json>1):
+                #self.block_widget_dict[num][2][i].config(state=tk.DISABLED)
             self.block_widget_dict[1][3][i].delete(0, tk.END)
         print('button at reset ',self.generate_revenue_policy_button_y)            
         self.button_generate_revenue_policy.place(relx = self.generate_revenue_policy_button_x, 
                                                   rely = self.generate_revenue_policy_button_y, anchor = "w")
                 
     def delete_policy_widgets(self):
+        self.num_widgets = len(self.block_widget_dict)
         num = self.num_widgets
         #print('num of reforms: ', num)
-        #print('self.num_widgets ',self.num_widgets)
-        #print('self.num_reforms ',self.num_reforms)        
+        print('self.num_widgets before ', self.num_widgets)
+        #print('self.num_reforms ',self.num_reforms)
+        print('block_widget_dict before ', self.block_widget_dict)
         if num == 1:
             #showinfo("Warning", "cannot delete")
             self.block_widget_dict[1][1].delete(0, tk.END)
             for i in range(self.width_json):
                 self.block_widget_dict[1][2][i].delete(0, tk.END)
-                self.block_widget_dict[1][3][i].delete(0, tk.END)            
+                self.block_widget_dict[1][3][i].delete(0, tk.END)         
             #self.num_reforms += 1                   # increase num_reforms by 1 so that it doesnt reduce to zero in the next step when it is reduced by 1
-        elif (num > 1) :
+        elif (num > 1):
             self.block_widget_dict[num][1].destroy()          
             for i in range(self.width_json):            
                 self.block_widget_dict[num][2][i].destroy()
                 self.block_widget_dict[num][3][i].destroy()
+            self.block_widget_dict.pop(num, None)
             self.num_widgets -= 1
             if (self.num_reforms > 0):
                 self.num_reforms -= 1
@@ -242,8 +252,10 @@ class super_combo(tk.Frame):
                 self.l4[num].destroy()
                 self.l5[num].destroy()  
                 self.generate_revenue_policy_button_new_y = self.combo_y + 2*self.combo_combo_gap_y*(self.num_widgets-1) + self.combo_button_gap_y
-                print('button at >1 del ',self.generate_revenue_policy_button_new_y)
+                #print('button at >1 del ',self.generate_revenue_policy_button_new_y)
             self.button_generate_revenue_policy.place(relx = self.generate_revenue_policy_button_x, rely = self.generate_revenue_policy_button_new_y, anchor = "w")
+        print('block_widget_dict after ', self.block_widget_dict)
+        print('self.num_widgets after ',self.num_widgets)
         
     def policy_options(self, input_json):
         input_json_sorted = dict(sorted(input_json.items()))    
@@ -293,8 +305,11 @@ class super_combo(tk.Frame):
             selected_value[i] = self.input_json['_'+ selected_item][self.field_value][i]
             if (int(selected_year[i]) < int(vars['start_year'])):
                 selected_year[i] = vars['start_year']
+            widget_dict[num][2][i].config(state=tk.NORMAL)                
             widget_dict[num][2][i].delete(0, tk.END)
-            widget_dict[num][2][i].insert(tk.END, selected_year[i])
+            widget_dict[num][2][i].insert(tk.END, int(selected_year[i]))
+            if (self.width_json>1):
+                widget_dict[num][2][i].config(state=tk.DISABLED)
             widget_dict[num][3][i].delete(0, tk.END)
             widget_dict[num][3][i].insert(tk.END, selected_value[i])
 
@@ -315,7 +330,7 @@ class super_combo(tk.Frame):
         
         #self.policy_options_list = self.policy_options(self.filename)
         #self.policy_options_list.remove('gst_rate')
-        self.block_widget_dict = {}
+        #self.block_widget_dict = {}
         #self.block_selected_dict = {}
         self.num_reforms = 0
         self.num_widgets = 1

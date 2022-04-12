@@ -139,7 +139,7 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
         self.button_function_names_filename[tax_type].place(relx = self.block_1_entry_x, 
                                      rely = self.block_1_entry_7_y, anchor = "w")
 
-        self.l2[tax_type]=Label(self.TAB1, text="Salary Variable: ", font = self.fontStyle)
+        self.l2[tax_type]=tk.Label(self.TAB1, text="Salary Variable: ", font = self.fontStyle)
         self.l2[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
                  rely = self.block_1_entry_8_y, anchor = "e")
     
@@ -164,7 +164,6 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
                  rely = self.block_1_entry_9_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        
         self.entry_end_year[tax_type].current(self.year_list.index(self.vars['end_year']))
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
                         rely = self.block_1_entry_9_y, anchor = "w", width=80)
@@ -188,7 +187,7 @@ def tab1(self):
     self.selected_value = ""
     self.selected_year = 2019
     self.sub_directory = "taxcalc"
-    self.year_list = [2022, 2023, 2024, 2025, 2026, 2027]
+    self.year_list = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
     # Include a check whether the years are valid by looking at the 
     # selected growfactors file
     """    
@@ -212,10 +211,10 @@ def tab1(self):
     self.SALARY_VARIABLE = "SALARY"
     """
 
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia.csv"
-    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
+    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
+    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
     
     self.vars['pit'] = 0
     self.vars['cit'] = 0
@@ -223,7 +222,7 @@ def tab1(self):
     
     ##### NOTE 'Year' is a key word for year in records variable
     
-    self.vars['pit_data_filename'] = "pit_macedonia_new.csv"
+    self.vars['pit_data_filename'] = "pit_macedonia.csv"
     self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
     self.vars['pit_records_variables_filename'] = "pit_records_variables_macedonia.json"
     self.vars['pit_benchmark_filename'] = "pit_tax_incentives_benchmark.json"
@@ -234,10 +233,10 @@ def tab1(self):
     self.vars['cit_data_filename'] = "cit_egypt.csv"
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
     self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
-    self.vars['cit_benchmark_filename'] = "tax_incentives_benchmark_cit_egypt.json"
-    #self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
+    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
+    self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
-    self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
+    self.vars['cit_function_names_filename'] = "cit_function_names_egypt.json"
 
     self.vars['cit_max_lag_years'] = 10
 
@@ -249,13 +248,15 @@ def tab1(self):
     self.vars['vat_functions_filename'] = "vat_functions.py"
     self.vars['vat_function_names_filename'] = "vat_function_names.json"
     
-    self.vars['start_year'] = 2022
-    self.vars['end_year']=2027
+    self.vars['start_year'] = 2020
+    self.vars['end_year']=2025
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"
     self.vars['SALARY_VARIABLE'] = "SALARY"
     
     self.vars['charts_ready'] = 0
+    
+    self.save_inputs()
     self.chart_list = []
     #self.total_revenue_text1 = ""
     #self.reform_revenue_text1 = ""
@@ -297,8 +298,8 @@ def tab1(self):
     
     pos_x = [0.13, 0.40, 0.70]
 
-    self.status['pit'] = tk.NORMAL
-    self.status['cit'] = tk.DISABLED
+    self.status['pit'] = tk.DISABLED
+    self.status['cit'] = tk.NORMAL
     self.status['vat'] = tk.DISABLED
     """
     for tax_type in self.tax_list:
@@ -328,21 +329,21 @@ def tab1(self):
     self.pit_chk_box = tk.Checkbutton(self.TAB1, text='Personal Income Tax', 
                                       font = self.fontStyle, variable=self.pit_chk,
                                       state = self.status['pit'],
-                                      command=lambda: self.display_entry(self.pit_chk, 'pit', self.block_settings_pos_x['pit']))
+                                      command=lambda: self.gui_tab1_control(self.pit_chk, 'pit', self.block_settings_pos_x['pit']))
     self.pit_chk_box.place(relx = self.block_settings_pos_x['pit'], rely = self.block_1_title_box_y, anchor = "w")
 
     self.cit_chk = tk.IntVar()
     self.cit_chk_box = tk.Checkbutton(self.TAB1, text='Corporate Income Tax', 
                                       font = self.fontStyle, variable=self.cit_chk,
                                       state = self.status['cit'],
-                                      command=lambda: self.display_entry(self.cit_chk, 'cit', self.block_settings_pos_x['cit']))
+                                      command=lambda: self.gui_tab1_control(self.cit_chk, 'cit', self.block_settings_pos_x['cit']))
     self.cit_chk_box.place(relx = self.block_settings_pos_x['cit'], rely = self.block_1_title_box_y, anchor = "w")
 
     self.vat_chk = tk.IntVar()
     self.vat_chk_box = tk.Checkbutton(self.TAB1, text='Value Added Tax', 
                                       font = self.fontStyle, variable=self.vat_chk,
                                       state = self.status['vat'],
-                                      command=lambda: self.display_entry(self.vat_chk, 'vat', self.block_settings_pos_x['vat']))
+                                      command=lambda: self.gui_tab1_control(self.vat_chk, 'vat', self.block_settings_pos_x['vat']))
     self.vat_chk_box.place(relx = self.block_settings_pos_x['vat'], rely = self.block_1_title_box_y, anchor = "w")    
 
     

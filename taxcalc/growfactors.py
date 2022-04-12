@@ -180,7 +180,7 @@ class GrowFactors(object):
                  for cyr in range(firstyear, lastyear + 1)]
         return rates
 
-    def factor_value(self, name, year):
+    def factor_value(self, name, year, attribute_name=None, attribute_value=None):
         """
         Return value of factor with specified name for specified year.
         """
@@ -194,7 +194,10 @@ class GrowFactors(object):
         if year > self.last_year:
             msg = 'year={} > GrowFactors.last_year={}'
             raise ValueError(msg.format(year, self.last_year))
-        return self.gfdf[name][year]
+        if attribute_name is None:
+            return self.gfdf[name][year]
+        else:
+            return self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year]
 
     def factor_names(self):
         """
