@@ -236,7 +236,7 @@ def tab1(self):
     self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
     self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
-    self.vars['cit_function_names_filename'] = "cit_function_names_egypt.json"
+    self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
 
     self.vars['cit_max_lag_years'] = 10
 
