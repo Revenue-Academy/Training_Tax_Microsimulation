@@ -97,6 +97,9 @@ class CorpRecords(object):
                  weights=CIT_WEIGHTS_FILENAME,
                  panel_blowup=CIT_BLOWFACTORS_FILENAME,
                  start_year=CITCSV_YEAR):
+        
+        f = open('global_vars.json')
+        self.vars = json.load(f)
         # pylint: disable=too-many-arguments,too-many-locals
         self.__data_year = start_year
         # read specified data
@@ -268,6 +271,8 @@ class CorpRecords(object):
         Read CorpRecords variables metadata from JSON file;
         returns dictionary and specifies static varname sets listed below.
         """
+        
+        #print('VAR_INFO_FILENAME ', CorpRecords.VAR_INFO_FILENAME)
         var_info_path = os.path.join(CorpRecords.CUR_PATH,
                                      CorpRecords.VAR_INFO_FILENAME)
         if os.path.exists(var_info_path):
@@ -276,6 +281,7 @@ class CorpRecords(object):
         else:
             msg = 'file {} cannot be found'.format(var_info_path)
             raise ValueError(msg)
+        #print(vardict)
         CorpRecords.INTEGER_READ_VARS = set(k for k,
                                             v in vardict['read'].items()
                                             if v['type'] == 'int')
@@ -297,6 +303,7 @@ class CorpRecords(object):
         CorpRecords.CHANGING_CALCULATED_VARS = FLOAT_CALCULATED_VARS
         CorpRecords.INTEGER_VARS = (CorpRecords.INTEGER_READ_VARS |
                                     INT_CALCULATED_VARS)
+        #print('CorpRecords.INTEGER_READ_VARS in read_var_info ', CorpRecords.INTEGER_READ_VARS)
         return vardict
 
     # specify various sets of variable names
@@ -511,6 +518,7 @@ class CorpRecords(object):
         for varname in list(taxdf.columns.values):
             if varname in CorpRecords.USABLE_READ_VARS:
                 READ_VARS.add(varname)
+                print(CorpRecords.INTEGER_READ_VARS)
                 if varname in CorpRecords.INTEGER_READ_VARS:
                     setattr(self, varname,
                             taxdf[varname].astype(np.int32).values)

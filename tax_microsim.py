@@ -51,9 +51,10 @@ class Progress_Bar:
 
         
 class Application(tk.Frame):
-    from guifuncs import save_inputs, get_inputs, get_inputs_after_saving_current_vars, get_growfactors_dict
-    
-    from gui_tab11 import tab1
+    from guifuncs import save_inputs, get_inputs
+    from guifuncs import get_inputs_after_saving_current_vars
+    from guifuncs import get_growfactors_dict, update_grow_factors_csv 
+    from gui_tab1 import tab1
     #from gui_tab1 import tab12
     from gui_tab1 import display_entry
     from gui_tab1 import grid_placement
@@ -314,22 +315,31 @@ class Application(tk.Frame):
         #print('block_widget_dict ', self.block_widget_dict)
         #print('length block_widget_dict ', len(self.block_widget_dict))
         num_changes = len(widget_dict)
+        print(widget_dict)
+        print('num_changes ', num_changes)
         for num in range(1, num_changes+1):
-            #print(num)
-            selected_dict[num]={}
-            selected_dict[num]['selected_item']= widget_dict[num][1].get()
-            selected_dict[num]['selected_year'] = []
-            selected_dict[num]['selected_value'] = []
-            for i in range(year_value_pairs):             
-                selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
-                selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]   
-                if year_check:
-                    if int(selected_dict[num]['selected_year'][i]) < int(start_year):
-                        showinfo("Warning", "Reform Year is earlier than Start Year")
-                        return
-                    if int(selected_dict[num]['selected_year'][i]) > int(end_year):
-                        showinfo("Warning", "Reform Year is later than End Year")            
-                        return
+            print('num ', num)
+            selected_item = widget_dict[num][1].get()
+            if (selected_item!=''):
+                selected_dict[num]={}            
+                selected_dict[num]['selected_item']= selected_item
+                selected_dict[num]['selected_year'] = []
+                selected_dict[num]['selected_value'] = []
+                for i in range(year_value_pairs):        
+                    selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
+                    selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]   
+                    #print('selected_dict ', selected_dict)
+                    if year_check:
+                        #print('i ', i)
+                        #print(selected_dict[num]['selected_year'][i])
+                        #print(start_year)
+                        if int(selected_dict[num]['selected_year'][i]) < int(start_year):
+                            showinfo("Warning", "Reform Year is earlier than Start Year")
+                            return
+                        if int(selected_dict[num]['selected_year'][i]) > int(end_year):
+                            showinfo("Warning", "Reform Year is later than End Year")            
+                            return
+        print('selected_dict ', selected_dict)
         return selected_dict
     
     def clicked_generate_policy_revenues(self):
@@ -388,6 +398,10 @@ class Application(tk.Frame):
 
         if self.verbose:      
             print("Growfactors Changes Dict ",self.growfactors_selected_dict)            
+
+        self.update_grow_factors_csv(self.growfactors, self.growfactors_selected_dict,
+                               'Year', 'Value', 
+                                self.sub_directory+'/'+vars['GROWFACTORS_FILENAME'])
         
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
