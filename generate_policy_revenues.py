@@ -122,8 +122,8 @@ def generate_policy_revenues():
     f = open('global_vars.json')
     vars = json.load(f)
     verbose = vars['verbose']
-    start_year = vars['start_year']
-    end_year = vars['end_year']
+    start_year = int(vars['start_year'])
+    end_year = int(vars['end_year'])
     
     tax_list=[]
     tax_collection_var_list = []  
@@ -179,7 +179,7 @@ def generate_policy_revenues():
     # specify Calculator objects for current-law policy
     calc1 = Calculator(policy=pol, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)    
     assert isinstance(calc1, Calculator)
-    assert calc1.current_year == vars["start_year"]
+    assert calc1.current_year == int(vars["start_year"])
     np.seterr(divide='ignore', invalid='ignore')
     pol2 = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])      
     years, reform=read_reform_dict(block_selected_dict)

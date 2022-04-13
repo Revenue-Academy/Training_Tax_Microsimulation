@@ -171,7 +171,9 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
 
         self.chart_list = self.chart_list + [tax_type+'_revenue_projection']       
         self.chart_list = self.chart_list + [tax_type+'_distribution_table']
-        self.chart_list = self.chart_list + [tax_type+'_etr']        
+        self.chart_list = self.chart_list + [tax_type+'_etr']
+        
+        #self.save_inputs()
         #self.completed_TAB1 = 1
         #self.tab6()
 
@@ -214,11 +216,9 @@ def tab1(self):
     #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
     #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
     self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt1.csv"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
     
-    self.vars['pit'] = 0
-    self.vars['cit'] = 0
-    self.vars['vat'] = 0
+
     
     ##### NOTE 'Year' is a key word for year in records variable
     
@@ -255,20 +255,8 @@ def tab1(self):
     self.vars['SALARY_VARIABLE'] = "SALARY"
     
     self.vars['charts_ready'] = 0
-    
-    self.save_inputs()
     self.chart_list = []
-    #self.total_revenue_text1 = ""
-    #self.reform_revenue_text1 = ""
-    #self.reform_filename = "app01_reform.json"
-    
-    self.fontStyle = tkfont.Font(family="Calibri", size="12")
-    self.fontStyle_sub_title = tkfont.Font(family="Calibri", size="14", weight="bold")         
-    self.fontStyle_title = tkfont.Font(family="Calibri", size="18", weight="bold")
-    self.s = ttk.Style()
-    self.s.configure('my.TButton', font=self.fontStyle)        
-    self.text_font = ('Calibri', '12')
-            
+
     #initializing the display widgets    
     self.l1 = {}
     self.l2 = {}
@@ -291,6 +279,21 @@ def tab1(self):
     self.entry_salary_variable = {}
     self.entry_start_year = {}
     self.entry_end_year = {}
+    
+
+    #self.total_revenue_text1 = ""
+    #self.reform_revenue_text1 = ""
+    #self.reform_filename = "app01_reform.json"
+    
+    self.fontStyle = tkfont.Font(family="Calibri", size="12")
+    self.fontStyle_sub_title = tkfont.Font(family="Calibri", size="14", weight="bold")         
+    self.fontStyle_title = tkfont.Font(family="Calibri", size="18", weight="bold")
+    self.s = ttk.Style()
+    self.s.configure('my.TButton', font=self.fontStyle)        
+    self.text_font = ('Calibri', '12')
+            
+    #initializing the display widgets    
+
     self.block_settings_pos_x = {}
     self.status = {}
     
@@ -298,9 +301,16 @@ def tab1(self):
     
     pos_x = [0.13, 0.40, 0.70]
 
-    self.status['pit'] = tk.DISABLED
-    self.status['cit'] = tk.NORMAL
-    self.status['vat'] = tk.DISABLED
+    self.vars['pit'] = 0
+    self.vars['cit'] = 1
+    self.vars['vat'] = 0
+    
+    self.status['pit'] = tk.NORMAL if self.vars['pit'] else tk.DISABLED
+    self.status['cit'] = tk.NORMAL if self.vars['cit'] else tk.DISABLED
+    self.status['vat'] = tk.NORMAL if self.vars['vat'] else tk.DISABLED
+
+    self.save_inputs()
+       
     """
     for tax_type in self.tax_list:
         if self.status[tax_type] == tk.NORMAL:

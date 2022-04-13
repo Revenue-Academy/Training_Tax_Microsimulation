@@ -72,6 +72,7 @@ class Application(tk.Frame):
     from gui_tab6 import update_chart_list    
     from gui_tab6 import display_chart
     from gui_tab7 import tab7   
+    from gui_tab7 import get_gf_dict
     from gui_tab8 import tab8
     from gui_tab8 import display_error    
 
@@ -126,10 +127,23 @@ class Application(tk.Frame):
         self.tab1()
         vars = self.get_inputs()
         sub_directory = 'taxcalc'
-        if vars!={}:           
+        tax_list = []
+        if vars['pit']:
+            tax_list = tax_list + ['pit']
+        if vars['cit']:
+            tax_list = tax_list + ['cit']
+        if vars['vat']:
+            tax_list = tax_list + ['vat']
+        tax_type = tax_list[0]       
+        if vars!={}:         
             with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
-            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'])
+            with open(sub_directory+'/'+vars[tax_type+'_records_variables_filename']) as vfile:
+                self.vardict = json.load(vfile)                
+            self.ATTRIBUTE_READ_VARS = set(k for k,
+                      v in self.vardict['read'].items()
+                      if v['attribute'] == 'Yes')
+            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
             #print('self.growfactors ', self.growfactors)
         else:
             self.current_law_policy={}
@@ -140,7 +154,7 @@ class Application(tk.Frame):
         # TAB Policy
         from super_combo import super_combo
         self.year_value_pairs_policy_dict = 1       
-        self.tab_generate_revenue_policy = super_combo(self.TAB2, self.current_law_policy, 'row_label', 'value', 0.03, 0.20)
+        self.tab_generate_revenue_policy = super_combo(self.TAB2, self.current_law_policy, 'row_label', 'value', 0.01, 0.20)
         (self.button_generate_revenue_policy, self.block_widget_dict) = self.tab_generate_revenue_policy.display_widgets(self.TAB2)
         self.button_generate_revenue_policy.configure(command=self.clicked_generate_policy_revenues)
 
@@ -158,11 +172,14 @@ class Application(tk.Frame):
         
         # TAB Growfactors
         #self.vars['GROWFACTORS_FILENAME']
+
+        """
         self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year']) 
         self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.03, 0.20)
         (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
         self.button_growfactors.configure(command=self.clicked_generate_policy_revenues)        
-        #self.tab7()      
+        """
+        self.tab7()      
 
         # TAB Settings
         self.tab8()  
@@ -220,7 +237,7 @@ class Application(tk.Frame):
         if vars!={}:           
             with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
-            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'])
+            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
             #print(self.growfactors)
         else:
             self.current_law_policy={}
@@ -250,9 +267,11 @@ class Application(tk.Frame):
             print('new filename is :', widget.get())
             if (varname=='GROWFACTORS_FILENAME'):
                 if filename != old_filename:
+                    self.vars[varname] = filename
                     self.entry_salary_variable[tax_type].config(values=self.show_salary_options(tax_type))
             if (varname=='DEFAULTS_FILENAME'):
                 if filename != old_filename:
+                    self.vars[varname] = filename
                     self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options())
              
     def input_combo_data(self, event, widget, varname):
@@ -315,10 +334,11 @@ class Application(tk.Frame):
         #print('block_widget_dict ', self.block_widget_dict)
         #print('length block_widget_dict ', len(self.block_widget_dict))
         num_changes = len(widget_dict)
-        print(widget_dict)
-        print('num_changes ', num_changes)
+        self.selected_attribute_widget
+        #print(widget_dict)
+        #print('num_changes ', num_changes)
         for num in range(1, num_changes+1):
-            print('num ', num)
+            #print('num ', num)
             selected_item = widget_dict[num][1].get()
             if (selected_item!=''):
                 selected_dict[num]={}            
@@ -350,49 +370,13 @@ class Application(tk.Frame):
             self.logger.clear()
         self.verbose = vars['verbose']
         self.block_selected_dict = self.generate_changes_dict(self.block_widget_dict, self.year_value_pairs_policy_dict, year_check=True, start_year=vars['start_year'], end_year=vars['end_year'])
-        """
-        #Capture the latest Reform Selection
-        self.block_selected_dict={}
-        #print('block_widget_dict ', self.block_widget_dict)
-        #print('length block_widget_dict ', len(self.block_widget_dict))
-        self.num_reforms = len(self.block_widget_dict)
-        for num in range(1, self.num_reforms+1):
-            #print(num)
-            self.block_selected_dict[num]={}
-            self.block_selected_dict[num]['selected_item']= self.block_widget_dict[num][1].get()
-            self.block_selected_dict[num]['selected_year'] = []
-            self.block_selected_dict[num]['selected_value'] = []
-            for i in range(self.year_value_pairs_policy_dict):
-                self.block_selected_dict[num]['selected_year']= self.block_selected_dict[num]['selected_year'] + [self.block_widget_dict[num][2][i].get()]
-                self.block_selected_dict[num]['selected_value']= self.block_selected_dict[num]['selected_value'] + [self.block_widget_dict[num][3][i].get()]
-                if (int(self.block_selected_dict[num]['selected_year'][i]) < int(vars['start_year'])):
-                    showinfo("Warning", "Reform Year is earlier than Start Year")
-                    return
-                if (int(self.block_selected_dict[num]['selected_year'][i]) > int(vars['end_year'])):
-                    showinfo("Warning", "Reform Year is later than End Year")            
-                    return  
-        """
+
         with open('reform.json', 'w') as f:
             f.write(json.dumps(self.block_selected_dict, indent=2))
         
         if self.verbose:
             print('Reform dictionary: ', self.block_selected_dict)
-        
-        """
-        
-        self.growfactors_selected_dict = {}
-        #print('self.growfactors_widget_dict ', self.growfactors_widget_dict)
-        self.num_changes_gf = len(self.growfactors_widget_dict)
-        for num in range(1, self.num_changes_gf+1):
-            print(num)
-            self.growfactors_selected_dict[num]={}
-            self.growfactors_selected_dict[num]['selected_item']= self.growfactors_widget_dict[num][1].get()
-            self.growfactors_selected_dict[num]['selected_year'] = []
-            self.growfactors_selected_dict[num]['selected_value'] = []
-            for i in range(self.year_value_pairs_growfactors_dict):        
-                self.growfactors_selected_dict[num]['selected_year']= self.growfactors_selected_dict[num]['selected_year'] + [self.growfactors_widget_dict[num][2][i].get()]
-                self.growfactors_selected_dict[num]['selected_value']= self.growfactors_selected_dict[num]['selected_value'] + [self.growfactors_widget_dict[num][3][i].get()]          
-        """
+
         self.growfactors_selected_dict = self.generate_changes_dict(self.growfactors_widget_dict, 
                                                                     self.year_value_pairs_growfactors_dict, year_check=False)
 

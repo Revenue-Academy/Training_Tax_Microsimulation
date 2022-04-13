@@ -59,9 +59,9 @@ class Policy(ParametersBase):
     LAST_BUDGET_YEAR = 2023  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
     """
-    JSON_START_YEAR = vars['start_year']  # remains the same unless earlier data added
-    LAST_KNOWN_YEAR = vars['start_year']  # last year for which indexed param vals are known
-    LAST_BUDGET_YEAR = vars['end_year']  # increases by one for every new assessment year
+    JSON_START_YEAR = int(vars['start_year'])  # remains the same unless earlier data added
+    LAST_KNOWN_YEAR = int(vars['start_year'])  # last year for which indexed param vals are known
+    LAST_BUDGET_YEAR = int(vars['end_year'])  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1    
 
     def __init__(self,DEFAULTS_FILENAME=None,
@@ -78,9 +78,9 @@ class Policy(ParametersBase):
         vars = json.load(f)
         self.verbose = vars['verbose']
 
-        JSON_START_YEAR = vars['start_year']  # remains the same unless earlier data added
-        LAST_KNOWN_YEAR = vars['start_year']  # last year for which indexed param vals are known
-        LAST_BUDGET_YEAR = vars['end_year']  # increases by one for every new assessment year
+        JSON_START_YEAR = int(vars['start_year'])  # remains the same unless earlier data added
+        LAST_KNOWN_YEAR = int(vars['start_year'])  # last year for which indexed param vals are known
+        LAST_BUDGET_YEAR = int(vars['end_year'])  # increases by one for every new assessment year
         DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
         start_year=JSON_START_YEAR
         num_years = DEFAULT_NUM_YEARS
