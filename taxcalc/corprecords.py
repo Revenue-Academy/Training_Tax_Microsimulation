@@ -82,7 +82,7 @@ class CorpRecords(object):
     vars = json.load(f)
     #print("vars in corprecords", vars)
     
-    CITCSV_YEAR = vars['start_year']
+    CITCSV_YEAR = int(vars['start_year'])
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     CIT_DATA_FILENAME = vars['cit_data_filename']
@@ -285,6 +285,9 @@ class CorpRecords(object):
         CorpRecords.INTEGER_READ_VARS = set(k for k,
                                             v in vardict['read'].items()
                                             if v['type'] == 'int')
+        CorpRecords.ATTRIBUTE_READ_VARS = set(k for k,
+                                            v in vardict['read'].items()
+                                            if v['attribute'] == 'Yes')        
         FLOAT_READ_VARS = set(k for k, v in vardict['read'].items()
                               if v['type'] == 'float')
         CorpRecords.MUST_READ_VARS = set(k for k, v in vardict['read'].items()
@@ -303,10 +306,12 @@ class CorpRecords(object):
         CorpRecords.CHANGING_CALCULATED_VARS = FLOAT_CALCULATED_VARS
         CorpRecords.INTEGER_VARS = (CorpRecords.INTEGER_READ_VARS |
                                     INT_CALCULATED_VARS)
+
         #print('CorpRecords.INTEGER_READ_VARS in read_var_info ', CorpRecords.INTEGER_READ_VARS)
         return vardict
 
     # specify various sets of variable names
+    ATTRIBUTE_READ_VARS = None
     INTEGER_READ_VARS = None
     MUST_READ_VARS = None
     USABLE_READ_VARS = None
@@ -326,6 +331,9 @@ class CorpRecords(object):
         CorpRecords.INTEGER_READ_VARS = set(k for k,
                                             v in vardict['read'].items()
                                             if v['type'] == 'int')
+        CorpRecords.ATTRIBUTE_READ_VARS = set(k for k,
+                                            v in vardict['read'].items()
+                                            if v['attribute'] == 'Yes')        
         FLOAT_READ_VARS = set(k for k, v in vardict['read'].items()
                               if v['type'] == 'float')
         CorpRecords.USABLE_READ_VARS = (CorpRecords.INTEGER_READ_VARS |
@@ -335,66 +343,43 @@ class CorpRecords(object):
         gf_columns_all = self.gfactors.factor_names()
         gf_columns = CorpRecords.USABLE_READ_VARS.intersection(gf_columns_all)
         #print("grow factors columns used ", gf_columns)
-        
-        for col in gf_columns:
-            GF_COLS = self.gfactors.factor_value(col, year)
-            var = getattr(self, col)
-            var *= GF_COLS
-            setattr(self, col, var)
-
+        attribute_columns = list(CorpRecords.ATTRIBUTE_READ_VARS.intersection(gf_columns_all))     
+        print('attribute_columns ', attribute_columns)
+        print('Revenues ', getattr(self, 'Revenues'))
+        if len(attribute_columns)==0:
+            for col in gf_columns:
+                GF_COLS = self.gfactors.factor_value(col, year)
+                var = getattr(self, col)
+                var *= GF_COLS
+                setattr(self, col, var)
+        else:
+            attribute_data = list(getattr(self, attribute_columns[0]))
+            attribute_types = set(attribute_data)
+            print('attribute_types ', attribute_types)
+            #print(attribute_columns[0], attribute_data)
+            GF_COLS = np.ones(len(attribute_data))
+            for col in gf_columns:
+                #col = 'Revenues'
+                for val in attribute_types:
+                    print('val ', val)
+                    gf_value = self.gfactors.factor_value(col, year, attribute_columns[0], val)
+                    print('gf_value ', gf_value)
+                    attribute_bool = [i==val for i in attribute_data]
+                    #print(attribute_data==val)
+                    GF_COLS = np.where(attribute_bool, gf_value, GF_COLS)
+                print('GF_COLS ', GF_COLS)
+                var = getattr(self, col)
+                print('var before ', var)                
+                var *= GF_COLS
+                print('var after ', var)
+                setattr(self, col, var)
             #self.ST_CG_AMT_1 *= GF_ST_CG_AMT_1
             #GF_INCOME_HP = self.gfactors.factor_value('INCOME_HP', year)
         
         """
-        GF_INCOME_HP = self.gfactors.factor_value('INCOME_HP', year)
-        GF_PRFT_GAIN_BP_OTHR_SPECLTV_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_OTHR_SPECLTV_BUS',
-                                                          year)
-        GF_PRFT_GAIN_BP_SPECLTV_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_SPECLTV_BUS',
-                                                       year)
-        GF_PRFT_GAIN_BP_SPCFD_BUS = self.gfactors.factor_value('PRFT_GAIN_BP_SPCFD_BUS', year)
-        GF_PRFT_GAIN_BP_INC_115BBF = self.gfactors.factor_value('PRFT_GAIN_BP_INC_115BBF',
-                                                        year)
         GF_ST_CG_AMT_1 = self.gfactors.factor_value('ST_CG_AMT_1', year)
-        GF_ST_CG_AMT_2 = self.gfactors.factor_value('ST_CG_AMT_2', year)
-        GF_LT_CG_AMT_1 = self.gfactors.factor_value('LT_CG_AMT_1', year)
-        GF_LT_CG_AMT_2 = self.gfactors.factor_value('LT_CG_AMT_2', year)
-        GF_ST_CG_AMT_APPRATE = self.gfactors.factor_value('ST_CG_AMT_APPRATE', year)
-        GF_TOTAL_INCOME_OS = self.gfactors.factor_value('TOTAL_INCOME_OS', year)
-        GF_CYL_SET_OFF = self.gfactors.factor_value('CYL_SET_OFF', year)
-        GF_TOTAL_DEDUC_VIA = self.gfactors.factor_value('TOTAL_DEDUC_VIA', year)
-        GF_DEDUCT_SEC_10A_OR_10AA = self.gfactors.factor_value('DEDUCT_SEC_10A_OR_10AA',
-                                                       year)
-        GF_NET_AGRC_INCOME = self.gfactors.factor_value('NET_AGRC_INCOME', year)
-        GF_PWR_DOWN_VAL_1ST_DAY_PY_15P = self.gfactors.factor_value('PWR_DOWN_VAL_1ST_DAY_PY_15P', year)
-        GF_PADDTNS_180_DAYS__MOR_PY_15P = self.gfactors.factor_value('PADDTNS_180_DAYS__MOR_PY_15P', year)
-        GF_PCR34_PY_15P = self.gfactors.factor_value('PCR34_PY_15P', year)
-        GF_PADDTNS_LESS_180_DAYS_15P = self.gfactors.factor_value('PADDTNS_LESS_180_DAYS_15P', year)
-        GF_PCR7_PY_15P = self.gfactors.factor_value('PCR7_PY_15P', year)
-        GF_PEXP_INCURRD_TRF_ASSTS_15P = self.gfactors.factor_value('PEXP_INCURRD_TRF_ASSTS_15P', year)
-        GF_PCAP_GAINS_LOSS_SEC50_15P = self.gfactors.factor_value('PCAP_GAINS_LOSS_SEC50_15P', year)
 
         self.ST_CG_AMT_1 *= GF_ST_CG_AMT_1
-        self.ST_CG_AMT_2 *= GF_ST_CG_AMT_2
-        self.ST_CG_AMT_APPRATE *= GF_ST_CG_AMT_APPRATE
-        self.LT_CG_AMT_1 *= GF_LT_CG_AMT_1
-        self.LT_CG_AMT_2 *= GF_LT_CG_AMT_2
-        self.INCOME_HP *= GF_INCOME_HP
-        self.PRFT_GAIN_BP_OTHR_SPECLTV_BUS *= GF_PRFT_GAIN_BP_OTHR_SPECLTV_BUS
-        self.PRFT_GAIN_BP_SPECLTV_BUS *= GF_PRFT_GAIN_BP_SPECLTV_BUS
-        self.PRFT_GAIN_BP_SPCFD_BUS *= GF_PRFT_GAIN_BP_SPCFD_BUS
-        self.PRFT_GAIN_BP_INC_115BBF *= GF_PRFT_GAIN_BP_INC_115BBF
-        self.TOTAL_INCOME_OS *= GF_TOTAL_INCOME_OS
-        self.CYL_SET_OFF *= GF_CYL_SET_OFF
-        self.TOTAL_DEDUC_VIA *= GF_TOTAL_DEDUC_VIA
-        self.DEDUCT_SEC_10A_OR_10AA *= GF_DEDUCT_SEC_10A_OR_10AA
-        self.NET_AGRC_INCOME *= GF_NET_AGRC_INCOME
-        self.PWR_DOWN_VAL_1ST_DAY_PY_15P *= GF_PWR_DOWN_VAL_1ST_DAY_PY_15P
-        self.PADDTNS_180_DAYS__MOR_PY_15P *= GF_PADDTNS_180_DAYS__MOR_PY_15P
-        self.PCR34_PY_15P *= GF_PCR34_PY_15P
-        self.PADDTNS_LESS_180_DAYS_15P *= GF_PADDTNS_LESS_180_DAYS_15P
-        self.PCR7_PY_15P *= GF_PCR7_PY_15P
-        self.PEXP_INCURRD_TRF_ASSTS_15P *= GF_PEXP_INCURRD_TRF_ASSTS_15P
-        self.PCAP_GAINS_LOSS_SEC50_15P *= GF_PCAP_GAINS_LOSS_SEC50_15P
         """
     def _extract_panel_year(self):
         """
@@ -518,13 +503,16 @@ class CorpRecords(object):
         for varname in list(taxdf.columns.values):
             if varname in CorpRecords.USABLE_READ_VARS:
                 READ_VARS.add(varname)
-                print(CorpRecords.INTEGER_READ_VARS)
+                #print(CorpRecords.INTEGER_READ_VARS)
                 if varname in CorpRecords.INTEGER_READ_VARS:
                     setattr(self, varname,
                             taxdf[varname].astype(np.int32).values)
                 else:
                     setattr(self, varname,
                             taxdf[varname].astype(np.float64).values)
+            elif varname in CorpRecords.ATTRIBUTE_READ_VARS:
+                    setattr(self, varname,
+                            taxdf[varname])            
             else:
                 self.IGNORED_VARS.add(varname)
         # check that MUST_READ_VARS are all present in taxdf

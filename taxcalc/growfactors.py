@@ -86,11 +86,13 @@ class GrowFactors(object):
         f = open('global_vars.json')
         vars = json.load(f)
         self.verbose = vars['verbose']
+        growfactors_filename = vars['GROWFACTORS_FILENAME']
         # read grow factors from specified growfactors_filename
         gfdf = pd.DataFrame()
         CUR_PATH = os.path.abspath(os.path.dirname(__file__))
         #FILENAME = 'growfactors.csv'
         growfactors_filepath = os.path.join(CUR_PATH, growfactors_filename)
+        print('growfactors_filepath ', growfactors_filepath)
         if isinstance(growfactors_filepath, str):
             if os.path.isfile(growfactors_filepath):
                 gfdf = pd.read_csv(growfactors_filepath,
@@ -121,8 +123,8 @@ class GrowFactors(object):
         self._last_year = max(gfdf.index)
         # set gfdf as attribute of class
         self.gfdf = pd.DataFrame()
-        setattr(self, 'gfdf',
-                gfdf.astype(np.float64))  # pylint: disable=no-member
+        #setattr(self, 'gfdf', gfdf.astype(np.float64))  # pylint: disable=no-member
+        setattr(self, 'gfdf', gfdf)  # pylint: disable=no-member
         #print(self.gfdf)
         del gfdf
         # specify factors as being unused (that is, not yet accessed)
@@ -195,8 +197,18 @@ class GrowFactors(object):
             msg = 'year={} > GrowFactors.last_year={}'
             raise ValueError(msg.format(year, self.last_year))
         if attribute_name is None:
+            #print('self.gfdf ', self.gfdf)
+            #print('self.gfdf[name][year] ', self.gfdf[name][year])
             return self.gfdf[name][year]
         else:
+            #print('self.gfdf ', self.gfdf)
+            #print(self.gfdf[attribute_name]==attribute_value)
+            print('col ', name)
+            print('year ', year)
+            print('attribute_name ', attribute_name)
+            print('attribute_value ', attribute_value)
+            print('self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year] ', 
+                  self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year])
             return self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year]
 
     def factor_names(self):
