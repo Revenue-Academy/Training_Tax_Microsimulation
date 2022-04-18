@@ -134,7 +134,7 @@ class Application(tk.Frame):
             tax_list = tax_list + ['cit']
         if vars['vat']:
             tax_list = tax_list + ['vat']
-        tax_type = tax_list[0]       
+        tax_type = tax_list[0]
         if vars!={}:         
             with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
@@ -345,9 +345,10 @@ class Application(tk.Frame):
                 selected_dict[num]['selected_item']= selected_item
                 selected_dict[num]['selected_year'] = []
                 selected_dict[num]['selected_value'] = []
+                selected_dict[num]['selected_attribute'] = widget_dict[num][4].get()
                 for i in range(year_value_pairs):        
                     selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
-                    selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]   
+                    selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]
                     #print('selected_dict ', selected_dict)
                     if year_check:
                         #print('i ', i)

@@ -344,8 +344,8 @@ class CorpRecords(object):
         gf_columns = CorpRecords.USABLE_READ_VARS.intersection(gf_columns_all)
         #print("grow factors columns used ", gf_columns)
         attribute_columns = list(CorpRecords.ATTRIBUTE_READ_VARS.intersection(gf_columns_all))     
-        print('attribute_columns ', attribute_columns)
-        print('Revenues ', getattr(self, 'Revenues'))
+        #print('attribute_columns ', attribute_columns)
+        #print('Revenues ', getattr(self, 'Revenues'))
         if len(attribute_columns)==0:
             for col in gf_columns:
                 GF_COLS = self.gfactors.factor_value(col, year)
@@ -355,23 +355,23 @@ class CorpRecords(object):
         else:
             attribute_data = list(getattr(self, attribute_columns[0]))
             attribute_types = set(attribute_data)
-            print('attribute_types ', attribute_types)
+            #print('attribute_types ', attribute_types)
             #print(attribute_columns[0], attribute_data)
             GF_COLS = np.ones(len(attribute_data))
             for col in gf_columns:
                 #col = 'Revenues'
                 for val in attribute_types:
-                    print('val ', val)
+                    #print('val ', val)
                     gf_value = self.gfactors.factor_value(col, year, attribute_columns[0], val)
-                    print('gf_value ', gf_value)
+                    #print('gf_value ', gf_value)
                     attribute_bool = [i==val for i in attribute_data]
                     #print(attribute_data==val)
                     GF_COLS = np.where(attribute_bool, gf_value, GF_COLS)
-                print('GF_COLS ', GF_COLS)
+                #print('GF_COLS ', GF_COLS)
                 var = getattr(self, col)
-                print('var before ', var)                
+                #print('var before ', var)                
                 var *= GF_COLS
-                print('var after ', var)
+                #print('var after ', var)
                 setattr(self, col, var)
             #self.ST_CG_AMT_1 *= GF_ST_CG_AMT_1
             #GF_INCOME_HP = self.gfactors.factor_value('INCOME_HP', year)
