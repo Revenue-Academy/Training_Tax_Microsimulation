@@ -22,8 +22,8 @@ rcParams.update({'figure.autolayout': True})
 #from taxcalc import *
 
 from PIL import Image,ImageTk
-       
-def display_tax_expenditure(self, widget, tax_type,block_1_title_pos_x):
+        
+def display_tax_expenditure(self, widget, varname):
     self.active_tax = self.find_active_taxes()
     if (tax_type not in self.active_tax):
         self.msg_window = tk.Toplevel()
@@ -41,7 +41,7 @@ def display_tax_expenditure(self, widget, tax_type,block_1_title_pos_x):
                                       rely = self.block_1_entry_y,
                                       anchor = "e")
             self.entry_benchmark_filename.insert(END, self.vars['benchmark_filename'])
-            self.button_benchmark_filename = ttk.Button(self.TAB4, text = "Change Benchmark File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_benchmark_filename, tax_type+'_distribution_json_filename'))
+            self.button_benchmark_filename = ttk.Button(self.TAB4, text = "Change Benchmark File", style='my.TButton', command=self.input_benchmark_filename)
             self.button_benchmark_filename.place(relx = self.block_1_entry_x,
                                        rely = self.block_1_entry_y, anchor = "w")        
             self.button_generate_tax_expenditures = ttk.Button(self.TAB4, text = "Generate Tax Expenditures", style='my.TButton', command=self.clicked_generate_tax_expenditures)
@@ -50,18 +50,15 @@ def display_tax_expenditure(self, widget, tax_type,block_1_title_pos_x):
   
 def tab4(self):
 
-    self.block_distribution_pos_x = {}
-    pos_x = [0.10, 0.40, 0.70]    
-    for tax_type in self.tax_list:
-        self.vars[tax_type+'_tax_expenditure'] = 0
-   
-    self.block_distribution_pos_x = self.allocate_pos_x(pos_x, self.status,
-                                                self.block_distribution_pos_x)
-
-    self.l3A=tk.Label(self.TAB4,text="Tax Expenditures",
-             font = self.fontStyle_sub_title)
-    self.l3A.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
-
-    self.tax_expenditure_chk = tk.IntVar()
-    self.tax_expenditure_chk_box = tk.Checkbutton(self.TAB4, text='Estimate Tax Expenditures', font = self.fontStyle, variable=self.tax_expenditure_chk, command=lambda: self.display_tax_expenditure(self.tax_expenditure_chk, 'cit', self.block_distribution_pos_x['cit']))
-    self.tax_expenditure_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
+        self.l3A=Label(self.TAB4,text="Tax Expenditures",
+                 font = self.fontStyle_sub_title)
+        self.l3A.place(relx = 0.1, rely = 0.1, anchor = "w")
+        
+        
+        '''
+        self.tax_expenditure_chk = tk.IntVar()
+        self.tax_expenditure_chk_box = tk.Checkbutton(self.TAB4, text='Estimate Tax Expenditures', font = self.fontStyle, variable=self.tax_expenditure_chk, command=lambda: self.display_tax_expenditure(self.tax_expenditure_chk, 'tax_expenditure'))
+        self.tax_expenditure_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
+        '''
+        self.button_generate_tax_exp = ttk.Button(self.TAB4, text = "Generate Tax Expenditure", style='my.TButton', command=self.clicked_generate_tax_expenditures)
+        self.button_generate_tax_exp.place(relx = 0.1,rely = 0.2, anchor = "w")

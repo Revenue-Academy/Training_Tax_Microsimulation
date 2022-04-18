@@ -402,9 +402,14 @@ class Application(tk.Frame):
         
         
     def clicked_generate_tax_expenditures(self):
+        vars = self.get_inputs_after_saving_current_vars()
+        if vars['show_error_log']:
+            self.logger.clear()
+        self.verbose = vars['verbose']
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
-        self.foo_thread = Thread(target=self.generate_tax_expenditures)
+        from generate_tax_expenditures import generate_tax_expenditures   
+        self.foo_thread = Thread(target=generate_tax_expenditures)
         self.foo_thread.daemon = True
         self.progressbar.start(interval=10)
         self.foo_thread.start()
