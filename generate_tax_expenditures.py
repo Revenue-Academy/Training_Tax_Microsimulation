@@ -115,7 +115,7 @@ def generate_tax_expenditures():
 
     # This is the Overall Tax Expenditures
     pol2 = Policy()
-    reform = Calculator.read_json_param_objects(vars['cit_benchmark_filename'], None)
+    reform = Calculator.read_json_param_objects('taxcalc/' + vars['cit_benchmark_filename'], None)
     pol2.implement_reform(reform['policy'])
         
     calc2 = Calculator(policy=pol2, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
