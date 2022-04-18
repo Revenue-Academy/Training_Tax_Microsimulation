@@ -99,18 +99,42 @@ def make_grow_factors_csv(mydict, index, value, filename):
         
 def update_grow_factors_csv(self, mydict, update_dict, field_year, field_value, filename):    
     print('update_dict ', update_dict)
+    print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']
             v = update_dict[i]['selected_value']
-            mydict[k][field_value]=v
+            if len(self.attribute_columns)>0:
+                attribute_value = update_dict[i]['selected_attribute']
+                mydict[attribute_value][k][field_value]=v
+            else:
+                mydict[k][field_value]=v
         #print('mydict ', mydict)
         output_dict={}
-        output_dict[field_year] = mydict[list(mydict.keys())[0]][field_year]
-        for k in mydict.keys():
-            output_dict[k[1:]] = mydict[k][field_value]
-        #print('output_dict ', output_dict)
-        with open(filename, 'w', newline='') as f:
+        if len(self.attribute_columns)>0:
+            first_level_keys = list(mydict.keys())
+            second_level_keys = list(mydict[first_level_keys[0]].keys())
+            for i in first_level_keys:
+                output_dict[i] = {}
+                for j in second_level_keys:
+                    field_year_val = mydict[i][j][field_year]
+                    output_dict[i][field_year] = field_year_val
+                    output_dict[i][j[1:]] = mydict[i][j][field_value]
+            second_level_keys1 = [i[1:] for i in second_level_keys]
+            with open(filename, 'w', newline='') as f:
+                 w = csv.writer(f)
+                 cols = [self.attribute_columns[0]]+[field_year]+second_level_keys1
+                 w.writerow(cols)
+                 for i in first_level_keys:
+                     transposed_values = (np.array(list(output_dict[i].values())).T).tolist()
+                     for j in range(len(transposed_values)):
+                         w.writerow([i]+transposed_values[j])                   
+        else:
+            output_dict[field_year] = mydict[list(mydict.keys())[0]][field_year]
+            for k in mydict.keys():
+                output_dict[k[1:]] = mydict[k][field_value]
+            #print('output_dict ', output_dict)
+            with open(filename, 'w', newline='') as f:
              w = csv.writer(f)
              w.writerow(output_dict.keys())
              transposed_values = (np.array(list(output_dict.values())).T).tolist()

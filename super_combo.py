@@ -214,7 +214,7 @@ class super_combo(tk.Frame):
     def reset_policy_widgets(self):
         self.num_widgets = len(self.block_widget_dict)
         num = self.num_widgets
-        print('self.num_widgets in reset widgets', self.num_widgets)
+        #print('self.num_widgets in reset widgets', self.num_widgets)
         for num in range(2, self.num_widgets+1):
             self.block_widget_dict[num][1].destroy()
             if self.attribute_value is not None:
@@ -235,7 +235,7 @@ class super_combo(tk.Frame):
             self.block_widget_dict[1][2][i].config(state=tk.NORMAL)
             self.block_widget_dict[1][2][i].delete(0, tk.END)
             self.block_widget_dict[1][3][i].delete(0, tk.END)
-        print('button at reset ',self.generate_revenue_policy_button_y)            
+        #print('button at reset ',self.generate_revenue_policy_button_y)            
         self.button_generate_revenue_policy.place(relx = self.generate_revenue_policy_button_x, 
                                                   rely = self.generate_revenue_policy_button_y, anchor = "w")
                 
@@ -243,9 +243,9 @@ class super_combo(tk.Frame):
         self.num_widgets = len(self.block_widget_dict)
         num = self.num_widgets
         #print('num of reforms: ', num)
-        print('self.num_widgets before ', self.num_widgets)
+        #print('self.num_widgets before ', self.num_widgets)
         #print('self.num_reforms ',self.num_reforms)
-        print('block_widget_dict before ', self.block_widget_dict)
+        #print('block_widget_dict before ', self.block_widget_dict)
         if num == 1:
             #showinfo("Warning", "cannot delete")
             self.block_widget_dict[1][1].delete(0, tk.END)
@@ -305,10 +305,11 @@ class super_combo(tk.Frame):
         #print("inside policy selection")
         active_widget_number = int(str(event.widget)[-1])
         #print("active_widget_number: ", active_widget_number)
-        num = active_widget_number
+        #num = active_widget_number
         #print('num ', num)
         # update the number of reforms only if we change the entries
         # beyond self.num_reforms
+        num = len(widget_dict)
         if num > self.num_reforms:
             self.num_reforms += 1
 
