@@ -8,15 +8,53 @@ Created on Fri Nov 12 13:45:56 2021
 import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
-import json
-import numpy as np
-import copy
-#from taxcalc import *
+import tkinter.font as tkfont
+from taxcalc import *
+from taxcalc.display_funcs import *
 
 from PIL import Image,ImageTk
-from tkinter import ttk
 
-def generate_tax_expenditures(self):
+def write_file(df, text_data, filename, window=None, footer_row_num=None):
+    df.to_csv(filename+'.csv', mode='w')
+    # a = open(filename+'.csv','w')
+    # a.write("\n")
+    # a.write("\n")
+    # a.close
+    with open(filename+'.txt','w') as f:
+        f.write(text_data)
+    f.close
+    if (window is not None) and (footer_row_num is not None):
+        footer = ["footer", "*Data saved in file "+ filename]
+        display_table(window, data=footer, footer=footer_row_num+2)
+        
+def weighted_total_tax(calc, tax_list, category, year, tax_dict):
+    for tax_type in tax_list:
+        tax_dict[tax_type][year][category] = {}
+        if tax_type == 'pit':
+            tax_dict[tax_type][year][category]['value'] = calc.weighted_total_pit(tax_type+'ax')       
+        if tax_type == 'cit':
+            tax_dict[tax_type][year][category]['value'] = calc.weighted_total_cit(tax_type+'ax')           
+        if tax_type == 'vat':
+            tax_dict[tax_type][year][category]['value'] = calc.weighted_total_gst(tax_type+'ax')
+
+        tax_dict[tax_type][year][category]['value_bill'] =  tax_dict[tax_type][year][category]['value']/10**9
+        tax_dict[tax_type][year][category]['value_bill_str'] =  '{0:.2f}'.format(tax_dict[tax_type][year][category]['value_bill'])        
+    return tax_dict
+       
+def weighted_total_tax_diff(tax_list, category1, category2, year, tax_dict):
+    for tax_type in tax_list:
+        tax_dict[tax_type][year][category2]['value_bill_diff'] = (tax_dict[tax_type][year][category2]['value_bill'] -
+                                                                  tax_dict[tax_type][year][category1]['value_bill'])
+        tax_dict[tax_type][year][category2]['value_bill_diff_str'] = '{0:.2f}'.format(tax_dict[tax_type][year][category2]['value_bill_diff'])
+    return tax_dict
+
+def screen_print(tax_list, category, year, tax_dict, item, item_desc):
+    for tax_type in tax_list:
+        print("The "+tax_type.upper()+" "+item_desc+" in billions is: ", tax_dict[tax_type][year][category][item])
+
+
+
+def generate_tax_expenditures():
     from taxcalc.growfactors import GrowFactors
     from taxcalc.policy import Policy
     from taxcalc.records import Records
@@ -24,14 +62,16 @@ def generate_tax_expenditures(self):
     from taxcalc.corprecords import CorpRecords
     from taxcalc.parameters import ParametersBase
     from taxcalc.calculator import Calculator
-    from taxcalc.utils import dist_variables    
-    # create Records object containing pit.csv and pit_weights.csv input data
-    #recs = Records()
+    from taxcalc.utils import dist_variables
+
+    fontStyle = tkfont.Font(family="Helvetica", size="12")
+    
     f = open('global_vars.json')
     vars = json.load(f)
     verbose = vars['verbose']
-    start_year = vars['start_year']
-    end_year = vars['end_year']
+    start_year = int(vars['start_year'])
+    end_year = int(vars['end_year'])
+    
     tax_list=[]
     tax_collection_var_list = []  
     # start the simulation for pit/cit/vat    
@@ -39,7 +79,7 @@ def generate_tax_expenditures(self):
         tax_list = tax_list + ['pit']
         tax_collection_var_list = tax_collection_var_list + ['pitax']
         recs = Records(data=vars['pit_data_filename'], weights=vars['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
-        #elasticity_filename = vars['pit_elasticity_filename']
+        elasticity_filename = vars['pit_elasticity_filename']
     else:
         recs = None
     if vars['cit']:
@@ -47,249 +87,161 @@ def generate_tax_expenditures(self):
         tax_collection_var_list = tax_collection_var_list + ['citax']
         crecs = CorpRecords(data=vars['cit_data_filename'], weights=vars['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
         #print("crecs is created ")
-        #elasticity_filename = vars['cit_elasticity_filename']
+        elasticity_filename = vars['cit_elasticity_filename']
     else:
         crecs = None
     if vars['vat']:
         tax_list = tax_list + ['vat']
         tax_collection_var_list = tax_collection_var_list + ['vatax']
         grecs = GSTRecords(data=vars['vat_data_filename'], weights=vars['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
-        #elasticity_filename = vars['vat_elasticity_filename']
+        elasticity_filename = vars['vat_elasticity_filename']
     else:
-        grecs = None 
-        
-    recs = Records(data=self.data_filename, weights=self.weights_filename, gfactors=GrowFactors(growfactors_filename=self.growfactors_filename))
+        grecs = None  
     
-    grecs = GSTRecords()
-    
-    crecs1 = CorpRecords()
-    #crecs1 = CorpRecords(data=self.data_filename, weights=self.weights_filename)
+    #Current Law Policy
+    pol = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])
 
-    # Note: weights argument is optional
-    assert isinstance(recs, Records)
-    assert recs.current_year == 2017
-    
-    # create Policy object containing current-law policy
-    pol = Policy()
-    
     # specify Calculator objects for current-law policy
-    calc1 = Calculator(policy=pol, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)    
-
+    calc1 = Calculator(policy=pol, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
     assert isinstance(calc1, Calculator)
-    assert calc1.current_year ==  vars["start_year"]
-
+    assert calc1.current_year == int(vars["start_year"])
     np.seterr(divide='ignore', invalid='ignore')
 
     # Produce DataFrame of results using cross-section
-    calc1.calc_all()
-    #sector=calc1.carray('sector')
-    weight = calc1.carray('weight')
-    
-    dump_vars = ['FILING_SEQ_NO', 'ST_CG_AMT_1', 'ST_CG_AMT_2', 'LT_CG_AMT_1', 'LT_CG_AMT_2', 
-                 'pitax']
-    dumpdf = calc1.dataframe_cit(dump_vars)
-    #create the weight variable
-    dumpdf['weight']= weight
-    dumpdf= dumpdf.rename(columns={'citax':"tax_collected_under_current_policy"})
-    dumpdf['weighted_tax_collected_under_current_policy']= dumpdf['weight']*dumpdf['tax_collected_under_current_policy']
-    dumpdf['ID_NO']= "A"+ dumpdf['CIT_ID_NO'].astype('str') 
-    benchmark = Calculator.read_json_param_objects(self.benchmark_filename, None)
-    base_year = list(benchmark['policy'].keys())[0]
-    #reform = dict(benchmark)
-    reform = copy.deepcopy(benchmark)
-        
-    with open(self.vars['cit_benchmark_filename']) as f:
-        current_law_policy = json.load(f)             
-    ref_dict = benchmark['policy']
-    var_list = []
-    tax_expediture_list = []
-    tax_expediture_list_polish = []
-    for pkey, sdict in ref_dict.items():
-            for k, s in sdict.items():
-                reform.pop("policy")
-                mydict={}
-                mydict[k]=s
-                mydict0={}
-                mydict0[pkey]=mydict
-                reform['policy']=mydict0            
-                pol2 = Policy()
-                pol2.implement_reform(reform['policy'])
-                calc2 = Calculator(policy=pol2, records=recs, corprecords=crecs1,
-                                   gstrecords=grecs, verbose=False)
-                calc2.calc_all()
-                weight2 = calc2.carray('weight')                   
-                dump_vars = ['CIT_ID_NO', 'citax']     
-                dumpdf_2 = calc2.dataframe_cit(dump_vars)
-                dumpdf_2['weight']= weight2
-                dumpdf_2['ID_NO']= "A"+ dumpdf_2['CIT_ID_NO'].astype('int').astype('str')
-                dumpdf_2 = dumpdf_2.rename(columns={'citax':"tax_collected_under_benchmark"+ k})
-                dumpdf_2['weighted_tax_collected_under_benchmark'+ k]= dumpdf_2['weight']*dumpdf_2['tax_collected_under_benchmark'+ k]
-                dumpdf = pd.merge(dumpdf, dumpdf_2, how="inner", on="ID_NO")
-                #calculating expenditure
-                dumpdf['tax_expenditure_'+current_law_policy[k]['description']]= (dumpdf["weighted_tax_collected_under_benchmark"+ k]- dumpdf['weighted_tax_collected_under_current_policy'])/10**6
-                dumpdf['tax_expenditure_'+current_law_policy[k]['long_name']]= (dumpdf["weighted_tax_collected_under_benchmark"+ k]- dumpdf['weighted_tax_collected_under_current_policy'])/10**6            
-                var_list = var_list + [k]
-                tax_expediture_list = tax_expediture_list + ['tax_expenditure_'+current_law_policy[k]['description']]
-                tax_expediture_list_polish = tax_expediture_list_polish + ['tax_expenditure_'+current_law_policy[k]['long_name']]
-                
-    #Summarize here
-    tax_expenditure_df = dumpdf[tax_expediture_list].sum(axis = 0)
-    tax_expenditure_df= tax_expenditure_df.reset_index()
-    tax_expenditure_df.columns = ['Tax Expenditure', 'Million ']
-    tax_expenditure_df.to_csv('tax_expenditures_sum.csv',index=False, float_format='%.0f')
-    print("Tax Expenditures\n", tax_expenditure_df)
-    tax_expenditure_df = dumpdf[tax_expediture_list_polish].sum(axis = 0)
-    tax_expenditure_df= tax_expenditure_df.reset_index()
-    tax_expenditure_df.columns = ['Wydatki Podatkowe', 'Milion ']
-    tax_expenditure_df.to_csv('tax_expenditures_sum_polish.csv', encoding='utf-8', index=False, float_format='%.0f')
-    tax_expenditure_df.to_csv('tax_expenditures_sum_polish.txt', encoding='utf-8', sep=',', index=False)       
-            
+   
+    dump_vars = ['Taxpayer_ID', 'Net_accounting_profit', 'Total_taxable_profit', \
+                'Donations_Govt', 'Donations_allowed', 'Investment_incentive', \
+                'Net_taxable_profit', 'Tax_base', 'Net_tax_base', 'citax']
+
     # This is the Overall Tax Expenditures
-    pol3 = Policy()
-    reform = Calculator.read_json_param_objects(self.benchmark_filename, None)
-    pol3.implement_reform(reform['policy'])
+    pol2 = Policy()
+    reform = Calculator.read_json_param_objects(vars['cit_benchmark_filename'], None)
+    pol2.implement_reform(reform['policy'])
+        
+    calc2 = Calculator(policy=pol2, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
+        # popup window for the Results
+    # window = tk.Toplevel()
+    # window.geometry("700x600+140+140")
+    # label = tk.Label(window, text="Tax Expenditures", font=fontStyle)
+    # label.place(relx = 0.40, rely = 0.02)
+    # s = tk.Style()
+    # s.configure('my.TButton', font=fontStyle)         
     
-    calc2 = Calculator(policy=pol3, records=recs, corprecords=crecs1,
-                       gstrecords=grecs, verbose=False)
-    # popup window for the Results
-    window = tk.Toplevel()
-    window.geometry("700x600+140+140")
-    label = tk.Label(window, text="Tax Expenditures", font=self.fontStyle_sub_title)
-    label.place(relx = 0.40, rely = 0.02)
-    self.s = ttk.Style()
-    self.s.configure('my.TButton', font=self.fontStyle)         
-    button_close = ttk.Button(window, text="Close", style='my.TButton', command=window.destroy)
-    button_close.place(relx = 0.50, rely = 0.90)
-    
-    total_revenue_text={}
-    reform_revenue_text={}
-    tax_expenditure_text = {}        
+    # total_revenue_text={}
+    # reform_revenue_text={}
+    # tax_expenditure_text = {}        
     revenue_dict={}
-    revenue_amount_dict = {}
-    tax_expenditure = {}
-    num = 1
-    #for year in range(years[0], years[-1]+1):            
-    for year in range(2019, 2024):  
+    # revenue_amount_dict = {}
+    # tax_expenditure = {}
+    # num = 1
+
+    
+    window_dict={}
+    row_num = {}
+    data_row = {}
+    l_TAB3 = {}
+    for tax_type in tax_list:
+        revenue_dict[tax_type]={}
+        for year in range(start_year, end_year+1):
+            revenue_dict[tax_type][year]={}
+        window_dict[tax_type] = tk.Toplevel()
+        window_dict[tax_type].geometry("800x600+600+140")
+        #display_table(window, header=True)
+        # Adjust this for number of years selected
+        header = ["header","Year", "Current Law", "Benchmark", "Tax Exp"]
+        # if vars[tax_type+'_adjust_behavior']:
+        #     header = header + ['Reform (Behavior)', "Diff"]
+        title_header = [["title", tax_type.upper()+" Projections"], header]            
+        row_num[tax_type] = display_table(window_dict[tax_type], data=title_header, header=True)
+    
+    for year in range(start_year, end_year+1):  
         calc1.advance_to_year(year)        
         calc2.advance_to_year(year)
+        calc1.calc_all()
         # NOTE: calc1 now contains a PRIVATE COPY of pol and a PRIVATE COPY of recs,
         #       so we can continue to use pol and recs in this script without any
         #       concern about side effects from Calculator method calls on calc1.
-
+    
         # Produce DataFrame of results using cross-section
-        calc1.calc_all()
         
-        dump_vars = ['CIT_ID_NO', 'legal_form', 'sector', 'province', 'small_business', 'revenue', 'expenditure', 'income', 'tax_base_before_deductions', 'deductions_from_tax_base',
-                     'income_tax_base_after_deductions', 'citax']
-        dumpdf_1 = calc1.dataframe_cit(dump_vars)
-        dumpdf_1.to_csv('app00_poland1.csv', index=False, float_format='%.0f')
-        
-        Business_Profit1 = calc1.carray('income')
-        Tax_Free_Incomes1 = calc1.carray('tax_free_income_total')
-        Tax_Base_Before_Deductions1 = calc1.carray('tax_base_before_deductions')
-        Deductions1 = calc1.carray('deductions_from_tax_base')
-        Tax_Base_After_Deductions1 = calc1.carray('income_tax_base_after_deductions')
-        citax1 = calc1.carray('citax')
-        weight1 = calc1.carray('weight')
-        etr1 = np.divide(citax1, Business_Profit1)
-        weighted_etr1 = etr1*weight1.values
-        weighted_etr_overall1 = (sum(weighted_etr1[~np.isnan(weighted_etr1)])/
-                                 sum(weight1.values[~np.isnan(weighted_etr1)]))
-        
-        wtd_citax1 = citax1 * weight1
-        
-        citax_collection1 = wtd_citax1.sum()
-        
-        citax_collection_billions1 = citax_collection1/10**9
-        
-        citax_collection_str1 = '{0:.2f}'.format(citax_collection_billions1)
-        
-        print('\n\n\n')
-        print('TAX COLLECTION UNDER CURRENT LAW FOR THE YEAR - '+str(year)+': ', citax_collection_billions1)
-        
-        total_revenue_text[year] = "TAX COLLECTION UNDER CURRENT LAW FOR THE YEAR - " + str(year)+" : "+str(citax_collection_str1)+" bill "
-        #self.l6.config(text=total_revenue_text1)
-        #self.l6.place(relx = 0.1, rely = 0.7+(num-1)*0.1, anchor = "w")
-        # Produce DataFrame of results using cross-section
         calc2.calc_all()
-        
-        dump_vars = ['CIT_ID_NO', 'legal_form', 'sector', 'province', 'small_business', 'revenue', 'expenditure', 'income', 'tax_base_before_deductions', 'deductions_from_tax_base',
-                     'income_tax_base_after_deductions', 'citax']
-        dumpdf_2 = calc2.dataframe_cit(dump_vars)
-        dumpdf_2.to_csv('app00_poland2.csv', index=False, float_format='%.0f')
-        
-        Business_Profit2 = calc2.carray('income')
-        Tax_Free_Incomes2 = calc2.carray('tax_free_income_total')
-        Tax_Base_Before_Deductions2 = calc2.carray('tax_base_before_deductions')
-        Deductions2 = calc2.carray('deductions_from_tax_base')
-        Tax_Base_After_Deductions2 = calc2.carray('income_tax_base_after_deductions')
-        citax2 = calc2.carray('citax')
-        weight2 = calc2.carray('weight')
-        etr2 = np.divide(citax2, Business_Profit2)
-        weighted_etr2 = etr2*weight2.values
-        weighted_etr_overall2 = (sum(weighted_etr2[~np.isnan(weighted_etr2)])/
-                                 sum(weight2.values[~np.isnan(weighted_etr2)]))
-        
-        wtd_citax2 = citax2 * weight2
-        
-        citax_collection2 = wtd_citax2.sum()
-        
-        citax_collection_billions2 = citax_collection2/10**9
-        citax_expenditure_billions = citax_collection_billions2 -  citax_collection_billions1
-        citax_collection_str2 = '{0:.2f}'.format(citax_collection_billions2)
-        
-        citax_expenditure_billions_str = '{0:.5f}'.format(citax_expenditure_billions)
-        
-        print('\n\n\n')
-        print('TAX COLLECTION UNDER BENCHMARK POLICY FOR THE YEAR - '+str(year)+': ', citax_collection_billions2)
-             
-        revenue_amount_dict[year]={}
-        revenue_amount_dict[year]['current_law']={}            
-        revenue_amount_dict[year]['current_law']['amount'] = citax_collection_billions1
-        revenue_amount_dict[year]['benchmark']={}
-        revenue_amount_dict[year]['benchmark']={}
-        revenue_amount_dict[year]['benchmark']['amount'] = citax_collection_billions2
-        
-        revenue_amount_dict[year]['tax_expenditure']={}
-        revenue_amount_dict[year]['tax_expenditure']={}                     
-        revenue_amount_dict[year]['tax_expenditure']['amount'] = citax_expenditure_billions    
-        
-        reform_revenue_text[year] = "TAX COLLECTION UNDER BENCHMARK FOR THE YEAR - " + str(year)+" : "+str(citax_collection_str2)+" bill "
+         
+              
+        revenue_dict = weighted_total_tax(calc1, tax_list, 'current_law', year, revenue_dict)              
+        if verbose:
+            print(f'TAX COLLECTION FOR THE YEAR - {year} \n')        
+            screen_print(tax_list, 'current_law', year, revenue_dict, 'value_bill', 'Collection')
+           
+        revenue_dict = weighted_total_tax(calc2, tax_list, 'reform', year, revenue_dict)
+        if verbose:        
+            print(f'\nTAX COLLECTION FOR THE YEAR UNDER REFORM - {year} \n')       
+            screen_print(tax_list, 'reform', year, revenue_dict, 'value_bill', 'Collection')
+            
+        revenue_dict = weighted_total_tax_diff(tax_list, 'current_law', 'reform', year, revenue_dict)
+        if verbose:        
+            screen_print(tax_list, 'reform', year, revenue_dict, 'value_bill_diff', 'Collection difference under Reform')
 
-        tax_expenditure_text[year] = "TAX EXPENDITURES FOR THE YEAR - " + str(year)+" : "+citax_expenditure_billions_str+" bill "
+        for tax_type in tax_list:        
+            data_row[tax_type] = [str(year), revenue_dict[tax_type][year]['current_law']['value_bill_str'], 
+                                  revenue_dict[tax_type][year]['reform']['value_bill_str'], 
+                                  revenue_dict[tax_type][year]['reform']['value_bill_diff_str']]       
+        # if adjust_behavior:
+        # #redo the calculations by including behavioral adjustment
+        #     calc3.advance_to_year(year)
+        #     calc3.calc_all()
+        #     revenue_dict = weighted_total_tax(calc3, tax_list, 'reform_behavior', year, revenue_dict)
+        #     if verbose:            
+        #         print(f'\nTAX COLLECTION FOR THE YEAR UNDER REFORM WITH BEHAVIOR ADJUSTMENT - {year} \n')
+        #         screen_print(tax_list, 'reform_behavior', year, revenue_dict, 
+        #                      'value_bill', 'Collection with Behavioral Adjustment')
+            
+        #     revenue_dict = weighted_total_tax_diff(tax_list, 'current_law', 'reform_behavior', year, revenue_dict)
+        #     if verbose:
+        #         screen_print(tax_list, 'reform_behavior', year, revenue_dict, 
+        #                      'value_bill_diff',
+        #                      'Collection difference with Behavioral Adjustment')
+        #     for tax_type in tax_list:            
+        #         data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_bill_str'], 
+        #                                                    revenue_dict[tax_type][year]['reform_behavior']['value_bill_diff_str']]
+        for tax_type in tax_list:         
+            row_num[tax_type] = display_table(window_dict[tax_type], 
+                                              data = data_row[tax_type], 
+                                              row = row_num[tax_type])
+    
+    with open('revenue_dict.json', 'w') as f:
+        json.dump(revenue_dict, f)
+    #save the results of each tax type in separate files
+    
+    df = {}
+    # save the results into a csv file
+    for tax_type in tax_list:
+        #filename1 = 'Revenue Data_'+'_'+tax_type+'_'+date_time
+        filename_taxexp = tax_type+'_tax_expenditures'
+        revenue_dict_df = {}
+        for k, v in revenue_dict[tax_type].items():
+            revenue_dict_df[k] = {}
+            revenue_dict_df[k]['current_law'] = revenue_dict[tax_type][k]['current_law']['value_bill_str']
+            revenue_dict_df[k]['benchmark'] = revenue_dict[tax_type][k]['reform']['value_bill_str']
+            revenue_dict_df[k]['tax_expenditure'] = revenue_dict[tax_type][k]['reform']['value_bill_diff_str']
+            
+        df[tax_type] = pd.DataFrame.from_dict(revenue_dict_df)   
+        df_str = df[tax_type].to_string()
+        df_reform = pd.DataFrame.from_dict(reform)
+        df_reform_str = df_reform.to_string()
+        text_output1 = df_str + '\n\n' + df_reform_str + '\n\n'
+        write_file(df[tax_type], text_output1, filename_taxexp)
+        last_row = row_num[tax_type]
+        l_TAB3[tax_type] = tk.Button(window_dict[tax_type],
+                                     text="Save Results",
+                                     command=lambda: write_file(df[tax_type], 
+                                                                text_output1, 
+                                                                filename_taxexp, 
+                                                                window_dict[tax_type], 
+                                                                last_row
+                                                                ))
+        l_TAB3[tax_type].grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
+    
+    
+            
         
-        revenue_dict[year]={}
-        revenue_dict[year]['current_law'] = {}
-        revenue_dict[year]['current_law']['Label'] = tk.Label(window, text=total_revenue_text[year], font=self.fontStyle)
-        revenue_dict[year]['current_law']['Label'].place(relx = 0.05, rely = 0.1+(num-1)*0.2, anchor = "w") 
-        revenue_dict[year]['benchmark'] = {}
-        revenue_dict[year]['benchmark']['Label'] = tk.Label(window, text=reform_revenue_text[year], font=self.fontStyle)
-        revenue_dict[year]['benchmark']['Label'].place(relx = 0.05, rely = 0.13+(num-1)*0.2, anchor = "w") 
-        revenue_dict[year]['tax_expenditure'] = {}
-        revenue_dict[year]['tax_expenditure']['Label'] = tk.Label(window, text=tax_expenditure_text[year], font=self.fontStyle)
-        revenue_dict[year]['tax_expenditure']['Label'].place(relx = 0.05, rely = 0.16+(num-1)*0.2, anchor = "w")            
-        num += 1
-    
-    #print(revenue_amount_dict)
-    df_revenue_proj = pd.DataFrame(revenue_amount_dict)
-    df_revenue_proj = df_revenue_proj.T
-    df_revenue_proj['Current Law'] = df_revenue_proj['current_law'].apply(pd.Series)
-    df_revenue_proj['Benchmark'] = df_revenue_proj['benchmark'].apply(pd.Series)
-    df_revenue_proj = df_revenue_proj.drop(['current_law', 'benchmark'], axis=1)
-    df_revenue_proj['Current Law'] = pd.to_numeric(df_revenue_proj['Current Law'])
-    df_revenue_proj['Benchmark'] = pd.to_numeric(df_revenue_proj['Benchmark'])
-    print("Revenue Projections2\n", df_revenue_proj)
-    ax = df_revenue_proj.plot(y=["Current Law", "Benchmark"], kind="bar", rot=0,
-                        figsize=(8,8))
-    ax.set_ylabel('(billion )')
-    ax.set_xlabel('')
-    ax.set_title('CIT - Tax Collection under Current Law vs. Benchmark', fontweight="bold")
-    pic_filename3 = 'CIT - Current Law and Benchmark.png'
-    plt.savefig(pic_filename3)
-    
-    img1 = Image.open(pic_filename3)
-    img2 = img1.resize((500, 500), Image.ANTIALIAS)
-    img3 = ImageTk.PhotoImage(img2)
-    self.pic.configure(image=img3)
-    self.pic.image = img3
-    
+       

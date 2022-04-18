@@ -138,35 +138,43 @@ def display_entry(self, widget, tax_type, block_1_title_pos_x):
         self.button_function_names_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Functions Names File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_functions_names_filename[tax_type], tax_type+'_'+'function_names_filename'))
         self.button_function_names_filename[tax_type].place(relx = self.block_1_entry_x, 
                                      rely = self.block_1_entry_7_y, anchor = "w")
+        
+        self.entry_benchmark_filename[tax_type] = tk.Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_benchmark_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_8_y, anchor = "e")
+        self.entry_benchmark_filename[tax_type].insert(END, self.vars[tax_type+'_benchmark_filename'])
+        self.button_benchmark_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Benchmark Filename", style='my.TButton', command=lambda: self.input_entry_data(self.entry_benchmark_filename[tax_type], tax_type+'_'+'benchmark_filename'))
+        self.button_benchmark_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_8_y, anchor = "w")
 
         self.l2[tax_type]=tk.Label(self.TAB1, text="Salary Variable: ", font = self.fontStyle)
         self.l2[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                 rely = self.block_1_entry_8_y, anchor = "e")
+                 rely = self.block_1_entry_9_y, anchor = "e")
     
         self.entry_salary_variable[tax_type] = ttk.Combobox(self.TAB1, value=self.show_salary_options(tax_type), font=self.text_font)
-        self.entry_salary_variable[tax_type].current(2)
+        self.entry_salary_variable[tax_type].current(3)
         self.entry_salary_variable[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                        rely = self.block_1_entry_8_y, anchor = "w", width=100)
+                        rely = self.block_1_entry_9_y, anchor = "w", width=100)
         self.entry_salary_variable[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_salary_variable[tax_type], 'SALARY_VARIABLE'))
           
         self.l3[tax_type]=tk.Label(self.TAB1, text="Start Year: ", font = self.fontStyle)
         self.l3[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                 rely = self.block_1_entry_9_y, anchor = "e")
+                 rely = self.block_1_entry_10_y, anchor = "e")
     
         self.entry_start_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
         self.entry_start_year[tax_type].current(self.year_list.index(self.vars['start_year']))
         self.entry_start_year[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                        rely = self.block_1_entry_9_y, anchor = "w", width=80)
+                        rely = self.block_1_entry_10_y, anchor = "w", width=80)
         self.entry_start_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_start_year[tax_type], 'start_year'))
     
         self.l31[tax_type]=tk.Label(self.TAB1, text="End Year: ", font = self.fontStyle)
         self.l31[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
-                 rely = self.block_1_entry_9_y, anchor = "e")
+                 rely = self.block_1_entry_10_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
         self.entry_end_year[tax_type].current(self.year_list.index(self.vars['end_year']))
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
-                        rely = self.block_1_entry_9_y, anchor = "w", width=80)
+                        rely = self.block_1_entry_10_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
 
         self.chart_list = self.chart_list + [tax_type+'_revenue_projection']       
@@ -276,6 +284,8 @@ def tab1(self):
     self.button_functions_filename = {}
     self.entry_functions_names_filename = {}
     self.button_function_names_filename = {}
+    self.entry_benchmark_filename = {}
+    self.button_benchmark_filename = {}
     self.entry_salary_variable = {}
     self.entry_start_year = {}
     self.entry_end_year = {}
