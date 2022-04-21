@@ -148,6 +148,7 @@ class Calculator(object):
         self.gstrecords = gstrecords
 
         if self.records is not None:
+            PIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['pit_records_variables_filename']
             pit_function_names_file = 'taxcalc'+'/'+vars['pit_function_names_filename']
             f = open(pit_function_names_file)
             self.pit_function_names = json.load(f)
@@ -181,6 +182,7 @@ class Calculator(object):
                                                cit_liability)
             """
         if self.gstrecords is not None:
+            VAT_VAR_INFO_FILENAME = 'taxcalc/'+vars['vat_records_variables_filename']
             vat_function_names_file = 'taxcalc/'+vars['vat_function_names_filename']
             f = open(vat_function_names_file)
             self.vat_function_names = json.load(f)
@@ -196,12 +198,22 @@ class Calculator(object):
             raise ValueError('must specify policy as a Policy object')
         if self.records is not None:
             if isinstance(records, Records):
-                self.__records = copy.deepcopy(records)                
+                self.__records = copy.deepcopy(records)
+                with open(PIT_VAR_INFO_FILENAME) as vfile:
+                    self.vardict = json.load(vfile)                
+                self.ATTRIBUTE_READ_VARS_PIT = list(k for k,
+                          v in self.vardict['read'].items()
+                          if v['attribute'] == 'Yes')
             else:
                 raise ValueError('must specify records as a Records object')
         if self.gstrecords is not None:
             if isinstance(gstrecords, GSTRecords):
                 self.__gstrecords = copy.deepcopy(gstrecords)
+                with open(VAT_VAR_INFO_FILENAME) as vfile:
+                    self.vardict = json.load(vfile)                
+                self.ATTRIBUTE_READ_VARS_VAT = list(k for k,
+                          v in self.vardict['read'].items()
+                          if v['attribute'] == 'Yes')                
             else:
                 raise ValueError('must specify records as a GSTRecords object')
         if self.corprecords is not None:            
@@ -215,7 +227,10 @@ class Calculator(object):
                 for k, v in self.vardict["read"].items():
                   #print("key: ", x, "value: ", y)
                   if self.vardict["read"][k]["cross_year"]=='Yes':
-                      self.CROSS_YEAR_VARS = self.CROSS_YEAR_VARS + [k]                
+                      self.CROSS_YEAR_VARS = self.CROSS_YEAR_VARS + [k]
+                self.ATTRIBUTE_READ_VARS_CIT = list(k for k,
+                          v in self.vardict['read'].items()
+                          if v['attribute'] == 'Yes')                     
             else:
                 raise ValueError('must specify records as a CorpRecords object')
         if self.records is not None:        
@@ -439,12 +454,127 @@ class Calculator(object):
         if self.corprecords is not None:         
             return (self.carray(variable_name) * self.carray('weight'))
 
-    def weighted_total_cit(self, variable_name):
+    def get_attribute_types(self, tax_type, attribute_index):
+        """
+        Parameters
+        ----------
+        tax_type : string
+            tax_type is either 'pit' or 'cit' or 'vat'.
+        attribute_index : int
+            This gives the index of the attribute variables to be extracted.
+            There may be multiple attribute variables and we only select 
+            one of them. For example attributes variables could be 'Sector', 
+            'Region', etc.
+
+        Raises
+        ------
+        ValueError
+            if the record is not created.
+
+        Returns
+        -------
+        attribute type list. For example if attribute variable is 'Sector', the 
+        attribute types in the dataset would be 'Banks', 'Oil &Gas', 'Hotels', 
+        etc.
+
+        """
+
+        attribute_data = []
+        if tax_type == 'pit':
+            if self.records is not None:
+                if len(self.ATTRIBUTE_READ_VARS_PIT) > 0:
+                    attribute_data = list(getattr(self.__records, 
+                                                  self.ATTRIBUTE_READ_VARS_PIT[attribute_index]))
+                    attribute_types = list(set(attribute_data))           
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))
+        elif tax_type == 'cit':
+            if self.corprecords is not None:            
+                if len(self.ATTRIBUTE_READ_VARS_CIT) > 0:
+                    attribute_data = list(getattr(self.__corprecords, 
+                                                  self.ATTRIBUTE_READ_VARS_CIT[attribute_index]))
+                    attribute_types = list(set(attribute_data))               
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))            
+        elif tax_type == 'vat':
+            if self.gstrecords is not None:            
+                if len(self.ATTRIBUTE_READ_VARS_VAT) > 0:
+                    attribute_data = list(getattr(self.__gstrecords, 
+                                                  self.ATTRIBUTE_READ_VARS_VAT[attribute_index]))
+                    attribute_types = list(set(attribute_data))                 
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))                
+        else:
+            msg = 'tax type ="{}" is not valid'
+            raise ValueError(msg.format(tax_type))
+        
+        return (['All']+attribute_types, attribute_data)
+        
+
+    def weighted_total_tax_dict(self, tax_type, variable_name):
+        """
+        Return all-filing-unit weighted total of named tax variable.
+        """
+        if tax_type == 'pit':
+            if self.records is not None:
+                tax_data = self.array(variable_name)
+                attribute_var = self.ATTRIBUTE_READ_VARS_PIT              
+                (attribute_types, attribute_data)  = self.get_attribute_types(tax_type, 0)             
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))
+        elif tax_type == 'cit':
+            if self.corprecords is not None:            
+                tax_data = self.carray(variable_name)
+                attribute_var = self.ATTRIBUTE_READ_VARS_CIT               
+                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)                 
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))            
+        elif tax_type == 'vat':
+            if self.gstrecords is not None:            
+                tax_data = self.garray(variable_name)
+                attribute_var = self.ATTRIBUTE_READ_VARS_VAT                 
+                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)                   
+            else:
+                msg = 'tax type record ="{}" is not initialized'
+                raise ValueError(msg.format(tax_type))              
+        else:
+            msg = 'tax type ="{}" is not valid'
+            raise ValueError(msg.format(tax_type))
+            return
+        
+        wtd_total_cit = {}
+        wtd_total_cit['All'] = (tax_data * self.carray('weight')).sum()
+        # We have  calculated for 'All' so no need to calculate further
+        attribute_types.remove('All')
+        if len(attribute_var)>0:            
+            for attribute_value in attribute_types:
+                attribute_bool = [1 if i==attribute_value else 0 for i in attribute_data]
+                wtd_total_cit[attribute_value] = (tax_data * self.carray('weight') *
+                                                  attribute_bool).sum()     
+        #print(wtd_total_cit)
+        return wtd_total_cit
+            
+    def weighted_total_cit(self, variable_name, attribute_var=None):
         """
         Return all-filing-unit weighted total of named Corp Records variable.
         """
-        if self.corprecords is not None:         
-            return (self.carray(variable_name) * self.carray('weight')).sum()
+        if self.corprecords is not None:
+            if attribute_var is None:
+                return (self.carray(variable_name) * self.carray('weight')).sum()  
+            else:
+                attribute_data = list(getattr(self.__corprecords, attribute_var))
+                attribute_types = set(attribute_data)
+                wtd_total_cit = {}
+                for attribute_value in attribute_types:
+                    attribute_bool = [1 if i==attribute_value else 0 for i in attribute_data]
+                    wtd_total_cit['attribute_value'] = (self.carray(variable_name) * self.carray('weight') *
+                                                      attribute_bool).sum()
+                return wtd_total_cit
     
     def total_weight_pit(self):
         """
@@ -482,15 +612,24 @@ class Calculator(object):
         del arys
         return pdf
 
-    def dataframe_cit(self, variable_list):
+    def dataframe_cit(self, variable_list, attribute_value=None, attribute_var=None):
         """
         Return pandas DataFrame containing the listed variables from embedded
         Records object.
         """
+        if attribute_var is not None:
+            variable_list = variable_list + [attribute_var]
+        #print('variable_list ', variable_list)
         assert isinstance(variable_list, list)
         arys = [self.carray(vname) for vname in variable_list]
         #print(arys)
+        #print('attribute_value ', attribute_value)
+        #print('attribute_var ', attribute_var)
         pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable_list)
+        #print('pdf \n', pdf)
+        if attribute_var is not None:
+            if attribute_value != 'All':
+                pdf = pdf[pdf[attribute_var]==attribute_value]
         del arys
         return pdf
 
@@ -506,17 +645,28 @@ class Calculator(object):
         del arys
         return pdf
     
-    def distribution_table_dataframe(self, DIST_VARIABLES):
+    def distribution_table_dataframe(self, tax_type, DIST_VARIABLES, attribute_value=None, attribute_var=None):
         """
         Return pandas DataFrame containing the DIST_TABLE_COLUMNS variables
         from embedded Records object.
         """
-        if self.records is not None:
-            return self.dataframe(DIST_VARIABLES)
-        if self.corprecords is not None:
-            return self.dataframe_cit(DIST_VARIABLES)
-        if self.gstrecords is not None:
-            return self.dataframe_gst(DIST_VARIABLES)            
+        if tax_type == 'pit':        
+            if self.records is not None:
+                return self.dataframe(DIST_VARIABLES)
+        elif tax_type == 'cit':
+            if self.corprecords is not None:
+                if attribute_var is not None:
+                    if attribute_value == 'All':
+                        return self.dataframe_cit(DIST_VARIABLES)
+                    else:
+                        return self.dataframe_cit(DIST_VARIABLES, attribute_value, attribute_var)
+        elif tax_type == 'vat':        
+            if self.gstrecords is not None:
+                return self.dataframe_gst(DIST_VARIABLES)
+        else:
+            msg = 'tax type ="{}" is not valid'
+            raise ValueError(msg.format(tax_type))
+            return            
 
     def array(self, variable_name, variable_value=None):
         """
@@ -715,8 +865,142 @@ class Calculator(object):
         del diag
         return pd.concat(tlist, axis=1)
 
-    def distribution_tables(self, calc, groupby, distribution_vardict, income_measure=None,
-                            averages=False, scaling=True):
+    def distribution_tables_dict(self, tax_type, calc, groupby, distribution_vardict, 
+                            income_measure=None,
+                            averages=False, scaling=True,
+                            attribute_var=None):
+        """
+        Get results from self and calc, sort them by GTI into table
+        rows defined by groupby, compute grouped statistics, and
+        return tables as a pair of Pandas dataframes.
+        This method leaves the Calculator object(s) unchanged.
+        Note that the returned tables have consistent income groups (based
+        on the self GTI) even though the baseline GTI in self and
+        the reform GTI in calc are different.
+
+        Parameters
+        ----------
+        calc : Calculator object or None
+            typically represents the reform while self represents the baseline;
+            if calc is None, the second returned table is None
+
+        groupby : String object
+            options for input: 'weighted_deciles', 'standard_income_bins'
+            determines how the columns in resulting Pandas DataFrame are sorted
+
+        averages : boolean
+            specifies whether or not monetary table entries are aggregates or
+            averages (default value of False implies entries are aggregates)
+
+        scaling : boolean
+            specifies whether or not monetary table entries are scaled to
+            billions and rounded to three decimal places when averages=False,
+            or when averages=True, to thousands and rounded to three decimal
+            places.  Regardless of the value of averages, non-monetary table
+            entries are scaled to millions and rounded to three decimal places
+            (default value of False implies entries are scaled and rounded)
+
+        Return and typical usage
+        ------------------------
+        dist1, dist2 = calc1.distribution_tables(calc2, 'weighted_deciles')
+        OR
+        dist1, _ = calc1.distribution_tables(None, 'weighted_deciles')
+        (where calc1 is a baseline Calculator object
+        and calc2 is a reform Calculator object).
+        Each of the dist1 and optional dist2 is a distribution table as a
+        Pandas DataFrame with DIST_TABLE_COLUMNS and groupby rows.
+        NOTE: when groupby is 'weighted_deciles', the returned tables have 3
+              extra rows containing top-decile detail consisting of statistics
+              for the 0.90-0.95 quantile range (bottom half of top decile),
+              for the 0.95-0.99 quantile range, and
+              for the 0.99-1.00 quantile range (top one percent); and the
+              returned table splits the bottom decile into filing units with
+              negative (denoted by a 0-10n row label),
+              zero (denoted by a 0-10z row label), and
+              positive (denoted by a 0-10p row label) values of the
+              specified income_measure.
+        """
+        # nested function used only by this method
+        def have_same_income_measure(calc1, calc2, imeasure):
+            """
+            Return true if calc1 and calc2 contain the same GTI;
+            otherwise, return false.  (Note that "same" means nobody's
+            GTI differs by more than one cent.)
+            """
+            if self.records is not None:
+                im1 = calc1.array(imeasure)
+                im2 = calc2.array(imeasure)
+            if self.corprecords is not None:
+                im1 = calc1.carray(imeasure)
+                im2 = calc2.carray(imeasure)
+            if self.gstrecords is not None:
+                im1 = calc1.garray(imeasure)
+                im2 = calc2.garray(imeasure)                
+            return np.allclose(im1, im2, rtol=0.0, atol=0.01)
+        
+        # main logic of method
+        from taxcalc.utils import create_distribution_table
+        """
+        (DIST_VARIABLES, DIST_TABLE_COLUMNS, DIST_TABLE_LABELS, 
+        DECILE_ROW_NAMES,STANDARD_ROW_NAMES,STANDARD_INCOME_BINS)=dist_variables()
+        """
+        assert calc is None or isinstance(calc, Calculator)
+        assert (groupby == 'weighted_deciles' or
+                groupby == 'weighted_percentiles' or
+                groupby == 'standard_income_bins')
+
+        if calc is not None:
+            if self.records is not None:
+                assert np.allclose(self.array('weight'),
+                                   calc.array('weight'))  # rows in same order
+                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+            if self.corprecords is not None:
+                assert np.allclose(self.carray('weight'),
+                                   calc.carray('weight'))
+                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+            if self.gstrecords is not None:
+                assert np.allclose(self.garray('weight'),
+                                   calc.garray('weight'))
+                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+        dt1 = {}
+        for attribute_value in attribute_types:                   
+            var_dataframe = self.distribution_table_dataframe(tax_type, distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
+            #print('var_dataframe \n', var_dataframe)
+            if income_measure is None:
+                imeasure = 'GTI'
+            else:
+                imeasure = income_measure
+
+            dt1[attribute_value] = create_distribution_table(var_dataframe, groupby, distribution_vardict,
+                                            imeasure, averages, scaling)
+            del var_dataframe
+        if calc is None:
+            dt2 = None
+        else:
+            assert calc.current_year == self.current_year
+            assert calc.array_len == self.array_len
+            dt2 = {}
+            for attribute_value in attribute_types:  
+                var_dataframe = self.distribution_table_dataframe(tax_type, distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
+                if have_same_income_measure(self, calc, imeasure):
+                    if income_measure is None:
+                        imeasure = 'GTI'
+                    else:
+                        imeasure = income_measure
+                else:
+                    imeasure = 'GTI'
+                    #imeasure = 'GTI_baseline'
+                    var_dataframe[attribute_value][imeasure] = self.array(imeasure)
+                dt2[attribute_value] = create_distribution_table(var_dataframe, groupby, 
+                                                distribution_vardict,
+                                                imeasure, averages, scaling)
+                del var_dataframe
+        return (dt1, dt2)
+                    
+    def distribution_tables(self, calc, groupby, distribution_vardict, 
+                            income_measure=None,
+                            averages=False, scaling=True,
+                            attribute_value=None, attribute_var=None):
         """
         Get results from self and calc, sort them by GTI into table
         rows defined by groupby, compute grouped statistics, and
@@ -805,8 +1089,9 @@ class Calculator(object):
                                    calc.carray('weight'))
             if self.gstrecords is not None:
                 assert np.allclose(self.garray('weight'),
-                                   calc.garray('weight'))                 
-        var_dataframe = self.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'])
+                                   calc.garray('weight'))
+                
+        var_dataframe = self.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
         #print('var_dataframe \n', var_dataframe)
         if income_measure is None:
             imeasure = 'GTI'
@@ -820,7 +1105,7 @@ class Calculator(object):
         else:
             assert calc.current_year == self.current_year
             assert calc.array_len == self.array_len
-            var_dataframe = calc.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'])
+            var_dataframe = calc.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'], attribute_value=None, attribute_var=None)
             if have_same_income_measure(self, calc, imeasure):
                 if income_measure is None:
                     imeasure = 'GTI'

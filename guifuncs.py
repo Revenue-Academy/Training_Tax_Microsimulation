@@ -98,8 +98,8 @@ def make_grow_factors_csv(mydict, index, value, filename):
             w.writerow(transposed_values[i])
         
 def update_grow_factors_csv(self, mydict, update_dict, field_year, field_value, filename):    
-    print('update_dict ', update_dict)
-    print('mydict ', mydict)
+    #print('update_dict ', update_dict)
+    #print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']

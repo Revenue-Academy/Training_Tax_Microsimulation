@@ -234,7 +234,7 @@ def tab1(self):
     self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
     self.vars['pit_records_variables_filename'] = "pit_records_variables_macedonia.json"
     self.vars['pit_benchmark_filename'] = "pit_tax_incentives_benchmark.json"
-    self.vars['pit_elasticity_filename'] = "pit_elasticity_macedonia.json"
+    self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia.json"
     self.vars['pit_functions_filename'] = "pit_functions_macedonia.py"
     self.vars['pit_function_names_filename'] = "pit_function_names_macedonia.json"       
 
@@ -242,7 +242,7 @@ def tab1(self):
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
     self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
     self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
-    self.vars['cit_elasticity_filename'] = "cit_elasticity_egypt.json"
+    self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
     self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
 

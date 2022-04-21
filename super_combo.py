@@ -26,9 +26,13 @@ from guifuncs import save_inputs, get_inputs
 from PIL import Image,ImageTk
 
 class super_combo(tk.Frame):
-    def __init__(self, tab, input_json, field_year, field_value, position_x, position_y, attribute_value=None, selected_attribute_widget=None):
+    def __init__(self, tab, input_json, field_year, field_value, position_x, 
+                 position_y, attribute_value=None, 
+                 selected_attribute_widget=None,
+                 editable_field_year=None):
         #self.block_1_title_pos_x = 0.15
         self.input_json_main = input_json
+        self.editable_field_year = editable_field_year
         #self.attribute_name = attribute_name
         self.attribute_value = attribute_value
         if self.attribute_value is not None:
@@ -42,7 +46,7 @@ class super_combo(tk.Frame):
         self.width_json = 0
         if len(self.input_json)>0:
             self.width_json = len(self.input_json[list(self.input_json.keys())[0]][field_year])            
-        grid_placement(self, 0.15)        
+        grid_placement(self, 0.15)       
         self.pos_x = position_x
         self.pos_y = position_y
         shift_x = 0
@@ -285,7 +289,8 @@ class super_combo(tk.Frame):
             #print(k)
             #print(input_json[k]['description'])
             #policy_option_list = policy_option_list + [input_json[k]['description']]
-            if (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
+            #Don't show the current law rates and the elasticity items in the drop down list
+            if (k[-8:] != 'curr_law'):
                 policy_options_list = policy_options_list + [k[1:]]
         return (policy_options_list)
     
@@ -298,8 +303,7 @@ class super_combo(tk.Frame):
         self.reform['policy']['_'+selected_item][self.updated_year]=[self.updated_value]
         #print("Reform2: ", self.reform)
         
-    def show_policy_selection(self, event, widget_dict):
-     
+    def show_policy_selection(self, event, widget_dict):   
         vars = get_inputs(self)
         #print('vars ', vars)
         #print("inside policy selection")
@@ -317,7 +321,6 @@ class super_combo(tk.Frame):
             self.attribute_value = self.selected_attribute_widget.get()
             self.input_json=self.input_json_main[self.attribute_value]      
         selected_item = widget_dict[num][1].get()
-        #print('self.selected_item ', self.selected_item)
         #print('vars ',vars)
         selected_year = {}
         selected_value = {}
@@ -328,8 +331,8 @@ class super_combo(tk.Frame):
                 selected_year[i] = vars['start_year']
             widget_dict[num][2][i].config(state=tk.NORMAL)                
             widget_dict[num][2][i].delete(0, tk.END)
-            widget_dict[num][2][i].insert(tk.END, int(selected_year[i]))
-            if (self.width_json>1):
+            widget_dict[num][2][i].insert(tk.END, selected_year[i])
+            if (not self.editable_field_year):
                 widget_dict[num][2][i].config(state=tk.DISABLED)
             widget_dict[num][3][i].delete(0, tk.END)
             widget_dict[num][3][i].insert(tk.END, selected_value[i])

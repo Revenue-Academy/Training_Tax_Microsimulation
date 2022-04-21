@@ -62,7 +62,7 @@ class Application(tk.Frame):
     #from gui_tab21 import super_tab
     from gui_tab3 import tab3
     from gui_tab3 import display_elasticity
-    from gui_tab3 import grid_placement_tab3
+    #from gui_tab3 import grid_placement_tab3
     from gui_tab4 import tab4
     from gui_tab4 import display_tax_expenditure   
     from gui_tab5 import tab5
@@ -71,6 +71,7 @@ class Application(tk.Frame):
     from gui_tab6 import tab6
     from gui_tab6 import update_chart_list    
     from gui_tab6 import display_chart
+    from gui_tab6 import get_attribute_selection
     from gui_tab7 import tab7   
     from gui_tab7 import get_gf_dict
     from gui_tab8 import tab8
@@ -135,6 +136,7 @@ class Application(tk.Frame):
         if vars['vat']:
             tax_list = tax_list + ['vat']
         tax_type = tax_list[0]
+        self.tax_type = tax_type
         if vars!={}:         
             with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
@@ -143,23 +145,33 @@ class Application(tk.Frame):
             self.ATTRIBUTE_READ_VARS = set(k for k,
                       v in self.vardict['read'].items()
                       if v['attribute'] == 'Yes')
-            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
-            #print('self.growfactors ', self.growfactors)
+            self.vars['attribute_vars'] = list(self.ATTRIBUTE_READ_VARS)
+            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)          
+            with open(sub_directory+'/'+vars[tax_type+'_elasticity_filename']) as f:
+                self.elasticity_json = json.load(f)            
         else:
             self.current_law_policy={}
             self.growfactors = {}
+            self.elasticity_json = {}
         #print(vars)
         #self.tab12()
         
         # TAB Policy
         from super_combo import super_combo
         self.year_value_pairs_policy_dict = 1       
-        self.tab_generate_revenue_policy = super_combo(self.TAB2, self.current_law_policy, 'row_label', 'value', 0.01, 0.20)
+        self.tab_generate_revenue_policy = super_combo(self.TAB2, self.current_law_policy, 'row_label', 'value', 0.01, 0.20, editable_field_year=1)
         (self.button_generate_revenue_policy, self.block_widget_dict) = self.tab_generate_revenue_policy.display_widgets(self.TAB2)
         self.button_generate_revenue_policy.configure(command=self.clicked_generate_policy_revenues)
 
          # TAB Behavior
-        self.tab3()
+         # Note that function self.gui_tab_control1 activates the drop down list
+        """
+        self.year_value_pairs_elasticity_dict = 3       
+        self.tab_elasticity = super_combo(self.TAB3, self.elasticity_json, 'row_label', 'value', 0.01, 0.20, editable_field_year=1)
+        (self.button_save_elasticity, self.elasticity_widget_dict) = self.tab_elasticity.display_widgets(self.TAB3)
+        self.button_save_elasticity.configure(command=self.clicked_generate_policy_revenues)
+        """ 
+        self.tab3(self.tax_type)
         
         # TAB Tax Expenditure
         self.tab4()
@@ -244,6 +256,7 @@ class Application(tk.Frame):
             self.growfactors = {}        
         self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options(self.current_law_policy))
         self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options(self.growfactors))
+        #self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json))
 
     def gui_tab6_control(self, widget_var, tax_type, pos_x):
         self.display_entry(widget_var, tax_type, pos_x)
@@ -329,7 +342,7 @@ class Application(tk.Frame):
             self.progress_label.destroy()
             self.foo_thread.join()
 
-    def generate_changes_dict(self, widget_dict, year_value_pairs, year_check=None, start_year=None, end_year=None):
+    def generate_changes_dict(self, widget_dict, year_value_pairs, year_check=None, start_year=None, end_year=None, sector_widget=None):
         selected_dict={}
         #print('block_widget_dict ', self.block_widget_dict)
         #print('length block_widget_dict ', len(self.block_widget_dict))
@@ -345,7 +358,8 @@ class Application(tk.Frame):
                 selected_dict[num]['selected_item']= selected_item
                 selected_dict[num]['selected_year'] = []
                 selected_dict[num]['selected_value'] = []
-                selected_dict[num]['selected_attribute'] = widget_dict[num][4].get()
+                if sector_widget:
+                    selected_dict[num]['selected_attribute'] = widget_dict[num][4].get()
                 for i in range(year_value_pairs):        
                     selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
                     selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]
@@ -370,19 +384,35 @@ class Application(tk.Frame):
         if vars['show_error_log']:
             self.logger.clear()
         self.verbose = vars['verbose']
-        self.block_selected_dict = self.generate_changes_dict(self.block_widget_dict, self.year_value_pairs_policy_dict, year_check=True, start_year=vars['start_year'], end_year=vars['end_year'])
+        self.block_selected_dict = self.generate_changes_dict(self.block_widget_dict, 
+                                                              self.year_value_pairs_policy_dict, 
+                                                              year_check=True, 
+                                                              start_year=vars['start_year'], 
+                                                              end_year=vars['end_year'],
+                                                              sector_widget=0)
 
         with open('reform.json', 'w') as f:
             f.write(json.dumps(self.block_selected_dict, indent=2))
         
         if self.verbose:
             print('Reform dictionary: ', self.block_selected_dict)
-
+        """
+        self.elasticity_selected_dict = self.generate_changes_dict(self.elasticity_widget_dict, 
+                                                                    self.year_value_pairs_elasticity_dict, 
+                                                                    year_check=False, sector_widget=0)
+        #print('self.elasticity_selected_dict ', self.elasticity_selected_dict)
+        with open(self.tax_type+'_elasticity_selection.json', 'w') as f:
+            f.write(json.dumps(self.elasticity_selected_dict, indent=2))
+        """
+        if self.verbose:
+            print('Elasticity Changes Dictionary: ', self.elasticity_selected_dict)
+            
         self.growfactors_selected_dict = self.generate_changes_dict(self.growfactors_widget_dict, 
-                                                                    self.year_value_pairs_growfactors_dict, year_check=False)
+                                                                    self.year_value_pairs_growfactors_dict, 
+                                                                    year_check=False, sector_widget=1)
 
         if self.verbose:      
-            print("Growfactors Changes Dict ",self.growfactors_selected_dict)            
+            print("Growfactors Changes Dictionary ",self.growfactors_selected_dict)            
 
         self.update_grow_factors_csv(self.growfactors, self.growfactors_selected_dict,
                                'Year', 'Value', 
@@ -429,35 +459,7 @@ class Application(tk.Frame):
         return
     """
 
-    def elasticity_options(self, tax_type):
-        with open(self.sub_directory+'/'+self.vars['DEFAULTS_FILENAME']) as f:
-            current_law_policy = json.load(f)
-        current_law_policy_sorted = dict(sorted(current_law_policy.items()))
-        elasticity_dict={}
-        elasticity_items_list = []
-        for k, s in current_law_policy_sorted.items(): 
-            #print(k)
-            #print(current_law_policy[k]['description'])
-            #policy_option_list = policy_option_list + [current_law_policy[k]['description']]
-            if (k[1:11] == 'elasticity'):
-                if (k[-5:] == 'value'):
-                    item = k[1:-6] 
-                    elasticity_dict[k] = {}
-                    elasticity_dict[k]['item'] = item
-                    elasticity_dict[k]['long_name'] = current_law_policy[k]['long_name']
-                    elasticity_dict[k]['value0']= current_law_policy[k]['value'][0][0]
-                    elasticity_dict[k]['value1']= current_law_policy[k]['value'][0][1]
-                    elasticity_dict[k]['value2']= current_law_policy[k]['value'][0][2]
-                    elasticity_dict[k]['year']= current_law_policy[k]['row_label'][0]
-                    
-                    v = k[:-6]+'_threshold'
-                    elasticity_dict[k]['threshold0']= current_law_policy[v]['value'][0][0]
-                    elasticity_dict[k]['threshold1']= current_law_policy[v]['value'][0][1]
-                    elasticity_dict[k]['threshold2']= current_law_policy[v]['value'][0][2]
 
-                    elasticity_items_list = elasticity_items_list + [item]
-        print("elasticity_dict in elasticity_options: ", elasticity_dict)        
-        return (elasticity_dict, elasticity_items_list)
     
     def elasticity_reform():
         self.elasticity={}

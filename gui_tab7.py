@@ -25,7 +25,7 @@ from PIL import Image,ImageTk
 
 def get_gf_dict(self, event):
     self.attribute_value = self.selected_attribute_widget.get()
-    print('selected_attribute ', self.attribute_value)
+    #print('selected_attribute ', self.attribute_value)
     self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options(self.growfactors[self.attribute_value]))    
     
 def tab7(self):
@@ -53,7 +53,7 @@ def tab7(self):
         #print('self.growfactors ', self.growfactors)
         self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year'])
 
-    self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.01, 0.15, attribute_value, self.selected_attribute_widget)
+    self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.01, 0.15, attribute_value, self.selected_attribute_widget, editable_field_year=0)
     (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
     self.button_growfactors.configure(command=self.clicked_generate_policy_revenues)
         
