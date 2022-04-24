@@ -36,12 +36,19 @@ def tab6(self):
     self.button_display_charts = ttk.Button(self.TAB6, text = "Display Charts", style='my.TButton', command=self.display_chart)
     self.button_display_charts.place(relx = self.button_1_TAB6_pos_x, rely = self.button_1_TAB6_pos_y, anchor = "w")       
     """
-    self.block_1_TAB6_combo_entry_gap_x = 0.10
-    self.block_1_TAB6_entry_x = self.block_1_entry_x - self.block_1_TAB6_combo_entry_gap_x
-    self.block_1_TAB6_entry_1_y = self.block_1_entry_1_y - 0.10
+    
+    self.combo_1_TAB6_x = 0.10
+    self.combo_1_TAB6_y = 0.10
+    
+    self.TAB6_combo_entry_gap_x = 0.10
+    self.label_1_TAB6_x = self.combo_1_TAB6_x 
+    self.label_1_TAB6_y = self.combo_1_TAB6_y
     l1_TAB6=tk.Label(self.TAB6, text="Select Chart: ", font = self.fontStyle)
-    l1_TAB6.place(relx = self.block_1_TAB6_entry_x, 
-             rely = self.block_1_TAB6_entry_1_y, anchor = "e")
+    l1_TAB6.place(relx = self.label_1_TAB6_x, 
+                  rely = self.label_1_TAB6_y, anchor = "e")
+    self.combo_2_TAB6_x = self.combo_1_TAB6_x
+    self.combo_2_TAB6_y = self.label_1_TAB6_y + 0.1  
+    
     """
     self.active_tax = self.find_active_taxes()
     chart_list = []
@@ -53,9 +60,9 @@ def tab6(self):
     self.chart_combo = ttk.Combobox(self.TAB6, textvariable=self.chart_selection, 
                                     value=self.chart_list, font=self.text_font, postcommand = self.update_chart_list)
     #chart_combo.current(0)
-    self.chart_combo.place(relx = self.block_1_TAB6_entry_x, 
-                    rely = self.block_1_TAB6_entry_1_y, anchor = "w", width=150)
-    self.chart_combo.bind("<<ComboboxSelected>>", lambda event: self.display_chart(event))
+    self.chart_combo.place(relx = self.combo_1_TAB6_x, 
+                    rely = self.combo_1_TAB6_y, anchor = "w", width=150)
+    self.chart_combo.bind("<<ComboboxSelected>>", lambda event: self.get_attribute_selection(event))
      
     # #self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
     # self.image = ImageTk.PhotoImage(Image.open("egypt_flag.jpg"))
@@ -63,83 +70,116 @@ def tab6(self):
     # self.pic = tk.Label(self.TAB2,image=self.image)
     # self.pic.place(relx = 0.45, rely = 0.2, anchor = "nw")
     # self.pic.image = self.image                                                          
-  
-def display_chart(self, event):
+
+def display_chart(self, event, selected_chart, global_vars):
+    self.selected_attribute_chart = self.attribute_selection.get()
+    #print('selected_chart ', selected_chart)
+    #print('self.selected_attribute_chart ', self.selected_attribute_chart)
+    tax_type = selected_chart[:3]
+    if (selected_chart==tax_type+'_revenue_projection'):
+        df = pd.read_csv(selected_chart+'.csv', index_col=0)           
+        df = df.T
+        df1 = df[df.columns[df.columns.str.contains(self.selected_attribute_chart)]]
+        #print('df1 ', df1)      
+        if global_vars[tax_type+'_adjust_behavior']:
+            df1.columns=['Current Law', 'Reform', 'Behavior']
+        else:
+            df1.columns=['Current Law', 'Reform']
+        #print('df1 ', df1)
+        df1 = df1.rename_axis('Year').reset_index()
+        #print('df1 ', df1)
+        #df1 = df1[1:]
+        #print('df1 after cutting', df1)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        #fig = plt.Figure()
+        #ax = fig.add_subplot(figsize=(5, 5))
+        #print('df1 ', df1)
+        plt.plot(df1['Year'], df1['Current Law'], color='r', marker='x',
+                 label='Current Law')
+        plt.plot(df1['Year'], df1['Reform'], color='b', marker='o', 
+                 markerfacecolor='None', markeredgecolor='b',
+                 label='Reform')
+        plt.title('Corporate tax forecast (in billion) for '+self.selected_attribute_chart)
+        # for index in range(len(year_list)):
+        #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
+        pic_filename1 = "egypt_rev_forecast.png"
+        plt.savefig(pic_filename1)
+        self.image = ImageTk.PhotoImage(Image.open("egypt_rev_forecast.png"))
+        self.pic = tk.Label(self.TAB6,image=self.image)
+        self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+        self.pic.image = self.image             
+    elif (selected_chart==tax_type+'_distribution_table'):
+        #print('i am in distribution ')
+        if global_vars[tax_type+'_distribution_table']:
+           df = pd.read_csv(selected_chart+'.csv', thousands=',') 
+           df.drop('Unnamed: 0', axis=1, inplace=True)
+           df = df.set_index('index')
+           print('df distribution ', df)
+           #figure(figsize=(8, 8), dpi=200)
+           fig, ax = plt.subplots(figsize=(8, 8))              
+           df.plot(kind='bar',y=[df.columns[0], df.columns[1]],figsize=(8,6))
+           pic_filename1 = "egypt_dist.png"
+           plt.savefig(pic_filename1)
+           self.image = ImageTk.PhotoImage(Image.open("egypt_dist.png"))
+           self.pic = tk.Label(self.TAB6,image=self.image)
+           self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+           self.pic.image = self.image
+    elif (selected_chart==tax_type+'_etr'):
+        df = pd.read_csv(selected_chart+'.csv', index_col=0)
+        df = df[['ETR', 'ETR_ref']]
+        df = df[:-1]
+        df['ETR'] = np.where(df['ETR']>1, np.nan, df['ETR'])
+        df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])            
+        df = df.reset_index()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax = df.plot(kind="line", x = 'index'  , y='ETR', color="b", label="ETR")
+        df.plot(kind="line", x = 'index' , y="ETR_ref", color="r", label="ETR under Reform", ax=ax)            
+        #fig = plt.Figure()
+        #ax = fig.add_subplot(figsize=(5, 5))
+        plt.xlabel('Percentile')
+        plt.xticks(df.index[::5])
+        plt.title('Effective Tax Rates by Percentile')
+        # for index in range(len(year_list)):
+        #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
+        pic_filename1 = "egypt_etr.png"
+        plt.savefig(pic_filename1)
+        self.image = ImageTk.PhotoImage(Image.open("egypt_etr.png"))
+        self.pic = tk.Label(self.TAB6,image=self.image)
+        self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+        self.pic.image = self.image       
+    
+def get_attribute_selection(self, event):
     # self.Label1=Label(self.TAB6, text="Charts", font = self.fontStyle_sub_title)
     # self.Label1.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
     selected_chart = self.chart_selection.get()
     #print('selected_chart ', selected_chart)
     tax_type = selected_chart[:3]
     f = open('global_vars.json')
-    vars = json.load(f)
+    global_vars = json.load(f)
     #print("vars['charts_ready'] ", vars['charts_ready'])
     self.image = ImageTk.PhotoImage(Image.open("blank.png"))
     self.pic = tk.Label(self.TAB6,image=self.image)
     self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-    self.pic.image = self.image     
-    if vars['charts_ready']:
-        if (selected_chart==tax_type+'_revenue_projection'):
-            df = pd.read_csv(selected_chart+'.csv')
-            df = df.T
-            #print(df)  
-            if vars[tax_type+'_adjust_behavior']:
-                df.columns=['Current', 'Reform', 'Behavior']
-            else:
-                df.columns=['Current', 'Reform']
-            df['Year'] = df.index
-            df = df[1:]
-            fig, ax = plt.subplots(figsize=(8, 6))
-            #fig = plt.Figure()
-            #ax = fig.add_subplot(figsize=(5, 5))
+    self.pic.image = self.image
+    #print("vars['charts_ready'] ", vars['charts_ready'])
+    if global_vars['charts_ready']:
+        df = pd.read_csv(tax_type+'_revenue_projection.csv', index_col=0)
+        df = df.T
+        print('df columns ', df.columns)
+        cols = df.columns[df.columns.str.startswith('current_law')]
+        attribute_name=self.attribute_columns[0]
+        attribute_types = [i[12:].title() for i in cols]
+        l2_TAB6=tk.Label(self.TAB6, text="Select "+attribute_name+" : ", font = self.fontStyle)
+        l2_TAB6.place(relx = self.combo_2_TAB6_x, 
+                      rely = self.combo_2_TAB6_y, anchor = "e")        
+        self.attribute_selection = tk.StringVar()    
+        self.attributes_combo = ttk.Combobox(self.TAB6, textvariable=self.attribute_selection, 
+                                    value=attribute_types, font=self.text_font)
+        self.attributes_combo.place(relx = self.combo_2_TAB6_x, 
+                    rely = self.combo_2_TAB6_y, anchor = "w", width=150)
+        self.attributes_combo.bind("<<ComboboxSelected>>", lambda event: self.display_chart(event, selected_chart, global_vars))        
+        
             
-            plt.plot(df.Year, df.Current, color='r', marker='x')
-            plt.plot(df.Year, df.Reform, color='b', marker='x')
-            plt.title('Corporate tax forecast (in billion)')
-            # for index in range(len(year_list)):
-            #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
-            pic_filename1 = "egypt_rev_forecast.png"
-            plt.savefig(pic_filename1)
-            self.image = ImageTk.PhotoImage(Image.open("egypt_rev_forecast.png"))
-            self.pic = tk.Label(self.TAB6,image=self.image)
-            self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-            self.pic.image = self.image             
-        elif (selected_chart==tax_type+'_distribution_table'):
-            if vars[tax_type+'_distribution_table']:
-               df = pd.read_csv(selected_chart+'.csv', thousands=',') 
-               df.drop('Unnamed: 0', axis=1, inplace=True)
-               df = df.set_index('index')
-               #figure(figsize=(8, 8), dpi=200)
-               fig, ax = plt.subplots(figsize=(8, 8))              
-               df.plot(kind='bar',y=[df.columns[0], df.columns[1]],figsize=(8,6))
-               pic_filename1 = "egypt_dist.png"
-               plt.savefig(pic_filename1)
-               self.image = ImageTk.PhotoImage(Image.open("egypt_dist.png"))
-               self.pic = tk.Label(self.TAB6,image=self.image)
-               self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-               self.pic.image = self.image
-        elif (selected_chart==tax_type+'_etr'):
-            df = pd.read_csv(selected_chart+'.csv', index_col=0)
-            df = df[['ETR', 'ETR_ref']]
-            df = df[:-1]
-            df['ETR'] = np.where(df['ETR']>1, np.nan, df['ETR'])
-            df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])            
-            df = df.reset_index()
-            fig, ax = plt.subplots(figsize=(8, 6))
-            ax = df.plot(kind="line", x = 'index'  , y='ETR', color="b", label="ETR")
-            df.plot(kind="line", x = 'index' , y="ETR_ref", color="r", label="ETR under Reform", ax=ax)            
-            #fig = plt.Figure()
-            #ax = fig.add_subplot(figsize=(5, 5))
-            plt.xlabel('Percentile')
-            plt.xticks(df.index[::5])
-            plt.title('Effective Tax Rates by Percentile')
-            # for index in range(len(year_list)):
-            #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
-            pic_filename1 = "egypt_etr.png"
-            plt.savefig(pic_filename1)
-            self.image = ImageTk.PhotoImage(Image.open("egypt_etr.png"))
-            self.pic = tk.Label(self.TAB6,image=self.image)
-            self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-            self.pic.image = self.image               
         # self.img1 = Image.open(pic_filename1)
         # self.img2 = self.img1.resize((500, 500), Image.ANTIALIAS)
         # self.img3 = ImageTk.PhotoImage(self.img2)

@@ -92,7 +92,7 @@ class GrowFactors(object):
         CUR_PATH = os.path.abspath(os.path.dirname(__file__))
         #FILENAME = 'growfactors.csv'
         growfactors_filepath = os.path.join(CUR_PATH, growfactors_filename)
-        print('growfactors_filepath ', growfactors_filepath)
+        #print('growfactors_filepath ', growfactors_filepath)
         if isinstance(growfactors_filepath, str):
             if os.path.isfile(growfactors_filepath):
                 gfdf = pd.read_csv(growfactors_filepath,
@@ -203,12 +203,12 @@ class GrowFactors(object):
         else:
             #print('self.gfdf ', self.gfdf)
             #print(self.gfdf[attribute_name]==attribute_value)
-            print('col ', name)
-            print('year ', year)
-            print('attribute_name ', attribute_name)
-            print('attribute_value ', attribute_value)
-            print('self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year] ', 
-                  self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year])
+            #print('col ', name)
+            #print('year ', year)
+            #print('attribute_name ', attribute_name)
+            #print('attribute_value ', attribute_value)
+            #print('self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year] ', 
+                  #self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year])
             return self.gfdf[self.gfdf[attribute_name]==attribute_value][name][year]
 
     def factor_names(self):

@@ -26,9 +26,13 @@ from guifuncs import save_inputs, get_inputs
 from PIL import Image,ImageTk
 
 class super_combo(tk.Frame):
-    def __init__(self, tab, input_json, field_year, field_value, position_x, position_y, attribute_value=None, selected_attribute_widget=None):
+    def __init__(self, tab, input_json, field_year, field_value, position_x, 
+                 position_y, attribute_value=None, 
+                 selected_attribute_widget=None,
+                 editable_field_year=None):
         #self.block_1_title_pos_x = 0.15
         self.input_json_main = input_json
+        self.editable_field_year = editable_field_year
         #self.attribute_name = attribute_name
         self.attribute_value = attribute_value
         if self.attribute_value is not None:
@@ -42,7 +46,7 @@ class super_combo(tk.Frame):
         self.width_json = 0
         if len(self.input_json)>0:
             self.width_json = len(self.input_json[list(self.input_json.keys())[0]][field_year])            
-        grid_placement(self, 0.15)        
+        grid_placement(self, 0.15)       
         self.pos_x = position_x
         self.pos_y = position_y
         shift_x = 0
@@ -238,6 +242,29 @@ class super_combo(tk.Frame):
         #print('button at reset ',self.generate_revenue_policy_button_y)            
         self.button_generate_revenue_policy.place(relx = self.generate_revenue_policy_button_x, 
                                                   rely = self.generate_revenue_policy_button_y, anchor = "w")
+
+    def destroy_all_widgets(self):
+        self.num_widgets = len(self.block_widget_dict)
+        num = self.num_widgets
+        #print('self.num_widgets in reset widgets', self.num_widgets)
+        for num in range(1, self.num_widgets+1):
+            self.block_widget_dict[num][1].destroy()
+            if self.attribute_value is not None:
+                self.block_widget_dict[num][4].destroy()
+            if (self.width_json>1):
+                self.l4[num].destroy()
+                self.l5[num].destroy()
+            for i in range(self.width_json):
+                self.block_widget_dict[num][2][i].destroy()
+                self.block_widget_dict[num][3][i].destroy()
+            self.block_widget_dict.pop(num, None)
+        self.num_reforms = 0
+        self.num_widgets = 0         
+        self.button_generate_revenue_policy.destroy()
+        self.button_add_reform.destroy()
+        self.button_delete_reform.destroy()
+        self.button_clear_reform.destroy()
+        self.l3A.destroy()
                 
     def delete_policy_widgets(self):
         self.num_widgets = len(self.block_widget_dict)
@@ -276,7 +303,7 @@ class super_combo(tk.Frame):
         print('block_widget_dict after ', self.block_widget_dict)
         print('self.num_widgets after ',self.num_widgets)
         
-    def policy_options(self, input_json):
+    def policy_options(self, input_json, elasticity=None):
         if self.attribute_value is not None:
             self.input_json=self.input_json_main[self.attribute_value]         
         input_json_sorted = dict(sorted(self.input_json.items()))    
@@ -285,8 +312,13 @@ class super_combo(tk.Frame):
             #print(k)
             #print(input_json[k]['description'])
             #policy_option_list = policy_option_list + [input_json[k]['description']]
-            if (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
+            #Don't show the current law rates and the elasticity items in the drop down list
+            if elasticity:
+                if (k[1:11] == 'elasticity'):
+                    policy_options_list = policy_options_list + [k[1:]]
+            elif (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
                 policy_options_list = policy_options_list + [k[1:]]
+        print('policy_options_list ', policy_options_list)
         return (policy_options_list)
     
     def policy_reform():
@@ -298,8 +330,7 @@ class super_combo(tk.Frame):
         self.reform['policy']['_'+selected_item][self.updated_year]=[self.updated_value]
         #print("Reform2: ", self.reform)
         
-    def show_policy_selection(self, event, widget_dict):
-     
+    def show_policy_selection(self, event, widget_dict):   
         vars = get_inputs(self)
         #print('vars ', vars)
         #print("inside policy selection")
@@ -317,7 +348,6 @@ class super_combo(tk.Frame):
             self.attribute_value = self.selected_attribute_widget.get()
             self.input_json=self.input_json_main[self.attribute_value]      
         selected_item = widget_dict[num][1].get()
-        #print('self.selected_item ', self.selected_item)
         #print('vars ',vars)
         selected_year = {}
         selected_value = {}
@@ -328,8 +358,8 @@ class super_combo(tk.Frame):
                 selected_year[i] = vars['start_year']
             widget_dict[num][2][i].config(state=tk.NORMAL)                
             widget_dict[num][2][i].delete(0, tk.END)
-            widget_dict[num][2][i].insert(tk.END, int(selected_year[i]))
-            if (self.width_json>1):
+            widget_dict[num][2][i].insert(tk.END, selected_year[i])
+            if (not self.editable_field_year):
                 widget_dict[num][2][i].config(state=tk.DISABLED)
             widget_dict[num][3][i].delete(0, tk.END)
             widget_dict[num][3][i].insert(tk.END, selected_value[i])
@@ -375,8 +405,8 @@ class super_combo(tk.Frame):
         # boxes as the length of the col_label and its value 
         # will be the col_labels
         self.l4 = {}
-        self.l4[0]=tk.Label(tab,text="Year: ", font = self.fontStyle)
-        self.l4[0].place(relx = self.entry_1_label_x, 
+        self.l4[1]=tk.Label(tab,text="Year: ", font = self.fontStyle)
+        self.l4[1].place(relx = self.entry_1_label_x, 
                  rely = self.entry_1_label_y, anchor = "w")
         #print('Year: ', round(self.entry_1_label_x,2), self.entry_1_label_y)
         self.block_widget_dict[1][2] = {}
@@ -389,8 +419,8 @@ class super_combo(tk.Frame):
         i=0
         #print('Year Entry: ', round(self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x,2), self.entry_1_y)
         self.l5 = {}
-        self.l5[0]=tk.Label(tab, text="Value: ", font = self.fontStyle)
-        self.l5[0].place(relx = self.entry_2_label_x, 
+        self.l5[1]=tk.Label(tab, text="Value: ", font = self.fontStyle)
+        self.l5[1].place(relx = self.entry_2_label_x, 
                  rely = self.entry_2_label_y, anchor = "w")
         #print('Value: ', round(self.entry_2_label_x,2), self.entry_2_label_y)
         self.block_widget_dict[1][3] = {}

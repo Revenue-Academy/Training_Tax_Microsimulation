@@ -496,68 +496,27 @@
         "out_of_range_minmsg": "",
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop"
-    },    
-    "_elasticity_cit_taxable_income_threshold": {
-        "long_name": "Threshold for Elasticity of Taxable Income",
-        "description": "elasticity",
-        "itr_ref": "elasticity",
-        "notes": "",
-        "row_var": "Year",
-        "row_label": [
-            "2020"
-        ],
-        "start_year": 2020,
-        "cpi_inflatable": false,
-        "cpi_inflated": false,
-        "col_var": "Bracket",
-        "col_label": [
-            "Bracket1",
-            "Bracket2",
-            "Bracket3"
-        ],
-        "boolean_value": false,
-        "integer_value": false,
-        "value": [
-            [
-                100000,
-                1000000,
-                9e99
-            ]
-      ],
-        "range": {
-            "min": 0,
-            "max": 9e99
-        },
-        "out_of_range_minmsg": "",
-        "out_of_range_maxmsg": "",
-        "out_of_range_action": "stop"
     },
-    "_elasticity_cit_taxable_income_value": {
+"_elasticity_cit_taxable_income_value": {
         "long_name": "Elasticity of Taxable Income",
         "description": "elasticity",
         "itr_ref": "elasticity",
         "notes": "",
         "row_var": "Year",
         "row_label": [
-            "2020"
+                "2020"
         ],
         "start_year": 2020,
         "cpi_inflatable": false,
         "cpi_inflated": false,
         "col_var": "Elasticity",
-        "col_label": [
-            "Value1",
-            "Value2",
-            "Value3"
-        ],
+        "col_label": "",
         "boolean_value": false,
         "integer_value": false,
-        "value": [
-            [
+        "value": [      
+                [0.0,
                 0.0,
-                0.0,
-                0.0
-                ]
+                0.0]
       ],
         "range": {
             "min": 0,
@@ -566,5 +525,38 @@
         "out_of_range_minmsg": "",
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop"
-    }    
+    },
+"_elasticity_cit_taxable_income_threshold": {
+        "long_name": "Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+                100000,
+                1000000,
+                9e99
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Elasticity",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [      
+                [
+                100000,
+                1000000,
+                9e99
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    } 
 }
