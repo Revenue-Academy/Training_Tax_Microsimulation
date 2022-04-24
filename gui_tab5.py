@@ -24,14 +24,14 @@ rcParams.update({'figure.autolayout': True})
 from PIL import Image,ImageTk
 
 def display_distribution_table(self, widget, tax_type, block_1_title_pos_x):
-    print("I am inside display distribution table")
-    self.vars[tax_type+'_display_distribution_table'] = int(widget.get())
-    print("self.vars[tax_type+'_display_distribution_table'] ",self.vars[tax_type+'_display_distribution_table'])
-    print("tax_type+'_distribution_json_filename' ", self.vars[tax_type+'_distribution_json_filename'])    
+    #print("I am inside display distribution table")
+    self.vars[tax_type+'_display_distribution_table_by_attribute'] = int(widget.get())
+    #print("self.vars[tax_type+'_display_distribution_table'] ",self.vars[tax_type+'_display_distribution_table'])
+    #print("tax_type+'_distribution_json_filename' ", self.vars[tax_type+'_distribution_json_filename'])    
 
 def display_distribution(self, widget, tax_type, block_1_title_pos_x):
     self.active_tax = self.find_active_taxes()
-    print(self.active_tax)
+    #print(self.active_tax)
     if (tax_type not in self.active_tax):
         self.msg_window = tk.Toplevel()
         self.msg_window.geometry("250x100+300+300")
@@ -42,10 +42,10 @@ def display_distribution(self, widget, tax_type, block_1_title_pos_x):
         self.msg_window.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(widget, self.msg_window))
     else:
         self.vars[tax_type+'_distribution_table'] = int(widget.get())
-        print("self.vars[tax_type+'_distribution_table'] ", self.vars[tax_type+'_distribution_table'])
+        #print("self.vars[tax_type+'_distribution_table'] ", self.vars[tax_type+'_distribution_table'])
         if self.vars[tax_type+'_distribution_table']:
             self.grid_placement(block_1_title_pos_x)
-            self.l1_distribution[tax_type]=Label(self.TAB5,text="Data Inputs "+ tax_type.upper(),
+            self.l1_distribution[tax_type]=Label(self.TAB5,text="Data Inputs for Distribution Table "+ tax_type.upper(),
                      font = self.fontStyle_sub_title)
             self.l1_distribution[tax_type].place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
             
@@ -54,36 +54,49 @@ def display_distribution(self, widget, tax_type, block_1_title_pos_x):
                                       rely = self.block_1_entry_1_y,
                                       anchor = "e")
             self.entry_distribution_json_filename[tax_type].insert(END, self.vars[tax_type+'_distribution_json_filename'])
-            self.button_distribution_json_filename[tax_type] = ttk.Button(self.TAB5, text = "Change Data File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_distribution_json_filename[tax_type], tax_type+'_distribution_json_filename'))
+            self.button_distribution_json_filename[tax_type] = ttk.Button(self.TAB5, text = "Change Distribution Inputs File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_distribution_json_filename[tax_type], tax_type+'_distribution_json_filename'))
             self.button_distribution_json_filename[tax_type].place(relx = self.block_1_entry_x,
                                        rely = self.block_1_entry_1_y, anchor = "w")
 
-            self.display_distribution_table_chk[tax_type] = tk.IntVar()
-            self.display_distribution_table_chk_box[tax_type] = tk.Checkbutton(self.TAB5, text='Display Distribution Table', 
+            self.display_distribution_table_attr_chk[tax_type] = tk.IntVar()
+            self.display_distribution_table_attr_chk_box[tax_type] = tk.Checkbutton(self.TAB5, text='Generate Distribution Table by Attribute', 
                                                            font = self.fontStyle,                                              
-                                                           variable=self.display_distribution_table_chk[tax_type], command=lambda: self.display_distribution_table(self.display_distribution_table_chk[tax_type], tax_type, self.block_distribution_pos_x[tax_type]))
-            self.display_distribution_table_chk_box[tax_type].place(relx = self.block_distribution_pos_x[tax_type], 
+                                                           variable=self.display_distribution_table_attr_chk[tax_type], command=lambda: self.display_distribution_table(self.display_distribution_table_chk[tax_type], tax_type, self.block_distribution_pos_x[tax_type]))
+            self.display_distribution_table_attr_chk_box[tax_type].place(relx = self.block_distribution_pos_x[tax_type], 
                                                 rely = self.block_1_entry_1_y+2*self.entry_entry_gap_y, anchor = "w")
-        
+
+            
+            self.button_generate_distribution = ttk.Button(self.TAB5, text = "Generate Distribution Tables", style='my.TButton')
+            self.button_generate_distribution.place(relx = self.block_distribution_pos_x[tax_type],
+                                                    rely = self.block_1_entry_1_y+4*self.entry_entry_gap_y, anchor = "w")       
+            self.button_generate_distribution.config(command=lambda: self.clicked_generate_distribution(tax_type))
+        else:
+            self.vars[tax_type+'_display_revenue_table'] = 1
+            self.save_inputs()
+            self.l1_distribution[tax_type].destroy()
+            self.entry_distribution_json_filename[tax_type].destroy()
+            self.button_distribution_json_filename[tax_type].destroy()
+            self.display_distribution_table_attr_chk_box[tax_type].destroy()
+            self.button_generate_distribution.destroy()
+             
 def tab5(self):
     self.l1_distribution = {}
     self.entry_distribution_json_filename = {}
     self.button_distribution_json_filename = {}
-    self.display_distribution_table_chk = {}
-    self.display_distribution_table_chk_box = {}    
+    self.display_distribution_table_attr_chk = {}
+    self.display_distribution_table_attr_chk_box = {} 
     # for positions of the different tax type on the screen
     self.block_distribution_pos_x = {}
-    pos_x = [0.10, 0.40, 0.70]    
+    pos_x = [0.10, 0.40, 0.70]
+
     for tax_type in self.tax_list:
         self.vars[tax_type+'_distribution_table'] = 0 
         self.vars[tax_type+'_display_distribution_table'] = 0
-   
+        self.vars[tax_type+'_display_distribution_table_by_attribute'] = 0
+        self.vars[tax_type+'_display_revenue_table'] = 1
+    self.save_inputs()
     self.block_distribution_pos_x = self.allocate_pos_x(pos_x, self.status,
                                                     self.block_distribution_pos_x)
-    
-    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
-    self.vars['cit_distribution_json_filename'] = 'cit_distribution_egypt.json'
-    self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
          
     self.TAB5_root_title=Label(self.TAB5,text="Tax Microsimulation Model",
              font = self.fontStyle_title)
@@ -118,84 +131,3 @@ def tab5(self):
     self.vat_distribution_chk_box.place(relx = self.block_distribution_pos_x['vat'], 
                                         rely = self.block_1_title_box_y, anchor = "w") 
     
-
-
-    
-    
-    """    
-    self.TAB5_l2=Label(self.TAB5, text="Elasticity", font = self.fontStyle_sub_title)
-    self.TAB5_l2.place(relx = self.block_1_title_pos_x, rely = self.block_2_TAB5_title_pos_y, anchor = "w")
-    
-    self.TAB5_l3=Label(self.TAB5, text="Select Elasticity Parameter: ", font = self.fontStyle)
-    self.TAB5_l3.place(relx = self.block_2_TAB5_entry_1_1_x, 
-             rely = self.block_2_TAB5_entry_1_1_y-self.text_entry_gap, anchor = "w")
-
-    self.elasticity_dict, self.elasticity_items_list = self.elasticity_options()
-    #self.policy_options_list.remove('gst_rate')
-    self.elasticity_widget_dict = {}
-    self.elasticity_selected_dict = {}
-    self.num_elasticity_changes = 1
-    
-   
-    self.elasticity_widget_dict[1] = {}
-    self.elasticity_selected_dict[1] = {}
-    self.elasticity_widget_dict[1][1] = ttk.Combobox(self.TAB5, value=self.elasticity_items_list, font=self.text_font, name=str(self.num_elasticity_changes))
-    self.elasticity_widget_dict[1][1].current(1)
-    self.elasticity_widget_dict[1][1].place(relx = self.block_2_TAB5_entry_1_1_x, 
-                    rely = self.block_2_TAB5_entry_1_1_y, anchor = "w", width=300)
-    
-    self.elasticity_widget_dict[1][1].bind("<<ComboboxSelected>>", self.show_elasticity_selection1)
-    
-    self.TAB5_l4=Label(self.TAB5,text="Threshold1: ", font = self.fontStyle)
-    self.TAB5_l4.place(relx = self.block_2_TAB5_entry_1_2_x, 
-             rely = self.block_2_TAB5_entry_1_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][2] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][2].place(relx = self.block_2_TAB5_entry_1_2_x, rely = self.block_2_TAB5_entry_1_1_y, anchor = "w")
-    
-    self.TAB5_l5=Label(self.TAB5,text="Threshold2: ", font = self.fontStyle)
-    self.TAB5_l5.place(relx = self.block_2_TAB5_entry_1_3_x, 
-             rely = self.block_2_TAB5_entry_1_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][3] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][3].place(relx = self.block_2_TAB5_entry_1_3_x, rely = self.block_2_TAB5_entry_1_1_y, anchor = "w")
-
-    self.TAB5_l6=Label(self.TAB5,text="Threshold3: ", font = self.fontStyle)
-    self.TAB5_l6.place(relx = self.block_2_TAB5_entry_1_4_x, 
-             rely = self.block_2_TAB5_entry_1_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][4] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][4].place(relx = self.block_2_TAB5_entry_1_4_x, rely = self.block_2_TAB5_entry_1_1_y, anchor = "w")
-
-    self.TAB5_l7=Label(self.TAB5,text="Value1: ", font = self.fontStyle)
-    self.TAB5_l7.place(relx = self.block_2_TAB5_entry_1_2_x, 
-             rely = self.block_2_TAB5_entry_2_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][5] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][5].place(relx = self.block_2_TAB5_entry_1_2_x, rely = self.block_2_TAB5_entry_2_1_y, anchor = "w")
-    
-    self.TAB5_l8=Label(self.TAB5,text="Value2: ", font = self.fontStyle)
-    self.TAB5_l8.place(relx = self.block_2_TAB5_entry_1_3_x, 
-             rely = self.block_2_TAB5_entry_2_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][6] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][6].place(relx = self.block_2_TAB5_entry_1_3_x, rely = self.block_2_TAB5_entry_2_1_y, anchor = "w")
-
-    self.TAB5_l9=Label(self.TAB5,text="Value3: ", font = self.fontStyle)
-    self.TAB5_l9.place(relx = self.block_2_TAB5_entry_1_4_x, 
-             rely = self.block_2_TAB5_entry_2_1_y-self.text_entry_gap, anchor = "w")
-    self.elasticity_widget_dict[1][7] = Entry(self.TAB5, width=10, font = self.fontStyle)
-    self.elasticity_widget_dict[1][7].place(relx = self.block_2_TAB5_entry_1_4_x, rely = self.block_2_TAB5_entry_2_1_y, anchor = "w")
-
-    
-    self.num_elasticity_changes += 1
-    self.button_add_reform = ttk.Button(self.TAB5, text="+", style='my.TButton', command= lambda: self.create_elasticity_widgets(self.TAB5), width=2)
-    self.button_add_reform.place(relx = self.button_add_reform_x, rely = self.block_2_TAB5_entry_1_1_y, anchor = "w")        
-    
-    self.button_generate_elasticity_dict = ttk.Button(self.TAB5, text = "Update Elasticities", style='my.TButton', command=self.clicked_generate_elasticity_dict)
-    self.button_2_TAB5_pos_x = self.button_1_pos_x
-    self.button_2_TAB5_pos_y = (self.block_2_TAB5_entry_2_1_y+(self.num_elasticity_changes-1)*(self.block_2_TAB5_entry_entry_gap_y)) +self.entry_button_gap
-    self.button_generate_elasticity_dict.place(relx = self.button_2_TAB5_pos_x,
-                                                rely = self.button_2_TAB5_pos_y, anchor = "w")       
-    
-    self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
-    #image = tk.PhotoImage(file="blank.png")
-    self.pic = tk.Label(self.TAB5,image=self.image)
-    self.pic.place(relx = 0.5, rely = 0.2, anchor = "nw")
-    self.pic.image = self.image
-    """

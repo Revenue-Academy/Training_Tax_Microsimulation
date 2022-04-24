@@ -545,13 +545,15 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [      
+                [
                 100000,
                 1000000,
                 9e99
+                ]
       ],
         "range": {
             "min": 0,
-            "max": 1
+            "max": 9e99
         },
         "out_of_range_minmsg": "",
         "out_of_range_maxmsg": "",

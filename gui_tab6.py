@@ -73,24 +73,32 @@ def tab6(self):
 
 def display_chart(self, event, selected_chart, global_vars):
     self.selected_attribute_chart = self.attribute_selection.get()
+    #print('selected_chart ', selected_chart)
+    #print('self.selected_attribute_chart ', self.selected_attribute_chart)
     tax_type = selected_chart[:3]
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
-        #print(df) 
         df1 = df[df.columns[df.columns.str.contains(self.selected_attribute_chart)]]
+        #print('df1 ', df1)      
         if global_vars[tax_type+'_adjust_behavior']:
-            df1.columns=['Current', 'Reform', 'Behavior']
+            df1.columns=['Current Law', 'Reform', 'Behavior']
         else:
-            df1.columns=['Current', 'Reform']
-        df1['Year'] = df1.index
-        df1 = df1[1:]
+            df1.columns=['Current Law', 'Reform']
+        #print('df1 ', df1)
+        df1 = df1.rename_axis('Year').reset_index()
+        #print('df1 ', df1)
+        #df1 = df1[1:]
+        #print('df1 after cutting', df1)
         fig, ax = plt.subplots(figsize=(8, 6))
         #fig = plt.Figure()
         #ax = fig.add_subplot(figsize=(5, 5))
-        
-        plt.plot(df1.Year, df1.Current, color='r', marker='x')
-        plt.plot(df1.Year, df1.Reform, color='b', marker='x')
+        #print('df1 ', df1)
+        plt.plot(df1['Year'], df1['Current Law'], color='r', marker='x',
+                 label='Current Law')
+        plt.plot(df1['Year'], df1['Reform'], color='b', marker='o', 
+                 markerfacecolor='None', markeredgecolor='b',
+                 label='Reform')
         plt.title('Corporate tax forecast (in billion) for '+self.selected_attribute_chart)
         # for index in range(len(year_list)):
         #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
@@ -101,10 +109,12 @@ def display_chart(self, event, selected_chart, global_vars):
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image             
     elif (selected_chart==tax_type+'_distribution_table'):
+        #print('i am in distribution ')
         if global_vars[tax_type+'_distribution_table']:
            df = pd.read_csv(selected_chart+'.csv', thousands=',') 
            df.drop('Unnamed: 0', axis=1, inplace=True)
            df = df.set_index('index')
+           print('df distribution ', df)
            #figure(figsize=(8, 8), dpi=200)
            fig, ax = plt.subplots(figsize=(8, 8))              
            df.plot(kind='bar',y=[df.columns[0], df.columns[1]],figsize=(8,6))
@@ -153,8 +163,9 @@ def get_attribute_selection(self, event):
     self.pic.image = self.image
     #print("vars['charts_ready'] ", vars['charts_ready'])
     if global_vars['charts_ready']:
-        df = pd.read_csv(selected_chart+'.csv', index_col=0)
+        df = pd.read_csv(tax_type+'_revenue_projection.csv', index_col=0)
         df = df.T
+        print('df columns ', df.columns)
         cols = df.columns[df.columns.str.startswith('current_law')]
         attribute_name=self.attribute_columns[0]
         attribute_types = [i[12:].title() for i in cols]

@@ -50,8 +50,11 @@ def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
     self.entry_button_gap = 0.02
     #self.vars={}
         
-def display_entry(self, widget, tax_type, block_1_title_pos_x):
+def display_entry(self, widget, tax_type):
     self.vars[tax_type] = int(widget.get())
+    self.block_settings_pos_x = self.allocate_pos_x(self.pos_x, self.status,
+                                                    self.block_settings_pos_x)   
+    block_1_title_pos_x = self.block_settings_pos_x[tax_type] 
     if not self.vars[tax_type]:
         self.l1[tax_type].destroy()
         self.entry_data_filename[tax_type].destroy()
@@ -255,6 +258,10 @@ def tab1(self):
     self.vars['vat_elasticity_filename'] = "vat_elasticity_macedonia.json"
     self.vars['vat_functions_filename'] = "vat_functions.py"
     self.vars['vat_function_names_filename'] = "vat_function_names.json"
+
+    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
+    self.vars['cit_distribution_json_filename'] = 'cit_distribution_egypt.json'
+    self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
     
     self.vars['start_year'] = 2020
     self.vars['end_year']=2025
@@ -309,26 +316,31 @@ def tab1(self):
     
     self.tax_list = ['pit', 'cit', 'vat']
     
-    pos_x = [0.13, 0.40, 0.70]
+    self.pos_x = [0.13, 0.40, 0.70]
 
     self.vars['pit'] = 0
-    self.vars['cit'] = 1
+    self.vars['cit'] = 0
     self.vars['vat'] = 0
     
+    self.status['pit'] = tk.NORMAL
+    self.status['cit'] = tk.NORMAL
+    self.status['vat'] = tk.NORMAL
+
+    self.vars['show_error_log'] = 0
+    self.vars['verbose'] = 0
+    
+    #self.save_inputs()
+       
+    """
     self.status['pit'] = tk.NORMAL if self.vars['pit'] else tk.DISABLED
     self.status['cit'] = tk.NORMAL if self.vars['cit'] else tk.DISABLED
     self.status['vat'] = tk.NORMAL if self.vars['vat'] else tk.DISABLED
-
-    self.save_inputs()
-       
-    """
     for tax_type in self.tax_list:
         if self.status[tax_type] == tk.NORMAL:
             self.vars[tax_type] = 1
     """
-    self.block_settings_pos_x = self.allocate_pos_x(pos_x, self.status,
-                                                    self.block_settings_pos_x)
-   
+
+    
     self.block_1_title_pos_x = 0.15
     self.block_1_title_box_y = 0.15
 
@@ -349,22 +361,22 @@ def tab1(self):
     self.pit_chk_box = tk.Checkbutton(self.TAB1, text='Personal Income Tax', 
                                       font = self.fontStyle, variable=self.pit_chk,
                                       state = self.status['pit'],
-                                      command=lambda: self.gui_tab1_control(self.pit_chk, 'pit', self.block_settings_pos_x['pit']))
-    self.pit_chk_box.place(relx = self.block_settings_pos_x['pit'], rely = self.block_1_title_box_y, anchor = "w")
+                                      command=lambda: self.initiate_model(self.pit_chk, 'pit'))
+    self.pit_chk_box.place(relx = self.pos_x[0], rely = self.block_1_title_box_y, anchor = "w", )
 
     self.cit_chk = tk.IntVar()
     self.cit_chk_box = tk.Checkbutton(self.TAB1, text='Corporate Income Tax', 
                                       font = self.fontStyle, variable=self.cit_chk,
                                       state = self.status['cit'],
-                                      command=lambda: self.gui_tab1_control(self.cit_chk, 'cit', self.block_settings_pos_x['cit']))
-    self.cit_chk_box.place(relx = self.block_settings_pos_x['cit'], rely = self.block_1_title_box_y, anchor = "w")
+                                      command=lambda: self.initiate_model(self.cit_chk, 'cit'))
+    self.cit_chk_box.place(relx = self.pos_x[1], rely = self.block_1_title_box_y, anchor = "w")
 
     self.vat_chk = tk.IntVar()
     self.vat_chk_box = tk.Checkbutton(self.TAB1, text='Value Added Tax', 
                                       font = self.fontStyle, variable=self.vat_chk,
                                       state = self.status['vat'],
-                                      command=lambda: self.gui_tab1_control(self.vat_chk, 'vat', self.block_settings_pos_x['vat']))
-    self.vat_chk_box.place(relx = self.block_settings_pos_x['vat'], rely = self.block_1_title_box_y, anchor = "w")    
+                                      command=lambda: self.initiate_model(self.vat_chk, 'vat'))
+    self.vat_chk_box.place(relx = self.pos_x[2], rely = self.block_1_title_box_y, anchor = "w")    
 
     
 

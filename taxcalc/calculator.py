@@ -476,7 +476,8 @@ class Calculator(object):
         attribute type list. For example if attribute variable is 'Sector', the 
         attribute types in the dataset would be 'Banks', 'Oil &Gas', 'Hotels', 
         etc.
-
+        Note that 'All' will always be there as an attribute type if 
+        even if there are no attribute variables
         """
 
         attribute_data = []
@@ -510,7 +511,7 @@ class Calculator(object):
         else:
             msg = 'tax type ="{}" is not valid'
             raise ValueError(msg.format(tax_type))
-        
+
         return (['All']+attribute_types, attribute_data)
         
 
@@ -652,7 +653,13 @@ class Calculator(object):
         """
         if tax_type == 'pit':        
             if self.records is not None:
-                return self.dataframe(DIST_VARIABLES)
+                if attribute_var is not None:
+                    if attribute_value == 'All':
+                        return self.dataframe(DIST_VARIABLES)
+                    else:
+                        return self.dataframe(DIST_VARIABLES, attribute_value, attribute_var)
+                else:
+                        return self.dataframe(DIST_VARIABLES)            
         elif tax_type == 'cit':
             if self.corprecords is not None:
                 if attribute_var is not None:
@@ -660,9 +667,17 @@ class Calculator(object):
                         return self.dataframe_cit(DIST_VARIABLES)
                     else:
                         return self.dataframe_cit(DIST_VARIABLES, attribute_value, attribute_var)
+                else:
+                        return self.dataframe_cit(DIST_VARIABLES)
         elif tax_type == 'vat':        
             if self.gstrecords is not None:
-                return self.dataframe_gst(DIST_VARIABLES)
+                if attribute_var is not None:
+                    if attribute_value == 'All':
+                        return self.dataframe_gst(DIST_VARIABLES)
+                    else:
+                        return self.dataframe_gst(DIST_VARIABLES, attribute_value, attribute_var)
+                else:
+                        return self.dataframe_gst(DIST_VARIABLES)            
         else:
             msg = 'tax type ="{}" is not valid'
             raise ValueError(msg.format(tax_type))
@@ -949,19 +964,24 @@ class Calculator(object):
                 groupby == 'weighted_percentiles' or
                 groupby == 'standard_income_bins')
 
+        attribute_types = ['All']
         if calc is not None:
             if self.records is not None:
                 assert np.allclose(self.array('weight'),
                                    calc.array('weight'))  # rows in same order
-                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+                if attribute_var is not None:
+                    (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
             if self.corprecords is not None:
                 assert np.allclose(self.carray('weight'),
                                    calc.carray('weight'))
-                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+                if attribute_var is not None:                
+                    (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
             if self.gstrecords is not None:
                 assert np.allclose(self.garray('weight'),
                                    calc.garray('weight'))
-                (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+                if attribute_var is not None:                
+                    (attribute_types, attribute_data) = self.get_attribute_types(tax_type, 0)
+        #print('attribute_types ', attribute_types)
         dt1 = {}
         for attribute_value in attribute_types:                   
             var_dataframe = self.distribution_table_dataframe(tax_type, distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
@@ -981,7 +1001,7 @@ class Calculator(object):
             assert calc.array_len == self.array_len
             dt2 = {}
             for attribute_value in attribute_types:  
-                var_dataframe = self.distribution_table_dataframe(tax_type, distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
+                var_dataframe = calc.distribution_table_dataframe(tax_type, distribution_vardict['DIST_VARIABLES'], attribute_value, attribute_var)
                 if have_same_income_measure(self, calc, imeasure):
                     if income_measure is None:
                         imeasure = 'GTI'

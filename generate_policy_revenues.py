@@ -4,7 +4,6 @@ Created on Thu Nov 11 18:28:24 2021
 
 @author: wb305167
 """
-
 import copy
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -27,7 +26,7 @@ def make_float(item):
         return float(item)
     
 def read_reform_dict(block_selected_dict):
-    print('block_selected_dict in read_reform_dict: ',block_selected_dict)
+    #print('block_selected_dict in read_reform_dict: ',block_selected_dict)
     years=[]
     for k in block_selected_dict.keys():
         if (block_selected_dict[k]['selected_year'] not in years):
@@ -109,11 +108,13 @@ def generate_policy_revenues():
     from taxcalc.utils import dist_variables
 
     f = open('global_vars.json')
-    global_vars = json.load(f)
-    verbose = global_vars['verbose']
-    start_year = int(global_vars['start_year'])
-    end_year = int(global_vars['end_year'])
-    attribute_varlist = global_vars['attribute_vars']
+    global_variables = json.load(f)
+    #print('global_variables in generate policy revenues ', global_variables)
+    verbose = global_variables['verbose']
+    start_year = int(global_variables['start_year'])
+    end_year = int(global_variables['end_year'])
+    attribute_varlist = global_variables['attribute_vars']
+    #print('display_revenue_table in generate policy revenues ',global_variables['cit'+'_display_revenue_table'])
     if len(attribute_varlist)==0: 
         attribute_var = None
     else:
@@ -121,38 +122,37 @@ def generate_policy_revenues():
     tax_list=[]
     tax_collection_var_list = []  
     # start the simulation for pit/cit/vat    
-    if global_vars['pit']:
+    if global_variables['pit']:
         tax_list = tax_list + ['pit']
         tax_collection_var_list = tax_collection_var_list + ['pitax']
-        recs = Records(data=global_vars['pit_data_filename'], weights=global_vars['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_vars['GROWFACTORS_FILENAME']))
+        recs = Records(data=global_variables['pit_data_filename'], weights=global_variables['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
     else:
         recs = None
-    if global_vars['cit']:
+    if global_variables['cit']:
         tax_list = tax_list + ['cit']
         tax_collection_var_list = tax_collection_var_list + ['citax']
-        crecs = CorpRecords(data=global_vars['cit_data_filename'], weights=global_vars['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_vars['GROWFACTORS_FILENAME']))
+        crecs = CorpRecords(data=global_variables['cit_data_filename'], weights=global_variables['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
     else:
         crecs = None
-    if global_vars['vat']:
+    if global_variables['vat']:
         tax_list = tax_list + ['vat']
         tax_collection_var_list = tax_collection_var_list + ['vatax']
-        grecs = GSTRecords(data=global_vars['vat_data_filename'], weights=global_vars['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_vars['GROWFACTORS_FILENAME']))
+        grecs = GSTRecords(data=global_variables['vat_data_filename'], weights=global_variables['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
     else:
         grecs = None  
     
     adjust_behavior = 0
     for tax_type in tax_list:
-        adjust_behavior = adjust_behavior or global_vars[tax_type+'_adjust_behavior']
-
+        adjust_behavior = adjust_behavior or global_variables[tax_type+'_adjust_behavior']
 
     distribution_json_filename = {}
     distribution_vardict_dict = {}
     income_measure = {}
     for tax_type in tax_list:
-        if global_vars[tax_type+'_distribution_table']:
+        if global_variables[tax_type+'_distribution_table']:
             #CIT_VAR_INFO_FILENAME = 'taxcalc/'+vars['cit_records_variables_filename']
             #self.max_lag_years = vars['cit_max_lag_years']
-            distribution_json_filename[tax_type] = 'taxcalc/'+global_vars[tax_type+'_distribution_json_filename']
+            distribution_json_filename[tax_type] = 'taxcalc/'+global_variables[tax_type+'_distribution_json_filename']
             f = open(distribution_json_filename[tax_type])
             distribution_vardict_dict[tax_type] = json.load(f)
             #print('distribution_vardict_dict[tax_type] ', distribution_vardict_dict[tax_type])
@@ -163,14 +163,14 @@ def generate_policy_revenues():
     #print("block_selected_dict from json",block_selected_dict)
     
     # create Policy object containing current-law policy
-    pol = Policy(DEFAULTS_FILENAME=global_vars['DEFAULTS_FILENAME'])
+    pol = Policy(DEFAULTS_FILENAME=global_variables['DEFAULTS_FILENAME'])
     
     # specify Calculator objects for current-law policy
     calc1 = Calculator(policy=pol, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)    
     assert isinstance(calc1, Calculator)
     assert calc1.current_year == start_year
     np.seterr(divide='ignore', invalid='ignore')
-    pol2 = Policy(DEFAULTS_FILENAME=global_vars['DEFAULTS_FILENAME'])      
+    pol2 = Policy(DEFAULTS_FILENAME=global_variables['DEFAULTS_FILENAME'])      
     years, reform=read_reform_dict(block_selected_dict)
     pol2.implement_reform(reform['policy'])
     calc2 = Calculator(policy=pol2, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
@@ -180,12 +180,13 @@ def generate_policy_revenues():
     if adjust_behavior:
         elasticity_dict = {}
         for tax_type in tax_list:
-            f = open(tax_type+'_elasticity_selection.json')
+            f = open('taxcalc/'+tax_type+'_elasticity_selection.json')
             elasticity_dict[tax_type] = json.load(f)
-            #print(elasticity_dict)
-            block_selected_dict = concat_dicts(block_selected_dict, elasticity_dict[tax_type])
+            if len(elasticity_dict[tax_type])>0:
+                #print(elasticity_dict)
+                block_selected_dict = concat_dicts(block_selected_dict, elasticity_dict[tax_type])
         #print('block_selected_dict in adjust behavior',block_selected_dict)
-        pol3 = Policy(DEFAULTS_FILENAME=global_vars['DEFAULTS_FILENAME'])   
+        pol3 = Policy(DEFAULTS_FILENAME=global_variables['DEFAULTS_FILENAME'])   
         years, reform=read_reform_dict(block_selected_dict)
         #print('reform dict in adjust behavior', reform)
         pol3.implement_reform(reform['policy'])
@@ -222,16 +223,17 @@ def generate_policy_revenues():
         dt_percentile[tax_type] = {}             
         for year in range(start_year, end_year+1):
             revenue_dict[tax_type][year]={}
-        window_dict[tax_type] = tk.Toplevel()
-        window_dict[tax_type].geometry("800x600+600+140")
-        #display_table(window, header=True)
-        # Adjust this for number of years selected
-        header = ["header","Year", "Current Law", "Reform", "Diff"]
-        if global_vars[tax_type+'_adjust_behavior']:
-            header = header + ['Reform (Behavior)', "Diff"]
-        title_header = [["title", tax_type.upper()+" Projections"],
-                        header]            
-        row_num[tax_type] = display_table(window_dict[tax_type], data=title_header, header=True)
+        if global_variables[tax_type+'_display_revenue_table']:
+            window_dict[tax_type] = tk.Toplevel()
+            window_dict[tax_type].geometry("800x600+600+140")            
+            #display_table(window, header=True)
+            # Adjust this for number of years selected
+            header = ["header","Year", "Current Law", "Reform", "Diff"]
+            if global_variables[tax_type+'_adjust_behavior']:
+                header = header + ['Reform (Behavior)', "Diff"]
+            title_header = [["title", tax_type.upper()+" Projections"],
+                            header]            
+            row_num[tax_type] = display_table(window_dict[tax_type], data=title_header, header=True)
    
     for year in range(start_year, end_year+1):       
         calc1.advance_to_year(year)
@@ -253,10 +255,11 @@ def generate_policy_revenues():
         if verbose:        
             screen_print(tax_list, 'reform', year, revenue_dict, 'value_bill_diff', 'Collection difference under Reform')
 
-        for tax_type in tax_list:        
-            data_row[tax_type] = [str(year), revenue_dict[tax_type][year]['current_law']['value_bill_str']['All'], 
-                                  revenue_dict[tax_type][year]['reform']['value_bill_str']['All'], 
-                                  revenue_dict[tax_type][year]['reform']['value_bill_diff_str']['All']]       
+        if global_variables[tax_type+'_display_revenue_table']:
+            for tax_type in tax_list:        
+                data_row[tax_type] = [str(year), revenue_dict[tax_type][year]['current_law']['value_bill_str']['All'], 
+                                      revenue_dict[tax_type][year]['reform']['value_bill_str']['All'], 
+                                      revenue_dict[tax_type][year]['reform']['value_bill_diff_str']['All']]       
         if adjust_behavior:
         #redo the calculations by including behavioral adjustment
             calc3.advance_to_year(year)
@@ -272,11 +275,13 @@ def generate_policy_revenues():
                 screen_print(tax_list, 'reform_behavior', year, revenue_dict, 
                              'value_bill_diff',
                              'Collection difference with Behavioral Adjustment')
-            for tax_type in tax_list:            
-                data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_bill_str']['All'], 
+            if global_variables[tax_type+'_display_revenue_table']:
+                for tax_type in tax_list:            
+                    data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_bill_str']['All'], 
                                                            revenue_dict[tax_type][year]['reform_behavior']['value_bill_diff_str']['All']]
-        for tax_type in tax_list:         
-            row_num[tax_type] = display_table(window_dict[tax_type], 
+        if global_variables[tax_type+'_display_revenue_table']:
+            for tax_type in tax_list:         
+                row_num[tax_type] = display_table(window_dict[tax_type], 
                                               data = data_row[tax_type], 
                                               row = row_num[tax_type])
         #display_table(window, revenue_dict_pit=revenue_dict_pit, year=year, row=i)
@@ -285,22 +290,29 @@ def generate_policy_revenues():
         dt2[tax_type][year]={}
         dt1_percentile[tax_type][year]={}
         dt2_percentile[tax_type][year]={}      
-        if global_vars[tax_type+'_distribution_table']:
+        if global_variables[tax_type+'_distribution_table']:
             output_in_averages = True
             #output_categories = 'standard_income_bins'
             output_categories = 'weighted_deciles'
             # pd.options.display.float_format = '{:,.3f}'.format
             # dt1, dt2 = calc1.distribution_tables(calc2, 'weighted_deciles')
+            if not global_variables[tax_type+'_display_distribution_table_by_attribute']:
+                dist_table_attribute_var=None
+            else:
+                dist_table_attribute_var = attribute_var
+            #print('attribute_var ', dist_table_attribute_var)
             dt1[tax_type][year], dt2[tax_type][year] = calc1.distribution_tables_dict(tax_type, calc2, output_categories, 
                                                 distribution_vardict_dict[tax_type], income_measure=income_measure[tax_type],
                                                 averages=output_in_averages,
-                                                scaling=True, attribute_var=attribute_var)
-
+                                                scaling=True, attribute_var=dist_table_attribute_var)
+            #print('year ', year)
+            #print('dt1 ', dt1[tax_type][year])
+            #print('dt2 ', dt2[tax_type][year])
             output_categories = 'weighted_percentiles'
             dt1_percentile[tax_type][year], dt2_percentile[tax_type][year] = calc1.distribution_tables_dict(tax_type, calc2, output_categories, 
                                                  distribution_vardict_dict[tax_type], income_measure=income_measure[tax_type],
                                                  averages=output_in_averages,
-                                                 scaling=True, attribute_var=attribute_var)
+                                                 scaling=True, attribute_var=dist_table_attribute_var)
             #print('dt1_percentile[tax_type][year] ', dt1_percentile[tax_type][year])
     #print('dt1 ',dt1)
         
@@ -324,8 +336,6 @@ def generate_policy_revenues():
     with open('revenue_dict.json', 'w') as f:
         json.dump(revenue_dict, f)
     #save the results of each tax type in separate files
-    now = datetime.now() # current date and time
-    date_time = now.strftime("%d_%m_%Y_%H_%M_%S")
     df = {}
     # save the results into a csv file
     for tax_type in tax_list:
@@ -346,8 +356,9 @@ def generate_policy_revenues():
         df_reform_str = df_reform.to_string()
         text_output1 = df_str + '\n\n' + df_reform_str + '\n\n'
         write_file(df[tax_type], text_output1, filename_chart_rev_projection)
-        last_row = row_num[tax_type]
-        l_TAB3[tax_type] = tk.Button(window_dict[tax_type],
+        if global_variables[tax_type+'_display_revenue_table']:
+            last_row = row_num[tax_type]
+            l_TAB3[tax_type] = tk.Button(window_dict[tax_type],
                                      text="Save Results",
                                      command=lambda: write_file(df[tax_type], 
                                                                 text_output1, 
@@ -355,125 +366,71 @@ def generate_policy_revenues():
                                                                 window_dict[tax_type], 
                                                                 last_row
                                                                 ))
-        l_TAB3[tax_type].grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
+            l_TAB3[tax_type].grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
     #footer = ["footer", "*Data saved in file "+ filename1]
     #row_num = display_table(window, data=footer, footer=row_num+2)
     ###### DISTRIBUTION TABLES ##############
-    window_dist = {}
-    row_num = {}
-    dt={}
-    for tax_type in tax_list:        
-        if global_vars[tax_type+'_distribution_table']:
-            dt[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, start_year, end_year)
-            dt_percentile[tax_type] = merge_distribution_table_dicts(dt1_percentile, dt2_percentile, tax_type, start_year, end_year)            
-            print(dt)
-            dt[tax_type]['All'].update(dt[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.0f}'.format))
-            dt[tax_type]['All'].to_pickle('file.pkl')
-            dt[tax_type]['All'] = pd.read_pickle('file.pkl')
-            dt[tax_type]['All'] = dt[tax_type]['All'].reset_index()
-            
-            #print('dt_percentile ',dt_percentile)
-            dt_percentile[tax_type]['All']['ETR'] = dt_percentile[tax_type]['All'][tax_collection_var+'_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]            
-            dt_percentile[tax_type]['All']['ETR_ref'] = dt_percentile[tax_type]['All'][tax_collection_var+'_ref_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_ref_'+str(start_year)]            
-            dt_percentile[tax_type]['All'].update(dt_percentile[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.4f}'.format))            
-            #dt = dt.reset_index()
-            # Adjust this for number of years selected
-            #now = datetime.now() # current date and time
-            #date_time = now.strftime("%d_%m_%Y_%H_%M_%S")
-            filename2 = tax_type+'_distribution_table'
-            text_output2 = dt[tax_type]['All'].to_string() + '\n\n'
-            write_file(dt[tax_type]['All'], text_output2, filename2)
-            filename_etr = tax_type+'_etr'
-            text_output_etr = dt_percentile[tax_type]['All'].to_string() + '\n\n'
-            write_file(dt_percentile[tax_type]['All'], text_output_etr, filename_etr)            
-            if global_vars[tax_type+'_display_distribution_table']:
-                window_dist[tax_type] = tk.Toplevel()
-                window_dist[tax_type].geometry("900x700+600+140")
-                header1 = ["header","", tax_type.upper()]
-                header2 = ["header",'Decile','Current Law '+str(start_year)]
-                for year in range(start_year, end_year+1):
-                    header1 = header1+[tax_type.upper()]
-                    header2 = header2+['Reform '+str(year)]          
-                title_header = [["title", tax_type.upper()+" Distribution"],
-                                header1, header2]     
-                #footer = ["footer", "*Data saved in file datadump.csv"]         
-                row_num[tax_type] = display_table(window_dist[tax_type], data=title_header, header=True)   
-                row_num[tax_type] = display_table(window_dist[tax_type], row = row_num[tax_type], dataframe=dt[tax_type]['All'])
-                l = tk.Button(window_dist[tax_type],text="Save Results",command=lambda: write_file(dt[tax_type]['All'], text_output2, filename2, window_dist[tax_type], row_num[tax_type]))
-                l.grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
-        #footer = ["footer", "*Data saved in file "+ filename1]
-        #row_num = display_table(window_dist, data=footer, footer=row_num+2)
+    def display_distribution_table_window(tax_type):
+        window_dist = {}
+        row_num = {}
+        dt={}
+        for tax_type in tax_list:        
+            if global_variables[tax_type+'_distribution_table']:
+                dt[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, start_year, end_year)
+                dt_percentile[tax_type] = merge_distribution_table_dicts(dt1_percentile, dt2_percentile, tax_type, start_year, end_year)            
+                #print(dt)
+                dt[tax_type]['All'].update(dt[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.0f}'.format))
+                dt[tax_type]['All'].to_pickle('file.pkl')
+                dt[tax_type]['All'] = pd.read_pickle('file.pkl')
+                #dt[tax_type]['All'] = dt[tax_type]['All'].reset_index() 
+                dt_tax_all = dt[tax_type]['All'][dt[tax_type]['All'].columns[dt[tax_type]['All'].columns.str.contains(tax_collection_var)]]
+                #print('dt_tax_all ', dt_tax_all)     
+                dt_tax_all = dt_tax_all.reset_index()
+                #print('dt_tax_all ', dt_tax_all)
+                #print('dt_percentile ',dt_percentile)
+                dt_percentile[tax_type]['All']['ETR'] = dt_percentile[tax_type]['All'][tax_collection_var+'_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]            
+                dt_percentile[tax_type]['All']['ETR_ref'] = dt_percentile[tax_type]['All'][tax_collection_var+'_ref_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_ref_'+str(start_year)]            
+                dt_percentile[tax_type]['All'].update(dt_percentile[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.4f}'.format))            
+                #dt = dt.reset_index()
+                # Adjust this for number of years selected
+                #now = datetime.now() # current date and time
+                #date_time = now.strftime("%d_%m_%Y_%H_%M_%S")
+                filename2 = tax_type+'_distribution_table'
+                text_output2 = dt[tax_type]['All'].to_string() + '\n\n'
+                write_file(dt_tax_all, text_output2, filename2)
+                filename_etr = tax_type+'_etr'
+                text_output_etr = dt_percentile[tax_type]['All'].to_string() + '\n\n'
+                write_file(dt_percentile[tax_type]['All'], text_output_etr, filename_etr)            
+                if global_variables[tax_type+'_display_distribution_table']:
+                    window_dist[tax_type] = tk.Toplevel()
+                    window_dist[tax_type].geometry("1000x700+600+140")
+                    header1 = ["header","", tax_type.upper()]
+                    header2 = ["header",'Decile','Current Law '+str(start_year)]
+                    for year in range(start_year, end_year+1):
+                        header1 = header1+[tax_type.upper()]
+                        header2 = header2+['Reform '+str(year)]          
+                    title_header = [["title", tax_type.upper()+" Distribution"],
+                                    header1, header2]     
+                    #footer = ["footer", "*Data saved in file datadump.csv"]         
+                    row_num[tax_type] = display_table(window_dist[tax_type], data=title_header, header=True)   
+                    row_num[tax_type] = display_table(window_dist[tax_type], row = row_num[tax_type], dataframe=dt_tax_all)
+                    l = tk.Button(window_dist[tax_type],text="Save Results",command=lambda: write_file(dt_tax_all, text_output2, filename2, window_dist[tax_type], row_num[tax_type]))
+                    l.grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
+            #footer = ["footer", "*Data saved in file "+ filename1]
+            #row_num = display_table(window_dist, data=footer, footer=row_num+2)
     
-    global_vars['charts_ready'] = 1
-    with open('global_vars.json', 'w') as f:
-        f.write(json.dumps(global_vars, indent=2))
+    display_distribution_table_window(tax_type)
+    global_variables['charts_ready'] = 1
+    for tax_type in tax_list:
+        #print(tax_type+'_display_revenue_table')
+        global_variables[tax_type+'_display_revenue_table'] = 1
+
+    with open('global_vars.json', 'w') as f:        
+        f.write(json.dumps(global_variables, indent=2))
+    
     #pt = Table(f, dataframe=dt,
        #showtoolbar=True, showstatusbar=True)
         
-"""    
-    #redo the calculations by including behavioral adjustment
-    recs = Records(data=vars['pit_data_filename'], weights=vars['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=vars['GROWFACTORS_FILENAME']))
-    pol2 = Policy(DEFAULTS_FILENAME=vars['DEFAULTS_FILENAME'])   
-    years, reform=read_reform_dict(block_selected_dict)
-    #print("reform dictionary: ",reform) 
-    pol2.implement_reform(reform['policy'])
-    calc2 = Calculator(policy=pol2, records=recs, verbose=False)
-    assert isinstance(calc2, Calculator)
-    assert calc2.current_year == 2017
-    np.seterr(divide='ignore', invalid='ignore')
 
-    for year in range(2019, 2023):
-        calc2.advance_to_year(year)
-        calc2.adjust_behavior(first_year=2019)
-        calc2.calc_all()
-        
-        weighted_pitax3 = calc2.weighted_total_pit('pitax')                
-        pitax_collection_billions3 = weighted_pitax3/10**9        
-        pitax_collection_str3 = '{0:.2f}'.format(pitax_collection_billions3)
-        
-        print('\n\n\n')
-        print(f'TAX COLLECTION FOR THE YEAR UNDER REFORM WITH BEHAVIOR ADJUSTMENT - {year} \n')   
-        print("The PIT Collection in billions is: ", pitax_collection_billions3)
-
-        pitax_diff_collection_billions4 = (pitax_collection_billions3-pitax_collection_billions1)        
-        pitax_diff_collection_str4 = '{0:.2f}'.format(pitax_diff_collection_billions4)
-                          
-        #save the results
-        
-        revenue_dict_pit[year]['reform_behavior']=pitax_collection_str3
-        revenue_dict_pit[year]['reform_behavior_difference']=pitax_diff_collection_str4
-        
-        display_table(window, revenue_dict_pit=revenue_dict_pit, year=year, row=i)
-        i=i+1
-
-   
-    display_table(window, footer=i)
-"""
-    
-"""
-    #print(revenue_amount_dict)
-    df_revenue_proj = pd.DataFrame(revenue_amount_dict)
-    df_revenue_proj = df_revenue_proj.T
-    df_revenue_proj['Current Law'] = df_revenue_proj['current_law'].apply(pd.Series)
-    df_revenue_proj['Reform'] = df_revenue_proj['reform'].apply(pd.Series)
-    df_revenue_proj = df_revenue_proj.drop(['current_law', 'reform'], axis=1)
-    df_revenue_proj['Current Law'] = pd.to_numeric(df_revenue_proj['Current Law'])
-    df_revenue_proj['Reform'] = pd.to_numeric(df_revenue_proj['Reform'])
-    print("Revenues\n", df_revenue_proj)
-    ax = df_revenue_proj.plot(y=["Current Law", "Reform"], kind="bar", rot=0,
-                        figsize=(8,8))
-    ax.set_ylabel('(billion )')
-    ax.set_xlabel('')
-    ax.set_title('CIT Revenue - Current Law vs. Reforms', fontweight="bold")
-    pic_filename2 = 'PIT - Current Law and Reforms.png'
-    
-    plt.savefig(pic_filename2)
-    
-    img1 = Image.open(pic_filename2)
-    img2 = img1.resize((500, 500), Image.ANTIALIAS)
-    img3 = ImageTk.PhotoImage(img2)
-    pic.configure(image=img3)
-    pic.image = img3
-"""
        
     
