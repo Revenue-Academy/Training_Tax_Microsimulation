@@ -78,7 +78,7 @@ class Records(object):
     vars = json.load(f)
     #print("vars in records", vars)
     
-    PITCSV_YEAR = vars["start_year"]
+    PITCSV_YEAR = int(vars["start_year"])
     
     #PITCSV_YEAR = 2017
 
@@ -116,7 +116,7 @@ class Records(object):
         # specify current_year and YEAR values
         if isinstance(start_year, int):
             self.__current_year = start_year
-            self.YEAR.fill(start_year)
+            self.Year.fill(start_year)
         else:
             msg = 'start_year is not an integer'
             raise ValueError(msg)
@@ -198,7 +198,7 @@ class Records(object):
         are skipped.
         """
         self.__current_year = new_current_year
-        self.YEAR.fill(new_current_year)
+        self.Year.fill(new_current_year)
         print("records self.__current_year ", self.__current_year)
 
     @staticmethod
