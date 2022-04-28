@@ -224,10 +224,10 @@ def tab1(self):
     self.SALARY_VARIABLE = "SALARY"
     """
 
-    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_macedonia.json"
-    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_macedonia1.csv"
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_macedonia.json"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_macedonia.csv"
+    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
     
 
     
@@ -235,11 +235,11 @@ def tab1(self):
     
     self.vars['pit_data_filename'] = "pit_macedonia.csv"
     self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
-    self.vars['pit_records_variables_filename'] = "pit_records_variables_macedonia.json"
-    self.vars['pit_benchmark_filename'] = "pit_tax_incentives_benchmark.json"
+    self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia.json"
+    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_macedonia.json"
     self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia.json"
-    self.vars['pit_functions_filename'] = "pit_functions_macedonia.py"
-    self.vars['pit_function_names_filename'] = "pit_function_names_macedonia.json"       
+    self.vars['pit_functions_filename'] = "functions_pit_macedonia.py"
+    self.vars['pit_function_names_filename'] = "function_names_pit_macedonia.json"       
 
     self.vars['cit_data_filename'] = "cit_egypt.csv"
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
