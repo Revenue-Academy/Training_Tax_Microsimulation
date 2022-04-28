@@ -20,7 +20,7 @@ def add_parameter(json_filename):
       for p, q in y.items():
           print("second level key: ", p, "second level value: ", q)
         
-    with open(json_filename[:-5]+"1"+".json", 'w') as f:
+    with open(json_filename, 'w') as f:
         f.write(json.dumps(vardict, indent=2))
 
 #add/edit parameter to policy json file
