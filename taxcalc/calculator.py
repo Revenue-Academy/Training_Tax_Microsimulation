@@ -204,6 +204,7 @@ class Calculator(object):
                 self.ATTRIBUTE_READ_VARS_PIT = list(k for k,
                           v in self.vardict['read'].items()
                           if v['attribute'] == 'Yes')
+                
             else:
                 raise ValueError('must specify records as a Records object')
         if self.gstrecords is not None:
@@ -406,6 +407,7 @@ class Calculator(object):
         #f='net_salary_income("self.__policy", "self.__records")'       
         if self.records is not None:
             for i in range(len(self.pit_function_names)):
+                print('function name ', self.pit_function_names[str(i)])
                 func_name = globals()[self.pit_function_names[str(i)]]
                 #print(function_names[str(i)])
                 func_name(self.__policy, self.__records)
@@ -486,7 +488,10 @@ class Calculator(object):
                 if len(self.ATTRIBUTE_READ_VARS_PIT) > 0:
                     attribute_data = list(getattr(self.__records, 
                                                   self.ATTRIBUTE_READ_VARS_PIT[attribute_index]))
-                    attribute_types = list(set(attribute_data))           
+                    print('attribute_data', attribute_data)
+                    attribute_types = list(set(attribute_data))
+                    print('attribute_types', attribute_types) 
+                attribute_types = []          
             else:
                 msg = 'tax type record ="{}" is not initialized'
                 raise ValueError(msg.format(tax_type))
@@ -522,7 +527,8 @@ class Calculator(object):
         if tax_type == 'pit':
             if self.records is not None:
                 tax_data = self.array(variable_name)
-                attribute_var = self.ATTRIBUTE_READ_VARS_PIT              
+                attribute_var = self.ATTRIBUTE_READ_VARS_PIT
+                              
                 (attribute_types, attribute_data)  = self.get_attribute_types(tax_type, 0)             
             else:
                 msg = 'tax type record ="{}" is not initialized'
@@ -548,17 +554,22 @@ class Calculator(object):
             raise ValueError(msg.format(tax_type))
             return
         
-        wtd_total_cit = {}
-        wtd_total_cit['All'] = (tax_data * self.carray('weight')).sum()
+        #wtd_total_cit = {}
+        #wtd_total_cit['All'] = (tax_data * self.carray('weight')).sum()
+
+        wtd_total_pit = {}
+        wtd_total_pit['All'] = (tax_data * self.array('weight')).sum()
         # We have  calculated for 'All' so no need to calculate further
         attribute_types.remove('All')
         if len(attribute_var)>0:            
             for attribute_value in attribute_types:
                 attribute_bool = [1 if i==attribute_value else 0 for i in attribute_data]
-                wtd_total_cit[attribute_value] = (tax_data * self.carray('weight') *
+                #wtd_total_cit[attribute_value] = (tax_data * self.carray('weight') *
+                                                  #attribute_bool).sum()
+                wtd_total_pit[attribute_value] = (tax_data * self.array('weight') *
                                                   attribute_bool).sum()     
         #print(wtd_total_cit)
-        return wtd_total_cit
+        return wtd_total_pit
             
     def weighted_total_cit(self, variable_name, attribute_var=None):
         """
