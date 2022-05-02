@@ -491,7 +491,8 @@ class Calculator(object):
                     print('attribute_data', attribute_data)
                     attribute_types = list(set(attribute_data))
                     print('attribute_types', attribute_types) 
-                attribute_types = []          
+                else:
+                    attribute_types = []          
             else:
                 msg = 'tax type record ="{}" is not initialized'
                 raise ValueError(msg.format(tax_type))
@@ -500,7 +501,9 @@ class Calculator(object):
                 if len(self.ATTRIBUTE_READ_VARS_CIT) > 0:
                     attribute_data = list(getattr(self.__corprecords, 
                                                   self.ATTRIBUTE_READ_VARS_CIT[attribute_index]))
-                    attribute_types = list(set(attribute_data))               
+                    attribute_types = list(set(attribute_data))
+                else:
+                    attribute_types = []                    
             else:
                 msg = 'tax type record ="{}" is not initialized'
                 raise ValueError(msg.format(tax_type))            
@@ -509,7 +512,9 @@ class Calculator(object):
                 if len(self.ATTRIBUTE_READ_VARS_VAT) > 0:
                     attribute_data = list(getattr(self.__gstrecords, 
                                                   self.ATTRIBUTE_READ_VARS_VAT[attribute_index]))
-                    attribute_types = list(set(attribute_data))                 
+                    attribute_types = list(set(attribute_data))
+                else:
+                    attribute_types = []                    
             else:
                 msg = 'tax type record ="{}" is not initialized'
                 raise ValueError(msg.format(tax_type))                
