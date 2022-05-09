@@ -15,6 +15,9 @@ import re
 import copy
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import ineqpy
+
 
 
 import importlib
@@ -649,6 +652,50 @@ class Calculator(object):
                 pdf = pdf[pdf[attribute_var]==attribute_value]
         del arys
         return pdf
+        
+    def calc_gini(self, variable, pre_tax_inc_var = None):
+        """
+        Return pandas DataFrame containing the listed variables from embedded
+        Records object.
+        """
+        import numpy as np
+        assert isinstance(variable, list)
+        variable = variable + ['weight']
+        arys = [self.array(vname) for vname in variable]
+        #print(arys)
+        pdf = pd.DataFrame(data=np.column_stack(arys), columns=variable)
+        del arys
+        gini = pdf
+        if pre_tax_inc_var is None:
+            gini= gini.sort_values(by=variable)
+        else:
+            gini= gini.sort_values(by=pre_tax_inc_var)
+        #gini['weight'] = 100
+        gini['cumulative_weight']=np.cumsum(gini['weight'])
+        sum_weight = (gini['weight']).sum()
+        gini['percentage_cumul_pop'] = gini['cumulative_weight']/sum_weight
+        gini['total_income'] = gini['weight']*gini[variable[0]]
+        gini['cumulative_total_income']= np.cumsum(gini['total_income'])
+        sum_total_income = sum(gini['total_income'])
+        gini['percentage_cumul_income'] = gini['cumulative_total_income']/sum_total_income
+        gini['height'] = gini['percentage_cumul_pop']-gini['percentage_cumul_income']
+        gini1 = pd.DataFrame([[np.nan]*len(gini.columns)], columns=gini.columns)
+        gini = gini1.append(gini, ignore_index=True)
+        gini['percentage_cumul_pop']= gini['percentage_cumul_pop'].fillna(0)
+        gini['percentage_cumul_income']= gini['percentage_cumul_income'].fillna(0)
+        gini['height']= gini['height'].fillna(0)
+        gini['base'] = gini.percentage_cumul_pop.diff()
+        gini['base']= gini['base'].fillna(0)
+        gini['integrate_area']= 0.5*gini['base']*(gini['height']+gini['height'].shift())
+        sum_integrate_area = gini['integrate_area'].sum()
+        gini_index = 2*(sum_integrate_area)
+        return gini_index
+    
+    def kakwani_index(self, varname):
+        gini_index_pre_tax = self.calc_gini([varname[0]])
+        gini_index_post_tax = self.calc_gini([varname[1], varname[0]])
+        kakwani = gini_index_post_tax - gini_index_pre_tax
+        return kakwani
 
     def dataframe_gst(self, variable_list):
         """
@@ -1141,7 +1188,8 @@ class Calculator(object):
         else:
             assert calc.current_year == self.current_year
             assert calc.array_len == self.array_len
-            var_dataframe = calc.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'], attribute_value=None, attribute_var=None)
+            var_dataframe = calc.distribution_table_dataframe(distribution_vardict['DIST_VARIABLES'],
+                                                              attribute_value=None, attribute_var=None)
             if have_same_income_measure(self, calc, imeasure):
                 if income_measure is None:
                     imeasure = 'GTI'
