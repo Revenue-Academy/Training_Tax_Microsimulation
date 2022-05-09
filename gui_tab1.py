@@ -198,9 +198,9 @@ def tab1(self):
     self.reform={}
     self.selected_item = ""
     self.selected_value = ""
-    self.selected_year = 2019
+    self.selected_year = 2018
     self.sub_directory = "taxcalc"
-    self.year_list = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
+    self.year_list = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
     # Include a check whether the years are valid by looking at the 
     # selected growfactors file
     """    
@@ -263,7 +263,7 @@ def tab1(self):
     self.vars['cit_distribution_json_filename'] = 'cit_distribution_egypt.json'
     self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
     
-    self.vars['start_year'] = 2020
+    self.vars['start_year'] = 2018
     self.vars['end_year']=2025
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"

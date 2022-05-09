@@ -758,6 +758,15 @@
         "2018": "pit_macedonia"
       }
     },
+    "rank_pre_tax": {
+      "type": "float",
+      "desc": "ranking of total gross income ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
     "total_taxable_income": {
       "type": "float",
       "desc": "Taxable Total Income (TTI)",

@@ -240,6 +240,16 @@ def generate_policy_revenues():
         calc2.advance_to_year(year)
         calc1.calc_all()
         calc2.calc_all()
+       #print("Gini Pre-Tax ", calc1.gini(['gross_i_w']))
+        pre_tax_gini_cur_law = calc1.calc_gini(['total_gross_income'])
+        print("Gini Pre-Tax ", pre_tax_gini_cur_law)
+        post_tax_gini_cur_law = calc1.calc_gini(['total_net_income'])
+        print("Gini Post-Tax ", post_tax_gini_cur_law)
+        print ("Gini differnce ", post_tax_gini_cur_law - pre_tax_gini_cur_law)
+        print("Gini Post-Tax after reform ", calc2.calc_gini(['total_net_income']))
+        #Kakwani
+        print ("Kakwani current Law", calc1.kakwani_index(['total_gross_income', 'total_net_income']))
+        # print("Kakwani after refo ", calc2.kakwani(['total_net_income']))
         
         revenue_dict = weighted_total_tax(calc1, tax_list, 'current_law', year, revenue_dict, attribute_var)              
         if verbose:
@@ -315,7 +325,9 @@ def generate_policy_revenues():
                                                  scaling=True, attribute_var=dist_table_attribute_var)
             #print('dt1_percentile[tax_type][year] ', dt1_percentile[tax_type][year])
     #print('dt1 ',dt1)
-        
+
+    
+
     def merge_distribution_table_dicts(dt1, dt2, tax_type, start_year, end_year):
         #print('dt1 ',dt1)
         #print('dt1[tax_type][start_year] ', dt1[tax_type][start_year])
