@@ -139,6 +139,7 @@ def get_growfactors_dict(self, filename, ATTRIBUTE_READ_VARS):
     first_column = df.pop('Year')     
     df.insert(0, 'Year', first_column)   
     self.attribute_columns = list(ATTRIBUTE_READ_VARS.intersection(set(df.columns)))
+    print('self_attribute_cols: ', self.attribute_columns)
     self.gf_columns_all = list(df.columns)   
     if (len(self.attribute_columns)==0):
         mydict = make_sub_dict(df)

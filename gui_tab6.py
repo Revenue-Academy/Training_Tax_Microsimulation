@@ -62,8 +62,12 @@ def tab6(self):
     #chart_combo.current(0)
     self.chart_combo.place(relx = self.combo_1_TAB6_x, 
                     rely = self.combo_1_TAB6_y, anchor = "w", width=150)
-    self.chart_combo.bind("<<ComboboxSelected>>", lambda event: self.get_attribute_selection(event))
-     
+    
+    f = open('global_vars.json')
+    global_vars = json.load(f)
+    
+    #self.chart_combo.bind("<<ComboboxSelected>>", lambda event: self.get_attribute_selection(event))
+    self.chart_combo.bind("<<ComboboxSelected>>", lambda event: self.display_chart(event, global_vars))
     # #self.image = ImageTk.PhotoImage(Image.open("world_bank.png"))
     # self.image = ImageTk.PhotoImage(Image.open("egypt_flag.jpg"))
     # #image = tk.PhotoImage(file="blank.png")
@@ -71,22 +75,33 @@ def tab6(self):
     # self.pic.place(relx = 0.45, rely = 0.2, anchor = "nw")
     # self.pic.image = self.image                                                          
 
-def display_chart(self, event, selected_chart, global_vars):
-    self.selected_attribute_chart = self.attribute_selection.get()
-    #print('selected_chart ', selected_chart)
-    #print('self.selected_attribute_chart ', self.selected_attribute_chart)
+def display_chart(self, event, global_vars):
+    self.image = ImageTk.PhotoImage(Image.open("blank.png"))
+    self.pic = tk.Label(self.TAB6,image=self.image)
+    self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+    
+    #self.selected_attribute_chart = self.attribute_selection.get()
+    selected_chart = self.chart_selection.get()
+    print('selected_chart ', selected_chart)
+    tax_type = selected_chart[:3]
+    #f = open('global_vars.json')
+    #global_vars = json.load(f)
+    
     tax_type = selected_chart[:3]
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
-        df1 = df[df.columns[df.columns.str.contains(self.selected_attribute_chart)]]
+        #df1 = df[df.columns[df.columns.str.contains(self.selected_attribute_chart)]]
         #print('df1 ', df1)      
         if global_vars[tax_type+'_adjust_behavior']:
-            df1.columns=['Current Law', 'Reform', 'Behavior']
+            #df1.columns=['Current Law', 'Reform', 'Behavior']
+            df.columns=['Current Law', 'Reform', 'Behavior']
         else:
-            df1.columns=['Current Law', 'Reform']
+            #df1.columns=['Current Law', 'Reform']
+            df.columns=['Current Law', 'Reform']
         #print('df1 ', df1)
-        df1 = df1.rename_axis('Year').reset_index()
+        #df1 = df1.rename_axis('Year').reset_index()
+        df1 = df.rename_axis('Year').reset_index()
         #print('df1 ', df1)
         #df1 = df1[1:]
         #print('df1 after cutting', df1)
@@ -99,46 +114,55 @@ def display_chart(self, event, selected_chart, global_vars):
         plt.plot(df1['Year'], df1['Reform'], color='b', marker='o', 
                  markerfacecolor='None', markeredgecolor='b',
                  label='Reform')
-        plt.title('Corporate tax forecast (in billion) for '+self.selected_attribute_chart)
+        #plt.title('Personal Income Tax forecast (in billion MKD) for '+self.selected_attribute_chart)
+        plt.title('Personal Income Tax forecast (in billion MKD)')
         # for index in range(len(year_list)):
         #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
-        pic_filename1 = "egypt_rev_forecast.png"
+        pic_filename1 = "MKD_rev_forecast.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("egypt_rev_forecast.png"))
+        self.image = ImageTk.PhotoImage(Image.open("MKD_rev_forecast.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image             
     elif (selected_chart==tax_type+'_distribution_table'):
-        #print('i am in distribution ')
-        if global_vars[tax_type+'_distribution_table']:
-           df = pd.read_csv(selected_chart+'.csv', thousands=',') 
-           df.drop('Unnamed: 0', axis=1, inplace=True)
-           df = df.set_index('index')
-           print('df distribution ', df)
-           #figure(figsize=(8, 8), dpi=200)
-           fig, ax = plt.subplots(figsize=(8, 8))              
-           df.plot(kind='bar',y=[df.columns[0], df.columns[1]],figsize=(8,6))
-           pic_filename1 = "egypt_dist.png"
-           plt.savefig(pic_filename1)
-           self.image = ImageTk.PhotoImage(Image.open("egypt_dist.png"))
-           self.pic = tk.Label(self.TAB6,image=self.image)
-           self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
-           self.pic.image = self.image
+        
+        print('i am in distribution ')
+        #if global_vars[tax_type+'_distribution_table']:
+        #print('global_vars ', global_vars[tax_type+'_distribution_table'])
+        df = pd.read_csv(selected_chart+'.csv', thousands=',') 
+        df.drop('Unnamed: 0', axis=1, inplace=True)
+        df = df.set_index('index')
+        print('df distribution ', df)
+        #figure(figsize=(8, 8), dpi=200)
+        
+        fig, ax = plt.subplots(figsize=(8, 8))              
+        df.plot(kind='bar',y=[df.columns[0], df.columns[3], df.columns[5]],figsize=(7, 7))
+        pic_filename1 = "mkd_dist.png"
+        plt.savefig(pic_filename1)
+        self.image = ImageTk.PhotoImage(Image.open("mkd_dist.png"))
+        self.pic = tk.Label(self.TAB6,image=self.image)
+        self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+        self.pic.image = self.image
     elif (selected_chart==tax_type+'_etr'):
+        
         df = pd.read_csv(selected_chart+'.csv', index_col=0)
-        df = df[['ETR', 'ETR_ref']]
+        #df = df[['ETR', 'ETR_ref']]
+        
         df = df[:-1]
         df['ETR'] = np.where(df['ETR']>1, np.nan, df['ETR'])
         df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])            
         df = df.reset_index()
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax = df.plot(kind="line", x = 'index'  , y='ETR', color="b", label="ETR")
-        df.plot(kind="line", x = 'index' , y="ETR_ref", color="r", label="ETR under Reform", ax=ax)            
+        df.plot(kind="line", x='index', y=['ETR', 'ETR_ref'], color=["b", "g"], label=["ETR", "ETR_reform"])   
+        #df.plot(kind="line", x='index', y='ETR_ref', color="g", label="ETR_reform")
+        #df.plot(kind="line", x = 'index' , y=, color="r", label="ETR under Reform", ax=ax)  
+        #col = ['r', 'b', 'y', 'c', 'm', 'k', 'g', 'r', 'b', 'y']
+               
         #fig = plt.Figure()
         #ax = fig.add_subplot(figsize=(5, 5))
-        plt.xlabel('Percentile')
+        ax.set_xlabel('Percentile')
         plt.xticks(df.index[::5])
-        plt.title('Effective Tax Rates by Percentile')
+        ax.set_title('Effective Tax Rates by Percentile')
         # for index in range(len(year_list)):
         #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
         pic_filename1 = "egypt_etr.png"
@@ -152,7 +176,7 @@ def get_attribute_selection(self, event):
     # self.Label1=Label(self.TAB6, text="Charts", font = self.fontStyle_sub_title)
     # self.Label1.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
     selected_chart = self.chart_selection.get()
-    #print('selected_chart ', selected_chart)
+    print('selected_chart ', selected_chart)
     tax_type = selected_chart[:3]
     f = open('global_vars.json')
     global_vars = json.load(f)
@@ -167,7 +191,10 @@ def get_attribute_selection(self, event):
         df = df.T
         print('df columns ', df.columns)
         cols = df.columns[df.columns.str.startswith('current_law')]
+        #print('self.attribute_cols ', self.attribute_columns)
+        
         attribute_name=self.attribute_columns[0]
+        
         attribute_types = [i[12:].title() for i in cols]
         l2_TAB6=tk.Label(self.TAB6, text="Select "+attribute_name+" : ", font = self.fontStyle)
         l2_TAB6.place(relx = self.combo_2_TAB6_x, 

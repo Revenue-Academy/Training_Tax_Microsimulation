@@ -198,9 +198,9 @@ def tab1(self):
     self.reform={}
     self.selected_item = ""
     self.selected_value = ""
-    self.selected_year = 2019
+    self.selected_year = 2018
     self.sub_directory = "taxcalc"
-    self.year_list = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
+    self.year_list = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
     # Include a check whether the years are valid by looking at the 
     # selected growfactors file
     """    
@@ -224,15 +224,15 @@ def tab1(self):
     self.SALARY_VARIABLE = "SALARY"
     """
 
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_macedonia.json"
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_macedonia.csv"
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_training.json"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
     #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
     #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
     
 
     
     ##### NOTE 'Year' is a key word for year in records variable
-    
+    '''
     self.vars['pit_data_filename'] = "pit_macedonia.csv"
     self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
     self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia.json"
@@ -240,6 +240,14 @@ def tab1(self):
     self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia.json"
     self.vars['pit_functions_filename'] = "functions_pit_macedonia.py"
     self.vars['pit_function_names_filename'] = "function_names_pit_macedonia.json"       
+    '''
+    self.vars['pit_data_filename'] = "pit_data_training.csv"
+    self.vars['pit_weights_filename'] = "pit_weights_training.csv"
+    self.vars['pit_records_variables_filename'] = "records_variables_pit_training.json"
+    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_training.json"
+    self.vars['pit_elasticity_filename'] = "elasticity_pit_training.json"
+    self.vars['pit_functions_filename'] = "functions_pit_training.py"
+    self.vars['pit_function_names_filename'] = "function_names_pit_training.json"
 
     self.vars['cit_data_filename'] = "cit_egypt.csv"
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
@@ -264,7 +272,7 @@ def tab1(self):
     self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
     
     self.vars['start_year'] = 2020
-    self.vars['end_year']=2025
+    self.vars['end_year']=2027
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"
     self.vars['SALARY_VARIABLE'] = "SALARY"
