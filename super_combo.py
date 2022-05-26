@@ -29,11 +29,18 @@ class super_combo(tk.Frame):
     def __init__(self, tab, input_json, field_year, field_value, position_x, 
                  position_y, attribute_value=None, 
                  selected_attribute_widget=None,
-                 editable_field_year=None):
+                 editable_field_year=None, elasticity=None):
+        
+        if elasticity is not None:
+            self.elasticity=1
+        else:
+            self.elasticity=0
         #self.block_1_title_pos_x = 0.15
         self.input_json_main = input_json
         self.editable_field_year = editable_field_year
         #self.attribute_name = attribute_name
+        # The self.attribute_value input parameter is only used for growfactors
+        # where we would like to filter the entries
         self.attribute_value = attribute_value
         if self.attribute_value is not None:
             self.input_json=self.input_json_main[self.attribute_value]
@@ -303,17 +310,24 @@ class super_combo(tk.Frame):
         print('block_widget_dict after ', self.block_widget_dict)
         print('self.num_widgets after ',self.num_widgets)
         
-    def policy_options(self, input_json, elasticity=None):
+    def policy_options(self, input_json):
+        self.input_json_main = input_json
+        #self.attribute_name = attribute_name
+        # The self.attribute_value input parameter is only used for growfactors
+        # where we would like to filter the entries
         if self.attribute_value is not None:
-            self.input_json=self.input_json_main[self.attribute_value]         
-        input_json_sorted = dict(sorted(self.input_json.items()))    
+            self.input_json=self.input_json_main[self.attribute_value]
+        else:
+            self.input_json = self.input_json_main
+
+        input_json_sorted = dict(sorted(self.input_json.items()))
         policy_options_list = []
         for k, s in input_json_sorted.items(): 
             #print(k)
             #print(input_json[k]['description'])
             #policy_option_list = policy_option_list + [input_json[k]['description']]
             #Don't show the current law rates and the elasticity items in the drop down list
-            if elasticity:
+            if self.elasticity:
                 if (k[1:11] == 'elasticity'):
                     policy_options_list = policy_options_list + [k[1:]]
             elif (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
@@ -331,7 +345,7 @@ class super_combo(tk.Frame):
         #print("Reform2: ", self.reform)
         
     def show_policy_selection(self, event, widget_dict):   
-        vars = get_inputs(self)
+        global_vars = get_inputs(self)
         #print('vars ', vars)
         #print("inside policy selection")
         active_widget_number = int(str(event.widget)[-1])
@@ -349,20 +363,44 @@ class super_combo(tk.Frame):
             self.input_json=self.input_json_main[self.attribute_value]      
         selected_item = widget_dict[num][1].get()
         #print('vars ',vars)
-        selected_year = {}
+        selected_param = {}
         selected_value = {}
-        for i in range(len(self.input_json['_'+ selected_item][self.field_year])):
-            selected_year[i] = self.input_json['_'+ selected_item][self.field_year][i]            
-            selected_value[i] = self.input_json['_'+ selected_item][self.field_value][i]
-            if (int(selected_year[i]) < int(vars['start_year'])):
-                selected_year[i] = vars['start_year']
-            widget_dict[num][2][i].config(state=tk.NORMAL)                
-            widget_dict[num][2][i].delete(0, tk.END)
-            widget_dict[num][2][i].insert(tk.END, selected_year[i])
-            if (not self.editable_field_year):
-                widget_dict[num][2][i].config(state=tk.DISABLED)
-            widget_dict[num][3][i].delete(0, tk.END)
-            widget_dict[num][3][i].insert(tk.END, selected_value[i])
+        #print('input_json ', self.input_json)
+        print('self.input_json selected item \n', self.input_json['_'+ selected_item])
+        start_year = int(global_vars['start_year'])
+        end_year = int(global_vars['end_year'])
+        """
+        for k in range(len(self.input_json['_'+ selected_item][self.field_year])):
+            year = int(self.input_json['_'+ selected_item][self.field_year][k])
+            if int(year)==start_year:
+                break
+        """
+        # growfactors may have many years but we only need those from start 
+        # year to end year
+        # i is the counter for the widgets i.e. start year to end year for growfactors
+        # width is three for elasticity with three thresholds
+        i=0 
+        for j in range(self.width_json):
+            param = int(self.input_json['_'+ selected_item][self.field_year][j])            
+            value = self.input_json['_'+ selected_item][self.field_value][j]
+            print('param ', param)             
+            if (self.width_json==1) and not self.elasticity:
+                if (param < start_year):
+                    param = start_year     
+            # start year and end year condition does not apply for elasticity
+            if self.elasticity or ((param >= start_year) and (param <= end_year)):        
+                selected_param[i] = param
+                selected_value[i] = value
+                #print('i ',i)
+                print('selected_year[i] ', selected_param[i])                 
+                widget_dict[num][2][i].config(state=tk.NORMAL)               
+                widget_dict[num][2][i].delete(0, tk.END)
+                widget_dict[num][2][i].insert(tk.END, selected_param[i])
+                if (not self.editable_field_year):
+                    widget_dict[num][2][i].config(state=tk.DISABLED)
+                widget_dict[num][3][i].delete(0, tk.END)
+                widget_dict[num][3][i].insert(tk.END, selected_value[i])
+                i=i+1
 
         if self.attribute_value is not None:
             widget_dict[num][4].delete(0, tk.END)
@@ -370,7 +408,9 @@ class super_combo(tk.Frame):
         return widget_dict
 
     def display_widgets(self, tab):
-        
+
+        global_vars = get_inputs(self)
+
         self.root_title=tk.Label(tab,text="Tax Microsimulation Model",
                  font = self.fontStyle_title)
         self.root_title.place(relx = self.title_pos_x, rely = self.title_pos_y, anchor = "n")
@@ -410,12 +450,21 @@ class super_combo(tk.Frame):
                  rely = self.entry_1_label_y, anchor = "w")
         #print('Year: ', round(self.entry_1_label_x,2), self.entry_1_label_y)
         self.block_widget_dict[1][2] = {}
+
+        start_year = int(global_vars['start_year'])
+        end_year = int(global_vars['end_year'])
+        year = start_year
         for i in range(self.width_json):
-            self.block_widget_dict[1][2][i] = tk.Entry(tab, width=6, font = self.fontStyle)
-            if (self.width_json==1):
-                self.block_widget_dict[1][2][i].place(relx = self.entry_1_x, rely = self.entry_1_y, anchor = "w")
-            else:                
-                self.block_widget_dict[1][2][i].place(relx = self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x, rely = self.entry_1_y, anchor = "w")
+            if (year <= end_year):
+                self.block_widget_dict[1][2][i] = tk.Entry(tab, width=6, font = self.fontStyle)
+                if (self.width_json==1):
+                    self.block_widget_dict[1][2][i].place(relx = self.entry_1_x, 
+                                                          rely = self.entry_1_y, anchor = "w")
+                else:
+                    self.block_widget_dict[1][2][i].place(relx = self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x, 
+                                                          rely = self.entry_1_y, anchor = "w")
+            year = year+1
+            
         i=0
         #print('Year Entry: ', round(self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x,2), self.entry_1_y)
         self.l5 = {}
@@ -424,12 +473,15 @@ class super_combo(tk.Frame):
                  rely = self.entry_2_label_y, anchor = "w")
         #print('Value: ', round(self.entry_2_label_x,2), self.entry_2_label_y)
         self.block_widget_dict[1][3] = {}
-        for i in range(self.width_json):        
-            self.block_widget_dict[1][3][i] = tk.Entry(tab, width=10, font = self.fontStyle)
-            if (self.width_json==1):          
-                self.block_widget_dict[1][3][i].place(relx = self.entry_2_x, rely = self.entry_2_y, anchor = "w")               
-            else:
-                self.block_widget_dict[1][3][i].place(relx = self.entry_2_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x, rely = self.entry_2_y, anchor = "w")               
+        year = start_year        
+        for i in range(self.width_json):
+            if (year <= end_year):            
+                self.block_widget_dict[1][3][i] = tk.Entry(tab, width=10, font = self.fontStyle)
+                if (self.width_json==1):          
+                    self.block_widget_dict[1][3][i].place(relx = self.entry_2_x, rely = self.entry_2_y, anchor = "w")               
+                else:
+                    self.block_widget_dict[1][3][i].place(relx = self.entry_2_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x, rely = self.entry_2_y, anchor = "w")               
+            year = year+1
         
         if self.attribute_value is not None:
             self.block_widget_dict[1][4] = tk.Entry(tab, width=15, font = self.fontStyle)        

@@ -240,6 +240,7 @@ def generate_policy_revenues():
         calc2.advance_to_year(year)
         calc1.calc_all()
         calc2.calc_all()
+        #print("Gini Coefficient", calc1.gini(gross_i_w))
         
         revenue_dict = weighted_total_tax(calc1, tax_list, 'current_law', year, revenue_dict, attribute_var)              
         if verbose:

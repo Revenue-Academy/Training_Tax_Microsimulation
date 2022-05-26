@@ -38,9 +38,9 @@ def display_elasticity(self, widget, tax_type, block_1_title_pos_x):
         self.elasticity_json = self.get_elasticity_dict(self.tax_type)
         if (self.vars[tax_type+'_adjust_behavior']):
             self.year_value_pairs_elasticity_dict = 3       
-            self.tab_elasticity = super_combo(self.TAB3, self.elasticity_json, 'threshold', 'value', 0.01, 0.20, editable_field_year=1)
+            self.tab_elasticity = super_combo(self.TAB3, self.elasticity_json, 'threshold', 'value', 0.01, 0.20, editable_field_year=1, elasticity=1)
             (self.button_save_elasticity, self.elasticity_widget_dict) = self.tab_elasticity.display_widgets(self.TAB3)
-            self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json, elasticity=1))
+            self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json))
             self.button_save_elasticity.configure(command=self.clicked_generate_policy_revenues)
         else:
             self.save_inputs()
@@ -55,6 +55,15 @@ def tab3(self, tax_type):
     
     self.block_elasticity_pos_x = self.allocate_pos_x(pos_x, self.status,
                                                     self.block_elasticity_pos_x)
+
+    #print('self.block_elasticity_pos_x ', self.block_elasticity_pos_x)
+    self.pit_elasticity_chk = tk.IntVar()
+    self.pit_elasticity_chk_box = tk.Checkbutton(self.TAB3, text='Personal Income Tax', 
+                                                 font = self.fontStyle,
+                                                 state = self.status['pit'],
+                                                 variable=self.pit_elasticity_chk, command=lambda: self.display_elasticity(self.pit_elasticity_chk, 'pit', self.block_elasticity_pos_x['pit']))
+    self.pit_elasticity_chk_box.place(relx = self.block_elasticity_pos_x['pit'], 
+                                      rely = self.block_1_title_box_y, anchor = "w")
     #print('self.block_elasticity_pos_x ', self.block_elasticity_pos_x)
     self.cit_elasticity_chk = tk.IntVar()
     self.cit_elasticity_chk_box = tk.Checkbutton(self.TAB3, text='Corporate Income Tax', 
@@ -64,7 +73,14 @@ def tab3(self, tax_type):
     self.cit_elasticity_chk_box.place(relx = self.block_elasticity_pos_x['cit'], 
                                       rely = self.block_1_title_box_y, anchor = "w")
     
-
+    #print('self.block_elasticity_pos_x ', self.block_elasticity_pos_x)
+    self.vat_elasticity_chk = tk.IntVar()
+    self.vat_elasticity_chk_box = tk.Checkbutton(self.TAB3, text='Value Added Tax', 
+                                                 font = self.fontStyle,
+                                                 state = self.status['vat'],
+                                                 variable=self.vat_elasticity_chk, command=lambda: self.display_elasticity(self.vat_elasticity_chk, 'vat', self.block_elasticity_pos_x['vat']))
+    self.vat_elasticity_chk_box.place(relx = self.block_elasticity_pos_x['vat'], 
+                                      rely = self.block_1_title_box_y, anchor = "w")
     return
 
     

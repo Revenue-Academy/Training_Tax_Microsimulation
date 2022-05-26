@@ -42,7 +42,7 @@ def tab7(self):
                                 rely = 0.05, anchor = "w", width=200)
         self.sector_combo.bind("<<ComboboxSelected>>", lambda event: self.get_gf_dict(event))
         #print('self.growfactors[self.attribute_types[0]] ',self.growfactors[self.attribute_types[0]])
-        self.year_value_pairs_growfactors_dict = len(self.growfactors[self.attribute_types[0]][list(self.growfactors[self.attribute_types[0]].keys())[0]]['Year'])
+        #self.year_value_pairs_growfactors_dict = len(self.growfactors[self.attribute_types[0]][list(self.growfactors[self.attribute_types[0]].keys())[0]]['Year'])
 
     else:
         #attribute_name=None
@@ -51,10 +51,12 @@ def tab7(self):
         self.year_value_pairs_growfactors_dict=0
         #print('ATTRIBUTE_READ_VARS ', self.ATTRIBUTE_READ_VARS)
         #print('self.growfactors ', self.growfactors)
-        self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year'])
+        #self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year'])
 
     self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.01, 0.15, attribute_value, self.selected_attribute_widget, editable_field_year=0)
     (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
+    # this is the number of year value pairs in the growfactors
+    self.year_value_pairs_growfactors_dict = len(self.growfactors_widget_dict[1][2])
     self.button_growfactors.configure(command=self.clicked_generate_policy_revenues)
         
     return
