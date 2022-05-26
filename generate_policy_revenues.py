@@ -398,9 +398,13 @@ def generate_policy_revenues():
                 #date_time = now.strftime("%d_%m_%Y_%H_%M_%S")
                 filename2 = tax_type+'_distribution_table'
                 text_output2 = dt[tax_type]['All'].to_string() + '\n\n'
+                filename3 = tax_type+'_distribution_table_top1'
+                text_output3 = dt[tax_type]['All'].to_string() + '\n\n'
                 write_file(dt_tax_all, text_output2, filename2)
+                write_file(dt_tax_all, text_output3, filename3)
                 filename_etr = tax_type+'_etr'
                 text_output_etr = dt_percentile[tax_type]['All'].to_string() + '\n\n'
+                print('dt_percentile[tax_type][All]', dt_percentile[tax_type]['All'])
                 write_file(dt_percentile[tax_type]['All'], text_output_etr, filename_etr)            
                 if global_variables[tax_type+'_display_distribution_table']:
                     window_dist[tax_type] = tk.Toplevel()
