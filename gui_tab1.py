@@ -70,7 +70,9 @@ def display_entry(self, widget, tax_type):
         self.entry_functions_filename[tax_type].destroy()
         self.button_functions_filename[tax_type].destroy() 
         self.entry_functions_names_filename[tax_type].destroy() 
-        self.button_function_names_filename[tax_type].destroy() 
+        self.button_function_names_filename[tax_type].destroy()
+        self.entry_benchmark_filename[tax_type].destroy()
+        self.button_benchmark_filename[tax_type].destroy()     
         self.l2[tax_type].destroy() 
         self.entry_salary_variable[tax_type].destroy() 
         self.l3[tax_type].destroy() 
@@ -106,7 +108,7 @@ def display_entry(self, widget, tax_type):
                                      rely = self.block_1_entry_3_y, anchor = "e")
         self.entry_records_filename[tax_type].insert(END, self.vars[tax_type+'_records_variables_filename'])
         
-        self.button_records_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Records JSON File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_records_filename[tax_type], tax_type+'_'+'records_variables_filename'))
+        self.button_records_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Records JSON File", style='my.TButton', command=lambda: self.input_entry_data(self.entry_records_filename[tax_type], tax_type+'_'+'records_variables_filename', tax_type))
         self.button_records_filename[tax_type].place(relx = self.block_1_entry_x, 
                                       rely = self.block_1_entry_3_y, anchor = "w")
         

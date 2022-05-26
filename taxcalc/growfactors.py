@@ -38,11 +38,11 @@ class GrowFactors(object):
     """
 
     f = open('global_vars.json')
-    vars = json.load(f)
+    global_variables = json.load(f)
  
-    #print("vars in growfactors", vars)
+    #print("global_variables in growfactors", global_variables)
 
-    GROWFACTORS_FILENAME = vars['GROWFACTORS_FILENAME']
+    GROWFACTORS_FILENAME = global_variables['GROWFACTORS_FILENAME']
     
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     #FILENAME = 'growfactors.csv'
@@ -51,20 +51,20 @@ class GrowFactors(object):
     # TODO: Growfactors for Corporate and non-corporate Income heads are
     # TODO: currently set as same. New field names should be read in case we
     # TODO: want separate growfactors for Corporate and Non-corporate data.
-    if (vars['pit']):
-        f = open(os.path.join(CUR_PATH, vars['pit_records_variables_filename']))
+    if (global_variables['pit']):
+        f = open(os.path.join(CUR_PATH, global_variables['pit_records_variables_filename']))
         records_variables = json.load(f)
         set1 = set(records_variables['read'].keys())
     else:
         set1 = set()
-    if (vars['cit']):
-        f = open(os.path.join(CUR_PATH, vars['cit_records_variables_filename']))
+    if (global_variables['cit']):
+        f = open(os.path.join(CUR_PATH, global_variables['cit_records_variables_filename']))
         corprecords_variables = json.load(f)
         set2 = set(corprecords_variables['read'].keys())        
     else:
         set2 = set()
-    if (vars['vat']):    
-        f = open(os.path.join(CUR_PATH, vars['vat_records_variables_filename']))
+    if (global_variables['vat']):    
+        f = open(os.path.join(CUR_PATH, global_variables['vat_records_variables_filename']))
         gstrecords_variables = json.load(f)
         set3 = set(gstrecords_variables['read'].keys())         
     else:
@@ -84,9 +84,9 @@ class GrowFactors(object):
     """
     def __init__(self, growfactors_filename=GROWFACTORS_FILENAME):
         f = open('global_vars.json')
-        vars = json.load(f)
-        self.verbose = vars['verbose']
-        growfactors_filename = vars['GROWFACTORS_FILENAME']
+        global_variables = json.load(f)
+        self.verbose = global_variables['verbose']
+        growfactors_filename = global_variables['GROWFACTORS_FILENAME']
         # read grow factors from specified growfactors_filename
         gfdf = pd.DataFrame()
         CUR_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -119,8 +119,10 @@ class GrowFactors(object):
                 print("Non-Standard variables are declared", invalid)
             #raise ValueError(msg.format(missing, invalid))
         # determine first_year and last_year from gfdf
-        self._first_year = min(gfdf.index)
-        self._last_year = max(gfdf.index)
+        #self._first_year = min(gfdf.index)
+        #self._last_year = max(gfdf.index)
+        self._first_year = int(global_variables['start_year'])
+        self._last_year = int(global_variables['end_year'])  
         # set gfdf as attribute of class
         self.gfdf = pd.DataFrame()
         #setattr(self, 'gfdf', gfdf.astype(np.float64))  # pylint: disable=no-member
@@ -158,6 +160,8 @@ class GrowFactors(object):
         if lastyear > self.last_year:
             msg = 'last_year={} > GrowFactors.last_year={}'
             raise ValueError(msg.format(lastyear, self.last_year))
+
+        print(self.gfdf)
         # pylint: disable=no-member
         rates = [round((self.gfdf['CPI'][cyr] - 1.0), 4)
                  for cyr in range(firstyear, lastyear + 1)]

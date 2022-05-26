@@ -137,23 +137,23 @@ class Application(tk.Frame):
         self.save_widget_inputs()
         global_vars = self.get_inputs()
         self.adjust_status()
-        sub_directory = 'taxcalc'
+        self.sub_directory = 'taxcalc'
         self.active_tax_list = self.find_active_taxes()
         #print('self.active_tax_list ', self.active_tax_list)
         # we currently only use one active tax. We will expand the model
         # to run on multiple taxes
         self.tax_type = self.active_tax_list[0]
         if global_vars!={}:         
-            with open(sub_directory+'/'+global_vars['DEFAULTS_FILENAME']) as f:
+            with open(self.sub_directory+'/'+global_vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
-            with open(sub_directory+'/'+global_vars[self.tax_type+'_records_variables_filename']) as vfile:
-                self.vardict = json.load(vfile)                
+            with open(self.sub_directory+'/'+global_vars[self.tax_type+'_records_variables_filename']) as vfile:
+                self.vardict = json.load(vfile)              
             self.ATTRIBUTE_READ_VARS = set(k for k,
                       v in self.vardict['read'].items()
                       if v['attribute'] == 'Yes')
             self.vars['attribute_vars'] = list(self.ATTRIBUTE_READ_VARS)
-            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+global_vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)          
-            
+            self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+global_vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)            
+            #print('self.growfactors ', self.growfactors)
             #self.elasticity_json = self.get_elasticity_dict(self.tax_type)
             #print('self.elasticity_json ', self.elasticity_json)
         
@@ -189,11 +189,11 @@ class Application(tk.Frame):
         
 
         vars=self.get_inputs()
-        sub_directory = 'taxcalc'
+        self.sub_directory = 'taxcalc'
         if vars!={}:           
-            with open(sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
+            with open(self.sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
                 self.current_law_policy = json.load(f)
-            self.growfactors = self.get_growfactors_dict(sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
+            self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
             #print(self.growfactors)
         else:
             self.current_law_policy={}
@@ -259,24 +259,36 @@ class Application(tk.Frame):
         #self.master.update()
         #filename_path = tk.splitlist(filez)[0]
         old_filename = widget.get()
-        #print('Old filename is: ', widget.get())       
+        print('Old filename is: ', widget.get())       
         filename_path = filez[0]
         filename_list = filename_path.split('/')
         filename = filename_list[-1]
         widget.delete(0,tk.END)
         widget.insert(0,filename)
+        print(filename)
         self.vars[varname] = filename
         if (tax_type is not None) :
-            #print('new filename is :', widget.get())
+            print('new filename is :', widget.get())
             if (varname=='GROWFACTORS_FILENAME'):
                 if filename != old_filename:
                     self.vars[varname] = filename
                     self.entry_salary_variable[tax_type].config(values=self.show_salary_options(tax_type))
             if (varname=='DEFAULTS_FILENAME'):
                 if filename != old_filename:
+                    print('i am here')
                     self.vars[varname] = filename
-                    self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options())
-             
+                    with open(self.sub_directory+'/'+filename) as f:
+                        self.current_law_policy = json.load(f)                  
+                    #print(self.current_law_policy)
+                    self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options(self.current_law_policy))                    
+            if (varname==tax_type+'_records_variables_filename'):            
+                with open(self.sub_directory+'/'+filename) as vfile:
+                    self.vardict = json.load(vfile)              
+                self.ATTRIBUTE_READ_VARS = set(k for k,
+                      v in self.vardict['read'].items()
+                      if v['attribute'] == 'Yes')
+                self.vars['attribute_vars'] = list(self.ATTRIBUTE_READ_VARS)
+                
     def input_combo_data(self, event, widget, varname):
         #print("method is called")
         selected = widget.get()
@@ -346,7 +358,7 @@ class Application(tk.Frame):
         #print(widget_dict)
         #print('num_changes ', num_changes)
         for num in range(1, num_changes+1):
-            #print('num ', num)
+            print('num ', num)
             selected_item = widget_dict[num][1].get()
             if (selected_item!=''):
                 selected_dict[num]={}            
@@ -355,7 +367,8 @@ class Application(tk.Frame):
                 selected_dict[num]['selected_value'] = []
                 if sector_widget:
                     selected_dict[num]['selected_attribute'] = widget_dict[num][4].get()
-                for i in range(year_value_pairs):        
+                #print('year_value_pairs', year_value_pairs)
+                for i in range(year_value_pairs):      
                     selected_dict[num]['selected_year']= selected_dict[num]['selected_year'] + [widget_dict[num][2][i].get()]
                     selected_dict[num]['selected_value']= selected_dict[num]['selected_value'] + [widget_dict[num][3][i].get()]
                     #print('selected_dict ', selected_dict)
@@ -369,7 +382,7 @@ class Application(tk.Frame):
                         if int(selected_dict[num]['selected_year'][i]) > int(end_year):
                             showinfo("Warning", "Reform Year is later than End Year")            
                             return
-        #print('selected_dict ', selected_dict)
+        print('selected_dict ', selected_dict)
         return selected_dict
     
     def clicked_generate_policy_revenues(self):
@@ -415,10 +428,13 @@ class Application(tk.Frame):
                         self.sub_directory+'/'+self.tax_type+'_elasticity_selection.json')
             if self.verbose:
                 print('Elasticity Changes Dictionary: ', self.elasticity_selected_dict)
-            
+        if (len(self.attribute_columns)==0):
+            sector_widget=0
+        else:
+            sector_widget=1
         self.growfactors_selected_dict = self.generate_changes_dict(self.growfactors_widget_dict, 
                                                                     self.year_value_pairs_growfactors_dict, 
-                                                                    year_check=0, sector_widget=1)
+                                                                    year_check=0, sector_widget=sector_widget)
 
         if self.verbose:      
             print("Growfactors Changes Dictionary ",self.growfactors_selected_dict)            

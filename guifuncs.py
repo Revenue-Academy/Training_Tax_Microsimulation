@@ -80,7 +80,8 @@ def get_elasticity_dict(self, tax_type):
                                               current_law_policy[k]['value'][0][1],
                                               current_law_policy[k]['value'][0][2]]
                 
-                elasticity_dict[k1]['year']= current_law_policy[k]['row_label'][0]
+                #elasticity_dict[k1]['year']= current_law_policy[k]['row_label'][0]
+                elasticity_dict[k1]['year']= self.vars['start_year']
                 
                 v = k[:-6]+'_threshold'
                 elasticity_dict[k1]['threshold']= [current_law_policy[v]['value'][0][0],
@@ -137,9 +138,9 @@ def get_growfactors_dict(self, filename, ATTRIBUTE_READ_VARS):
     df = pd.read_csv(filename)
     # shift column 'Year' to first position
     first_column = df.pop('Year')     
-    df.insert(0, 'Year', first_column)   
+    df.insert(0, 'Year', first_column)
     self.attribute_columns = list(ATTRIBUTE_READ_VARS.intersection(set(df.columns)))
-    self.gf_columns_all = list(df.columns)   
+    self.gf_columns_all = list(df.columns)  
     if (len(self.attribute_columns)==0):
         mydict = make_sub_dict(df)
         self.attribute_types=[]
@@ -150,7 +151,7 @@ def get_growfactors_dict(self, filename, ATTRIBUTE_READ_VARS):
         for val in self.attribute_types:
             subdict = make_sub_dict(df[df[self.attribute_columns[0]]==val][self.gf_columns_all])
             mydict[val] = subdict
-    #print('mydict ', mydict)
+    print('mydict ', mydict)
     return mydict
 
 def make_grow_factors_csv(mydict, index, value, filename):  
@@ -166,18 +167,30 @@ def make_grow_factors_csv(mydict, index, value, filename):
             w.writerow(transposed_values[i])
         
 def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value, filename):    
-    #print('update_dict ', update_dict)
-    #print('mydict ', mydict)
+    def update_values(mydict, k, field_param, field_value, v_year, v_value):
+        j=0
+        for i in range(len(mydict[k][field_param])):
+            if (v_year[j] == mydict[k][field_param][i]):
+                mydict[k][field_value][i]=v_value[j]
+                j=j+1
+        return mydict
+    print('update_dict ', update_dict)
+    print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']
-            v = update_dict[i]['selected_value']
+            v_year = update_dict[i]['selected_year']
+            v_value = update_dict[i]['selected_value']            
             if len(self.attribute_columns)>0:
                 attribute_value = update_dict[i]['selected_attribute']
-                mydict[attribute_value][k][field_value]=v
-            else:
-                mydict[k][field_value]=v
-        #print('mydict ', mydict)
+                #mydict[attribute_value][k][field_value]=v_value
+                mydict[attribute_value] = update_values(mydict[attribute_value], 
+                                                        k, field_param, field_value, 
+                                                        v_year, v_value)                
+            else: # update values only from start_year to end_year
+                mydict = update_values(mydict, k, field_param, field_value, 
+                                       v_year, v_value)
+        print('mydict updated ', mydict)
         output_dict={}
         if len(self.attribute_columns)>0:
             first_level_keys = list(mydict.keys())
