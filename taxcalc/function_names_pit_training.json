@@ -1,0 +1,35 @@
+{
+ "0": "cal_min_base_wage",
+ "1": "cal_max_base_wage",
+ "2": "cal_min_ssc",
+ "3": "cal_max_ssc", 
+ "4": "cal_ssc_w",
+ "5": "cal_personal_allowance_new",
+ "6": "cal_tax_base_w",
+ "7": "cal_pit_w",
+ "8": "cal_expenditure_w",
+ "9": "cal_deductions_income_agr_med_l",
+ "10": "cal_tax_base_agr",  
+ "11": "cal_tax_base_other",
+ "12": "cal_tti_w_I",
+ "13": "cal_tti_w_I_behavior", 
+ "14": "cal_pit_w_I", 
+ "15": "cal_tti_wd", 
+ "16": "cal_deduction_rental_income_c", 
+ "17": "cal_deduction_copyrights_income_c",
+ "18": "cal_deduction_income_other_c", 
+ "19": "cal_tti_c_a",
+ "20": "cal_tti_c_g", 
+ "21": "cal_tti_c",
+ "22": "cal_tti_c_behavior",
+ "23": "cal_pit_c",
+ "24": "cal_net_w_I",
+ "25": "cal_net_c",
+ "26": "cal_total_gross_income",
+ "27": "cal_total_taxable_income",
+ "28": "cal_total_pit", 
+ "29": "cal_total_net_income"
+}
+
+
+
