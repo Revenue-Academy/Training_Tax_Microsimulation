@@ -136,7 +136,7 @@ class super_combo(tk.Frame):
         self.l1A=tk.Label(tab, text="Current Law",
                  font = self.fontStyle_sub_title)
         self.l1A.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
-        print('Current Law relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y ', self.block_1_title_pos_x, self.block_1_title_pos_y)
+        #print('Current Law relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y ', self.block_1_title_pos_x, self.block_1_title_pos_y)
 
         #(...)
         #action_with_arg = partial(action, arg)
@@ -147,7 +147,7 @@ class super_combo(tk.Frame):
         
         self.l2A=tk.Label(tab, text="Reform", font = self.fontStyle_sub_title)
         self.l2A.place(relx = self.block_1_title_pos_x, rely = self.block_2_title_pos_y, anchor = "w")
-        print('Reform relx = self.block_1_title_pos_x, rely = self.block_2_title_pos_y ', self.block_1_title_pos_x, self.block_2_title_pos_y)
+        #print('Reform relx = self.block_1_title_pos_x, rely = self.block_2_title_pos_y ', self.block_1_title_pos_x, self.block_2_title_pos_y)
  
         
     def create_new_row_policy_widgets(self, tab):
@@ -307,8 +307,8 @@ class super_combo(tk.Frame):
                 self.generate_revenue_policy_button_new_y = self.combo_y + 2*self.combo_combo_gap_y*(self.num_widgets-1) + self.combo_button_gap_y
                 #print('button at >1 del ',self.generate_revenue_policy_button_new_y)
             self.button_generate_revenue_policy.place(relx = self.generate_revenue_policy_button_x, rely = self.generate_revenue_policy_button_new_y, anchor = "w")
-        print('block_widget_dict after ', self.block_widget_dict)
-        print('self.num_widgets after ',self.num_widgets)
+        #print('block_widget_dict after ', self.block_widget_dict)
+        #print('self.num_widgets after ',self.num_widgets)
         
     def policy_options(self, input_json):
         self.input_json_main = input_json
@@ -332,7 +332,7 @@ class super_combo(tk.Frame):
                     policy_options_list = policy_options_list + [k[1:]]
             elif (k[-8:] != 'curr_law') and (k[1:11] != 'elasticity'):
                 policy_options_list = policy_options_list + [k[1:]]
-        print('policy_options_list ', policy_options_list)
+        #print('policy_options_list ', policy_options_list)
         return (policy_options_list)
     
     def policy_reform():
@@ -366,7 +366,7 @@ class super_combo(tk.Frame):
         selected_param = {}
         selected_value = {}
         #print('input_json ', self.input_json)
-        print('self.input_json selected item \n', self.input_json['_'+ selected_item])
+        #print('self.input_json selected item \n', self.input_json['_'+ selected_item])
         start_year = int(global_vars['start_year'])
         end_year = int(global_vars['end_year'])
         """
@@ -383,7 +383,7 @@ class super_combo(tk.Frame):
         for j in range(self.width_json):
             param = int(self.input_json['_'+ selected_item][self.field_year][j])            
             value = self.input_json['_'+ selected_item][self.field_value][j]
-            print('param ', param)             
+            #print('param ', param)             
             if (self.width_json==1) and not self.elasticity:
                 if (param < start_year):
                     param = start_year     
@@ -392,7 +392,7 @@ class super_combo(tk.Frame):
                 selected_param[i] = param
                 selected_value[i] = value
                 #print('i ',i)
-                print('selected_year[i] ', selected_param[i])                 
+                #print('selected_year[i] ', selected_param[i])                 
                 widget_dict[num][2][i].config(state=tk.NORMAL)               
                 widget_dict[num][2][i].delete(0, tk.END)
                 widget_dict[num][2][i].insert(tk.END, selected_param[i])
