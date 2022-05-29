@@ -15,6 +15,7 @@ def save_inputs(self):
         
 def save_widget_inputs(self):
     self.vars = self.get_inputs()
+    print('self.vars', self.vars)
     tax_list = []
     if self.vars['pit']:
         tax_list = tax_list + ['pit']
@@ -114,8 +115,8 @@ def update_elasticity(self, mydict, update_dict, field_param, field_value, filen
             output_dict[str(i+1)]['selected_year'] = [mydict[k]['year']]
             i=i+2
     
-    print('output_dict elasticity ', output_dict)
-    print('filename ', filename)
+    #print('output_dict elasticity ', output_dict)
+    #print('filename ', filename)
     with open(filename, 'w') as f:
         f.write(json.dumps(output_dict, indent=2))      
             
@@ -151,7 +152,7 @@ def get_growfactors_dict(self, filename, ATTRIBUTE_READ_VARS):
         for val in self.attribute_types:
             subdict = make_sub_dict(df[df[self.attribute_columns[0]]==val][self.gf_columns_all])
             mydict[val] = subdict
-    print('mydict ', mydict)
+    #print('mydict ', mydict)
     return mydict
 
 def make_grow_factors_csv(mydict, index, value, filename):  
@@ -174,8 +175,8 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
                 mydict[k][field_value][i]=v_value[j]
                 j=j+1
         return mydict
-    print('update_dict ', update_dict)
-    print('mydict ', mydict)
+    #print('update_dict ', update_dict)
+    #print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']
@@ -190,7 +191,7 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
             else: # update values only from start_year to end_year
                 mydict = update_values(mydict, k, field_param, field_value, 
                                        v_year, v_value)
-        print('mydict updated ', mydict)
+        #print('mydict updated ', mydict)
         output_dict={}
         if len(self.attribute_columns)>0:
             first_level_keys = list(mydict.keys())

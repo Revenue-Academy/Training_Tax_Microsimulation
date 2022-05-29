@@ -28,6 +28,8 @@ def update_chart_list(self):
     self.chart_combo['values'] = self.chart_list
 
 def tab6(self):
+    global_vars = self.get_inputs()
+    print('global_vars[chart_list] ', global_vars['chart_list'])
     # self.button_1_TAB6_pos_x = self.block_1_title_pos_x
     # self.button_1_TAB6_pos_y = self.block_1_title_pos_y
     """
@@ -36,7 +38,6 @@ def tab6(self):
     self.button_display_charts = ttk.Button(self.TAB6, text = "Display Charts", style='my.TButton', command=self.display_chart)
     self.button_display_charts.place(relx = self.button_1_TAB6_pos_x, rely = self.button_1_TAB6_pos_y, anchor = "w")       
     """
-    
     self.combo_1_TAB6_x = 0.10
     self.combo_1_TAB6_y = 0.10
     
@@ -56,9 +57,10 @@ def tab6(self):
         chart_list = chart_list + [tax_type+'_revenue_projection']       
         chart_list = chart_list + [tax_type+'_distribution_table']
     """
-    self.chart_selection = tk.StringVar()    
+    chart_list = global_vars['chart_list']
+    self.chart_selection = tk.StringVar() 
     self.chart_combo = ttk.Combobox(self.TAB6, textvariable=self.chart_selection, 
-                                    value=self.chart_list, font=self.text_font, postcommand = self.update_chart_list)
+                                    value=chart_list, font=self.text_font)
     #chart_combo.current(0)
     self.chart_combo.place(relx = self.combo_1_TAB6_x, 
                     rely = self.combo_1_TAB6_y, anchor = "w", width=150)
@@ -127,8 +129,6 @@ def display_chart(self, event, global_vars):
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image             
     elif (selected_chart==tax_type+'_distribution_table'):
-        
-        print('i am in distribution ')
         #if global_vars[tax_type+'_distribution_table']:
         #print('global_vars ', global_vars[tax_type+'_distribution_table'])
         df = pd.read_csv(selected_chart+'.csv', thousands=',') 
@@ -148,8 +148,6 @@ def display_chart(self, event, global_vars):
         self.pic.image = self.image
     
     elif (selected_chart==tax_type+'_distribution_table_top1'):
-        
-        print('i am in distribution ')
         #if global_vars[tax_type+'_distribution_table']:
         #print('global_vars ', global_vars[tax_type+'_distribution_table'])
         df = pd.read_csv(selected_chart+'.csv', thousands=',') 

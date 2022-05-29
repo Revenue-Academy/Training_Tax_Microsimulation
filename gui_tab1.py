@@ -65,12 +65,14 @@ def display_entry(self, widget, tax_type):
         self.button_records_filename[tax_type].destroy()
         self.entry_policy_filename[tax_type].destroy()
         self.button_policy_filename[tax_type].destroy()
-        self.entry_growfactors_filename[tax_type].destroy()
+        self. entry_growfactors_filename[tax_type].destroy()
         self.button_growfactors_filename[tax_type].destroy()
         self.entry_functions_filename[tax_type].destroy()
         self.button_functions_filename[tax_type].destroy() 
         self.entry_functions_names_filename[tax_type].destroy() 
-        self.button_function_names_filename[tax_type].destroy() 
+        self.button_function_names_filename[tax_type].destroy()
+        self.entry_benchmark_filename[tax_type].destroy()
+        self.button_benchmark_filename[tax_type].destroy()      
         self.l2[tax_type].destroy() 
         self.entry_salary_variable[tax_type].destroy() 
         self.l3[tax_type].destroy() 
@@ -165,7 +167,7 @@ def display_entry(self, widget, tax_type):
                  rely = self.block_1_entry_10_y, anchor = "e")
     
         self.entry_start_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        self.entry_start_year[tax_type].current(self.year_list.index(self.vars['start_year']))
+        self.entry_start_year[tax_type].current(self.year_list.index(int(self.vars['start_year'])))
         self.entry_start_year[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
                         rely = self.block_1_entry_10_y, anchor = "w", width=80)
         self.entry_start_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_start_year[tax_type], 'start_year'))
@@ -175,15 +177,13 @@ def display_entry(self, widget, tax_type):
                  rely = self.block_1_entry_10_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
-        self.entry_end_year[tax_type].current(self.year_list.index(self.vars['end_year']))
+        self.entry_end_year[tax_type].current(self.year_list.index(int(self.vars['end_year'])))
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
                         rely = self.block_1_entry_10_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
+        
+        #self.chart_list = []
 
-        self.chart_list = self.chart_list + [tax_type+'_revenue_projection']       
-        self.chart_list = self.chart_list + [tax_type+'_distribution_table']
-        self.chart_list = self.chart_list + [tax_type+'_etr']
-        self.chart_list = self.chart_list + [tax_type+'_distribution_table_top1']
         #self.save_inputs()
         #self.completed_TAB1 = 1
         #self.tab6()
@@ -278,7 +278,8 @@ def tab1(self):
     self.vars['SALARY_VARIABLE'] = "SALARY"
     
     self.vars['charts_ready'] = 0
-    self.chart_list = []
+    self.vars['chart_list'] = []
+    #self.chart_list = []
 
     #initializing the display widgets    
     self.l1 = {}

@@ -132,76 +132,77 @@ class Application(tk.Frame):
 # Once the the tax is selected in tab1 populate the drop down lists
     def initiate_model(self, widget_var, tax_type):
         self.vars[tax_type]=widget_var.get()
-        self.save_inputs()
-        self.display_entry(widget_var, tax_type)
-        self.save_widget_inputs()
-        global_vars = self.get_inputs()
-        self.adjust_status()
-        self.sub_directory = 'taxcalc'
-        self.active_tax_list = self.find_active_taxes()
-        #print('self.active_tax_list ', self.active_tax_list)
-        # we currently only use one active tax. We will expand the model
-        # to run on multiple taxes
-        self.tax_type = self.active_tax_list[0]
-        if global_vars!={}:         
-            with open(self.sub_directory+'/'+global_vars['DEFAULTS_FILENAME']) as f:
-                self.current_law_policy = json.load(f)
-            with open(self.sub_directory+'/'+global_vars[self.tax_type+'_records_variables_filename']) as vfile:
-                self.vardict = json.load(vfile)              
-            self.ATTRIBUTE_READ_VARS = set(k for k,
-                      v in self.vardict['read'].items()
-                      if v['attribute'] == 'Yes')
-            self.vars['attribute_vars'] = list(self.ATTRIBUTE_READ_VARS)
-            self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+global_vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)            
-            #print('self.growfactors ', self.growfactors)
-            #self.elasticity_json = self.get_elasticity_dict(self.tax_type)
-            #print('self.elasticity_json ', self.elasticity_json)
-        
-        else:
-            self.current_law_policy={}
-            self.growfactors = {}
-            self.elasticity_json = {}
-        #print(vars)
-        #self.tab12()
-        
-        # TAB Policy
-        self.tab2(self.tax_type)
-        
-        # TAB Behavior
-        # Note that function initiate_model activates the drop down list 
-        self.tab3(self.tax_type)
-        
-        # TAB Tax Expenditure
-        self.tab4()
-
-        # TAB Distribution
-        self.tab5()
-        
-        # TAB Charts
-        self.tab6()
-        
-        # TAB Growfactors
-
-        self.tab7()      
-
-        # TAB Settings
-        self.tab8()
-        
-
-        vars=self.get_inputs()
-        self.sub_directory = 'taxcalc'
-        if vars!={}:           
-            with open(self.sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
-                self.current_law_policy = json.load(f)
-            self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
-            #print(self.growfactors)
-        else:
-            self.current_law_policy={}
-            self.growfactors = {}        
-        self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options(self.current_law_policy))
-        self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options(self.growfactors))
-        #self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json))
-        
+        self.display_entry(widget_var, tax_type)        
+        if self.vars[tax_type]:
+            self.save_inputs()
+            self.save_widget_inputs()
+            global_vars = self.get_inputs()
+            self.adjust_status()
+            self.sub_directory = 'taxcalc'
+            self.active_tax_list = self.find_active_taxes()
+            #print('self.active_tax_list ', self.active_tax_list)
+            # we currently only use one active tax. We will expand the model
+            # to run on multiple taxes
+            self.tax_type = self.active_tax_list[0]
+            if global_vars!={}:         
+                with open(self.sub_directory+'/'+global_vars['DEFAULTS_FILENAME']) as f:
+                    self.current_law_policy = json.load(f)
+                with open(self.sub_directory+'/'+global_vars[self.tax_type+'_records_variables_filename']) as vfile:
+                    self.vardict = json.load(vfile)              
+                self.ATTRIBUTE_READ_VARS = set(k for k,
+                          v in self.vardict['read'].items()
+                          if v['attribute'] == 'Yes')
+                self.vars['attribute_vars'] = list(self.ATTRIBUTE_READ_VARS)
+                self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+global_vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)            
+                #print('self.growfactors ', self.growfactors)
+                #self.elasticity_json = self.get_elasticity_dict(self.tax_type)
+                #print('self.elasticity_json ', self.elasticity_json)
+            
+            else:
+                self.current_law_policy={}
+                self.growfactors = {}
+                self.elasticity_json = {}
+            #print(vars)
+            #self.tab12()
+            
+            # TAB Policy
+            self.tab2(self.tax_type)
+            
+            # TAB Behavior
+            # Note that function initiate_model activates the drop down list 
+            self.tab3(self.tax_type)
+            
+            # TAB Tax Expenditure
+            self.tab4()
+    
+            # TAB Distribution
+            self.tab5()
+            
+            # TAB Charts
+            self.tab6()
+            
+            # TAB Growfactors
+    
+            self.tab7()      
+    
+            # TAB Settings
+            self.tab8()
+            
+    
+            vars=self.get_inputs()
+            self.sub_directory = 'taxcalc'
+            if vars!={}:           
+                with open(self.sub_directory+'/'+vars['DEFAULTS_FILENAME']) as f:
+                    self.current_law_policy = json.load(f)
+                self.growfactors = self.get_growfactors_dict(self.sub_directory+'/'+vars['GROWFACTORS_FILENAME'], self.ATTRIBUTE_READ_VARS)
+                #print(self.growfactors)
+            else:
+                self.current_law_policy={}
+                self.growfactors = {}        
+            self.block_widget_dict[1][1].config(values=self.tab_generate_revenue_policy.policy_options(self.current_law_policy))
+            self.growfactors_widget_dict[1][1].config(values=self.tab_growfactors.policy_options(self.growfactors))
+            #self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json))
+            
         
     def print_stdout(self):
         '''Illustrate that using 'print' writes to stdout'''
@@ -344,10 +345,15 @@ class Application(tk.Frame):
         else:
             if self.verbose:
                 print("Run Completed")
+            global_vars = self.get_inputs()
+            print('global_vars[chart_list] ', global_vars['chart_list'])
+            self.tab6()
+            self.chart_combo.config(values=global_vars['chart_list'])
             self.progressbar.stop()
             self.progressbar.destroy()
             self.progress_label.destroy()
             self.foo_thread.join()
+
 
     def generate_changes_dict(self, widget_dict, year_value_pairs, year_check=None, start_year=None, end_year=None, sector_widget=None):
         selected_dict={}

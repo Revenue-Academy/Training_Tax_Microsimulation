@@ -144,7 +144,8 @@ def generate_policy_revenues():
     adjust_behavior = 0
     for tax_type in tax_list:
         adjust_behavior = adjust_behavior or global_variables[tax_type+'_adjust_behavior']
-
+    
+    chart_list = []
     distribution_json_filename = {}
     distribution_vardict_dict = {}
     income_measure = {}
@@ -357,6 +358,7 @@ def generate_policy_revenues():
         df_reform_str = df_reform.to_string()
         text_output1 = df_str + '\n\n' + df_reform_str + '\n\n'
         write_file(df[tax_type], text_output1, filename_chart_rev_projection)
+        chart_list = chart_list + [tax_type+'_revenue_projection']                    
         if global_variables[tax_type+'_display_revenue_table']:
             last_row = row_num[tax_type]
             l_TAB3[tax_type] = tk.Button(window_dict[tax_type],
@@ -375,60 +377,62 @@ def generate_policy_revenues():
         window_dist = {}
         row_num = {}
         dt={}
-        for tax_type in tax_list:        
-            if global_variables[tax_type+'_distribution_table']:
-                dt[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, start_year, end_year)
-                dt_percentile[tax_type] = merge_distribution_table_dicts(dt1_percentile, dt2_percentile, tax_type, start_year, end_year)            
-                #print(dt)
-                dt[tax_type]['All'].update(dt[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.0f}'.format))
-                dt[tax_type]['All'].to_pickle('file.pkl')
-                dt[tax_type]['All'] = pd.read_pickle('file.pkl')
-                #dt[tax_type]['All'] = dt[tax_type]['All'].reset_index() 
-                dt_tax_all = dt[tax_type]['All'][dt[tax_type]['All'].columns[dt[tax_type]['All'].columns.str.contains(tax_collection_var)]]
-                #print('dt_tax_all ', dt_tax_all)     
-                dt_tax_all = dt_tax_all.reset_index()
-                #print('dt_tax_all ', dt_tax_all)
-                #print('dt_percentile ',dt_percentile)
-                dt_percentile[tax_type]['All']['ETR'] = dt_percentile[tax_type]['All'][tax_collection_var+'_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]            
-                dt_percentile[tax_type]['All']['ETR_ref'] = dt_percentile[tax_type]['All'][tax_collection_var+'_ref_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_ref_'+str(start_year)]            
-                dt_percentile[tax_type]['All'].update(dt_percentile[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.4f}'.format))            
-                #dt = dt.reset_index()
-                # Adjust this for number of years selected
-                #now = datetime.now() # current date and time
-                #date_time = now.strftime("%d_%m_%Y_%H_%M_%S")
-                filename2 = tax_type+'_distribution_table'
-                text_output2 = dt[tax_type]['All'].to_string() + '\n\n'
-                filename3 = tax_type+'_distribution_table_top1'
-                text_output3 = dt[tax_type]['All'].to_string() + '\n\n'
-                write_file(dt_tax_all, text_output2, filename2)
-                write_file(dt_tax_all, text_output3, filename3)
-                filename_etr = tax_type+'_etr'
-                text_output_etr = dt_percentile[tax_type]['All'].to_string() + '\n\n'
-                print('dt_percentile[tax_type][All]', dt_percentile[tax_type]['All'])
-                write_file(dt_percentile[tax_type]['All'], text_output_etr, filename_etr)            
-                if global_variables[tax_type+'_display_distribution_table']:
-                    window_dist[tax_type] = tk.Toplevel()
-                    window_dist[tax_type].geometry("1000x700+600+140")
-                    header1 = ["header","", tax_type.upper()]
-                    header2 = ["header",'Decile','Current Law '+str(start_year)]
-                    for year in range(start_year, end_year+1):
-                        header1 = header1+[tax_type.upper()]
-                        header2 = header2+['Reform '+str(year)]          
-                    title_header = [["title", tax_type.upper()+" Distribution"],
-                                    header1, header2]     
-                    #footer = ["footer", "*Data saved in file datadump.csv"]         
-                    row_num[tax_type] = display_table(window_dist[tax_type], data=title_header, header=True)   
-                    row_num[tax_type] = display_table(window_dist[tax_type], row = row_num[tax_type], dataframe=dt_tax_all)
-                    l = tk.Button(window_dist[tax_type],text="Save Results",command=lambda: write_file(dt_tax_all, text_output2, filename2, window_dist[tax_type], row_num[tax_type]))
-                    l.grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
-            #footer = ["footer", "*Data saved in file "+ filename1]
-            #row_num = display_table(window_dist, data=footer, footer=row_num+2)
-    
-    display_distribution_table_window(tax_type)
+        for tax_type in tax_list:
+            dt[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, start_year, end_year)
+            dt_percentile[tax_type] = merge_distribution_table_dicts(dt1_percentile, dt2_percentile, tax_type, start_year, end_year)            
+            #print(dt)
+            dt[tax_type]['All'].update(dt[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.0f}'.format))
+            dt[tax_type]['All'].to_pickle('file.pkl')
+            dt[tax_type]['All'] = pd.read_pickle('file.pkl')
+            #dt[tax_type]['All'] = dt[tax_type]['All'].reset_index() 
+            dt_tax_all = dt[tax_type]['All'][dt[tax_type]['All'].columns[dt[tax_type]['All'].columns.str.contains(tax_collection_var)]]
+            #print('dt_tax_all ', dt_tax_all)     
+            dt_tax_all = dt_tax_all.reset_index()
+            #print('dt_tax_all ', dt_tax_all)
+            #print('dt_percentile ',dt_percentile)
+            dt_percentile[tax_type]['All']['ETR'] = dt_percentile[tax_type]['All'][tax_collection_var+'_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]            
+            dt_percentile[tax_type]['All']['ETR_ref'] = dt_percentile[tax_type]['All'][tax_collection_var+'_ref_'+str(start_year)]/dt_percentile[tax_type]['All'][income_measure[tax_type]+'_ref_'+str(start_year)]            
+            dt_percentile[tax_type]['All'].update(dt_percentile[tax_type]['All'].select_dtypes(include=np.number).applymap('{:,.4f}'.format))            
+            #dt = dt.reset_index()
+            # Adjust this for number of years selected
+            filename2 = tax_type+'_distribution_table'
+            text_output2 = dt[tax_type]['All'].to_string() + '\n\n'
+            filename3 = tax_type+'_distribution_table_top1'
+            text_output3 = dt[tax_type]['All'].to_string() + '\n\n'
+            write_file(dt_tax_all, text_output2, filename2)
+            write_file(dt_tax_all, text_output3, filename3)
+            filename_etr = tax_type+'_etr'
+            text_output_etr = dt_percentile[tax_type]['All'].to_string() + '\n\n'
+            print('dt_percentile[tax_type][All]', dt_percentile[tax_type]['All'])
+            write_file(dt_percentile[tax_type]['All'], text_output_etr, filename_etr)            
+            if global_variables[tax_type+'_display_distribution_table']:
+                window_dist[tax_type] = tk.Toplevel()
+                window_dist[tax_type].geometry("1000x700+600+140")
+                header1 = ["header","", tax_type.upper()]
+                header2 = ["header",'Decile','Current Law '+str(start_year)]
+                for year in range(start_year, end_year+1):
+                    header1 = header1+[tax_type.upper()]
+                    header2 = header2+['Reform '+str(year)]          
+                title_header = [["title", tax_type.upper()+" Distribution"],
+                                header1, header2]     
+                #footer = ["footer", "*Data saved in file datadump.csv"]         
+                row_num[tax_type] = display_table(window_dist[tax_type], data=title_header, header=True)   
+                row_num[tax_type] = display_table(window_dist[tax_type], row = row_num[tax_type], dataframe=dt_tax_all)
+                l = tk.Button(window_dist[tax_type],text="Save Results",command=lambda: write_file(dt_tax_all, text_output2, filename2, window_dist[tax_type], row_num[tax_type]))
+                l.grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
+        #footer = ["footer", "*Data saved in file "+ filename1]
+        #row_num = display_table(window_dist, data=footer, footer=row_num+2)
+    if global_variables[tax_type+'_distribution_table']:
+        display_distribution_table_window(tax_type)
+        for tax_type in tax_list:
+            global_variables[tax_type +'_display_revenue_table'] = 1
+            chart_list = chart_list + [tax_type+'_distribution_table']
+            chart_list = chart_list + [tax_type+'_distribution_table_top1']
+            chart_list = chart_list + [tax_type+'_etr']
+            
     global_variables['charts_ready'] = 1
-    for tax_type in tax_list:
-        #print(tax_type+'_display_revenue_table')
-        global_variables[tax_type+'_display_revenue_table'] = 1
+    print('chart_list ', chart_list)
+    global_variables['chart_list'] = chart_list  
 
     with open('global_vars.json', 'w') as f:        
         f.write(json.dumps(global_variables, indent=2))
