@@ -930,6 +930,7 @@
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop"         
     },
+  
     "_capital_income_rate_g_curr_law": {
         "long_name": " Tax rate at which capital income from game of chance is levied as per current law",
         "description": "Tax collected from capital income .",

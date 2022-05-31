@@ -164,7 +164,7 @@
       "cross_year": "No",
       "attribute": "No"
     },
-    "gross_i_c": {
+     "gross_i_c": {
       "type": "float",
       "desc": "Gross income from 'capital'",
       "form": {

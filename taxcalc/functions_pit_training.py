@@ -121,10 +121,10 @@ def cal_tax_base_other(tax_base_agr, income_add_l, income_supvr_l, income_offici
     tax_base_other = max(tax_base_other, 0.)
     return tax_base_other
                        
- 
+
 "Calculation for total tax base from labor - sum of tax base wages and other labour income "
 @iterate_jit(nopython=True)
-def cal_tti_w_I(tax_base_w, tax_base_other,tti_w_I):
+def cal_tti_w_I(tax_base_w, tax_base_other, tti_w_I):
     tti_w_I = tax_base_w + tax_base_other
     return tti_w_I
 
