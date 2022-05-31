@@ -23,6 +23,150 @@ rcParams.update({'figure.autolayout': True})
 
 from PIL import Image,ImageTk
 
+def initialize_vars(self):
+    self.number = 0
+    self.widgets = []
+    self.completed_TAB1 = 0
+    #self.grid()
+    #self.createWidgets()
+
+    self.reform={}
+    self.selected_item = ""
+    self.selected_value = ""
+    self.selected_year = 2018
+    self.sub_directory = "taxcalc"
+    self.year_list = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
+    # Include a check whether the years are valid by looking at the 
+    # selected growfactors file
+    """    
+    self.data_filename = "pit.csv"
+    self.weights_filename = "pit_weights1.csv"
+    self.records_variables_filename = "records_variables.json"
+    self.cit_data_filename = "cit_cross.csv"
+    self.cit_weights_filename = "cit_cross_wgts1.csv"
+    self.cit_records_variables_filename = "corprecords_variables.json"
+    self.gst_data_filename = "gst.csv"
+    self.gst_weights_filename = "gst_weights.csv"
+    self.gst_records_variables_filename = "gstrecords_variables.json"         
+    self.policy_filename = "current_law_policy_cmie.json"
+    self.growfactors_filename = "growfactors1.csv"             
+    self.benchmark_filename = "tax_incentives_benchmark.json"
+    self.elasticity_filename = "elasticity.json"
+    self.pit_functions_filename = "functions.py"
+    self.pit_function_names = "function_names.json"
+    self.start_year = 2019
+    self.end_year=2023
+    self.SALARY_VARIABLE = "SALARY"
+    """
+    
+    #if tax_type == 'pit':
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_training.json"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
+    #self.vars['start_year'] = 2018
+    #elif tax_type == 'cit':
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
+    self.vars['start_year'] = 2020
+    
+
+    
+    ##### NOTE 'Year' is a key word for year in records variable
+    '''
+    self.vars['pit_data_filename'] = "pit_macedonia.csv"
+    self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
+    self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia.json"
+    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_macedonia.json"
+    self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia.json"
+    self.vars['pit_functions_filename'] = "functions_pit_macedonia.py"
+    self.vars['pit_function_names_filename'] = "function_names_pit_macedonia.json"       
+    '''
+    self.vars['pit_data_filename'] = "pit_data_training.csv"
+    self.vars['pit_weights_filename'] = "pit_weights_training.csv"
+    self.vars['pit_records_variables_filename'] = "records_variables_pit_training.json"
+    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_training.json"
+    self.vars['pit_elasticity_filename'] = "elasticity_pit_training.json"
+    self.vars['pit_functions_filename'] = "functions_pit_training.py"
+    self.vars['pit_function_names_filename'] = "function_names_pit_training.json"
+
+    self.vars['cit_data_filename'] = "cit_egypt.csv"
+    self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
+    self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
+    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
+    self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
+    self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
+    self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
+
+    self.vars['cit_max_lag_years'] = 10
+
+    self.vars['vat_data_filename'] = "vat.csv"
+    self.vars['vat_weights_filename'] = "vat_weights.csv"
+    self.vars['vat_records_variables_filename'] = "vat_records_variables.json"   
+    self.vars['vat_benchmark_filename'] = "vat_tax_incentives_benchmark.json"
+    self.vars['vat_elasticity_filename'] = "vat_elasticity_macedonia.json"
+    self.vars['vat_functions_filename'] = "vat_functions.py"
+    self.vars['vat_function_names_filename'] = "vat_function_names.json"
+
+    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
+    self.vars['cit_distribution_json_filename'] = 'cit_distribution_egypt.json'
+    self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
+    
+    self.vars['pit_display_distribution_table_byincome'] = 0
+    self.vars['pit_display_distribution_table_bydecile'] = 0
+    self.vars['pit_display_revenue_table'] = 1
+    
+    self.vars['cit_display_distribution_table_byincome'] = 0
+    self.vars['cit_display_distribution_table_bydecile'] = 0
+    self.vars['cit_display_revenue_table'] = 1
+    
+    self.vars['vat_display_distribution_table_byincome'] = 0
+    self.vars['vat_display_distribution_table_bydecile'] = 0
+    self.vars['vat_display_revenue_table'] = 1
+    
+    self.vars['start_year'] = 2018
+    self.vars['end_year']=2027
+    
+    #self.vars['SALARY_VARIABLE'] = "gross_i_w"
+    self.vars['SALARY_VARIABLE'] = "SALARY"
+    
+    self.vars['charts_ready'] = 0
+    self.vars['chart_list'] = []
+    #self.chart_list = []
+
+    #initializing the display widgets    
+    self.l1 = {}
+    self.l2 = {}
+    self.l3 = {}
+    self.l31 = {}
+    self.entry_data_filename = {}
+    self.button_data_filename = {}
+    self.entry_weights_filename = {}
+    self.button_weights_filename = {}
+    self.entry_records_filename = {}
+    self.button_records_filename = {}
+    self.entry_policy_filename = {}
+    self.button_policy_filename = {}
+    self.entry_growfactors_filename = {}
+    self.button_growfactors_filename = {}
+    self.entry_functions_filename = {}
+    self.button_functions_filename = {}
+    self.entry_functions_names_filename = {}
+    self.button_function_names_filename = {}
+    self.entry_benchmark_filename = {}
+    self.button_benchmark_filename = {}
+    self.entry_salary_variable = {}
+    self.entry_start_year = {}
+    self.entry_end_year = {}
+    
+
+    #self.total_revenue_text1 = ""
+    #self.reform_revenue_text1 = ""
+    #self.reform_filename = "app01_reform.json"
+    
+               
+    self.vars['show_error_log'] = 0
+    self.vars['verbose'] = 0
+    pass
+
 def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
     self.title_pos_x = 0.5
     self.title_pos_y = 0.0
@@ -51,9 +195,11 @@ def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
     #self.vars={}
         
 def display_entry(self, widget, tax_type):
+    #self.initialize_vars(tax_type)
     self.vars[tax_type] = int(widget.get())
-    self.block_settings_pos_x = self.allocate_pos_x(self.pos_x, self.status,
-                                                    self.block_settings_pos_x)   
+    #self.block_settings_pos_x = self.allocate_pos_x(self.pos_x, self.status,
+                                                    #self.block_settings_pos_x)
+    
     block_1_title_pos_x = self.block_settings_pos_x[tax_type] 
     if not self.vars[tax_type]:
         self.l1[tax_type].destroy()
@@ -80,6 +226,15 @@ def display_entry(self, widget, tax_type):
         self.l31[tax_type].destroy() 
         self.entry_end_year[tax_type].destroy()
     else:
+        if tax_type == 'pit':
+            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_training.json"
+            self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
+            self.vars['start_year'] = 2018
+        elif tax_type == 'cit':
+            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+            self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
+            self.vars['start_year'] = 2020
+        
         self.grid_placement(block_1_title_pos_x)
         self.l1[tax_type]=Label(self.TAB1,text="Data Inputs "+ tax_type.upper(),
                  font = self.fontStyle_sub_title)
@@ -189,154 +344,7 @@ def display_entry(self, widget, tax_type):
         #self.tab6()
 
 def tab1(self):    
-    self.number = 0
-    self.widgets = []
-    self.completed_TAB1 = 0
-    #self.grid()
-    #self.createWidgets()
-
-    self.reform={}
-    self.selected_item = ""
-    self.selected_value = ""
-    self.selected_year = 2018
-    self.sub_directory = "taxcalc"
-    self.year_list = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027]
-    # Include a check whether the years are valid by looking at the 
-    # selected growfactors file
-    """    
-    self.data_filename = "pit.csv"
-    self.weights_filename = "pit_weights1.csv"
-    self.records_variables_filename = "records_variables.json"
-    self.cit_data_filename = "cit_cross.csv"
-    self.cit_weights_filename = "cit_cross_wgts1.csv"
-    self.cit_records_variables_filename = "corprecords_variables.json"
-    self.gst_data_filename = "gst.csv"
-    self.gst_weights_filename = "gst_weights.csv"
-    self.gst_records_variables_filename = "gstrecords_variables.json"         
-    self.policy_filename = "current_law_policy_cmie.json"
-    self.growfactors_filename = "growfactors1.csv"             
-    self.benchmark_filename = "tax_incentives_benchmark.json"
-    self.elasticity_filename = "elasticity.json"
-    self.pit_functions_filename = "functions.py"
-    self.pit_function_names = "function_names.json"
-    self.start_year = 2019
-    self.end_year=2023
-    self.SALARY_VARIABLE = "SALARY"
-    """
-
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_training.json"
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
-    #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
     
-
-    
-    ##### NOTE 'Year' is a key word for year in records variable
-    '''
-    self.vars['pit_data_filename'] = "pit_macedonia.csv"
-    self.vars['pit_weights_filename'] = "pit_weights_macedonia.csv"
-    self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia.json"
-    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_macedonia.json"
-    self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia.json"
-    self.vars['pit_functions_filename'] = "functions_pit_macedonia.py"
-    self.vars['pit_function_names_filename'] = "function_names_pit_macedonia.json"       
-    '''
-    self.vars['pit_data_filename'] = "pit_data_training.csv"
-    self.vars['pit_weights_filename'] = "pit_weights_training.csv"
-    self.vars['pit_records_variables_filename'] = "records_variables_pit_training.json"
-    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_training.json"
-    self.vars['pit_elasticity_filename'] = "elasticity_pit_training.json"
-    self.vars['pit_functions_filename'] = "functions_pit_training.py"
-    self.vars['pit_function_names_filename'] = "function_names_pit_training.json"
-
-    self.vars['cit_data_filename'] = "cit_egypt.csv"
-    self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
-    self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
-    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_egypt.json"
-    self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
-    self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
-    self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
-
-    self.vars['cit_max_lag_years'] = 10
-
-    self.vars['vat_data_filename'] = "vat.csv"
-    self.vars['vat_weights_filename'] = "vat_weights.csv"
-    self.vars['vat_records_variables_filename'] = "vat_records_variables.json"   
-    self.vars['vat_benchmark_filename'] = "vat_tax_incentives_benchmark.json"
-    self.vars['vat_elasticity_filename'] = "vat_elasticity_macedonia.json"
-    self.vars['vat_functions_filename'] = "vat_functions.py"
-    self.vars['vat_function_names_filename'] = "vat_function_names.json"
-
-    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
-    self.vars['cit_distribution_json_filename'] = 'cit_distribution_egypt.json'
-    self.vars['vat_distribution_json_filename'] = 'vat_distribution.json'
-    
-    self.vars['start_year'] = 2020
-    self.vars['end_year']=2027
-    
-    #self.vars['SALARY_VARIABLE'] = "gross_i_w"
-    self.vars['SALARY_VARIABLE'] = "SALARY"
-    
-    self.vars['charts_ready'] = 0
-    self.vars['chart_list'] = []
-    #self.chart_list = []
-
-    #initializing the display widgets    
-    self.l1 = {}
-    self.l2 = {}
-    self.l3 = {}
-    self.l31 = {}
-    self.entry_data_filename = {}
-    self.button_data_filename = {}
-    self.entry_weights_filename = {}
-    self.button_weights_filename = {}
-    self.entry_records_filename = {}
-    self.button_records_filename = {}
-    self.entry_policy_filename = {}
-    self.button_policy_filename = {}
-    self.entry_growfactors_filename = {}
-    self.button_growfactors_filename = {}
-    self.entry_functions_filename = {}
-    self.button_functions_filename = {}
-    self.entry_functions_names_filename = {}
-    self.button_function_names_filename = {}
-    self.entry_benchmark_filename = {}
-    self.button_benchmark_filename = {}
-    self.entry_salary_variable = {}
-    self.entry_start_year = {}
-    self.entry_end_year = {}
-    
-
-    #self.total_revenue_text1 = ""
-    #self.reform_revenue_text1 = ""
-    #self.reform_filename = "app01_reform.json"
-    
-    self.fontStyle = tkfont.Font(family="Calibri", size="12")
-    self.fontStyle_sub_title = tkfont.Font(family="Calibri", size="14", weight="bold")         
-    self.fontStyle_title = tkfont.Font(family="Calibri", size="18", weight="bold")
-    self.s = ttk.Style()
-    self.s.configure('my.TButton', font=self.fontStyle)        
-    self.text_font = ('Calibri', '12')
-            
-    #initializing the display widgets    
-
-    self.block_settings_pos_x = {}
-    self.status = {}
-    
-    self.tax_list = ['pit', 'cit', 'vat']
-    
-    self.pos_x = [0.13, 0.40, 0.70]
-
-    self.vars['pit'] = 0
-    self.vars['cit'] = 0
-    self.vars['vat'] = 0
-    
-    self.status['pit'] = tk.NORMAL
-    self.status['cit'] = tk.NORMAL
-    self.status['vat'] = tk.NORMAL
-
-    self.vars['show_error_log'] = 0
-    self.vars['verbose'] = 0
     
     #self.save_inputs()
        
@@ -348,7 +356,35 @@ def tab1(self):
         if self.status[tax_type] == tk.NORMAL:
             self.vars[tax_type] = 1
     """
+    #initializing the display widgets  
+    self.initialize_vars()
+    self.fontStyle = tkfont.Font(family="Calibri", size="12")
+    self.fontStyle_sub_title = tkfont.Font(family="Calibri", size="14", weight="bold")         
+    self.fontStyle_title = tkfont.Font(family="Calibri", size="18", weight="bold")
+    self.s = ttk.Style()
+    self.s.configure('my.TButton', font=self.fontStyle)        
+    self.text_font = ('Calibri', '12')
+    
+    self.block_settings_pos_x = {}
+    self.status = {}
+    
+    self.pos_x = [0.13, 0.40, 0.70]
+    self.block_settings_pos_x['pit'] = self.pos_x[0]
+    self.block_settings_pos_x['cit'] = self.pos_x[1]
+    self.block_settings_pos_x['vat'] = self.pos_x[2]
+    
+    self.tax_list = ['pit', 'cit', 'vat']
+    
+    
 
+    self.vars['pit'] = 0
+    self.vars['cit'] = 0
+    self.vars['vat'] = 0
+    
+    self.status['pit'] = tk.NORMAL
+    self.status['cit'] = tk.NORMAL
+    #self.status['vat'] = tk.NORMAL
+    self.status['vat'] = tk.DISABLED
     
     self.block_1_title_pos_x = 0.15
     self.block_1_title_box_y = 0.15

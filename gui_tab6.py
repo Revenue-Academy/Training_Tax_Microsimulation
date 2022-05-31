@@ -84,25 +84,41 @@ def display_chart(self, event, global_vars):
     
     #self.selected_attribute_chart = self.attribute_selection.get()
     selected_chart = self.chart_selection.get()
+    
     print('selected_chart ', selected_chart)
-    tax_type = selected_chart[:3]
+    #tax_type = selected_chart[:3]
     #f = open('global_vars.json')
     #global_vars = json.load(f)
-    
-    tax_type = selected_chart[:3]
+    print('global vars', global_vars)
+    #tax_type = selected_chart[:3]
+    if global_vars['pit']:
+        tax_type = 'pit'
+    elif global_vars['cit']:
+        tax_type = 'cit'
+    else:
+        tax_type = 'pit'
+        
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
-        #df1 = df[df.columns[df.columns.str.contains(self.selected_attribute_chart)]]
-        #print('df1 ', df1)
+        
+        if tax_type == 'pit':
+            df = df
+            if self.vars[tax_type+'_adjust_behavior']:
+                df.columns=['Current Law', 'Reform', 'Behavior']
+            else:
+                df.columns=['Current Law', 'Reform']
+        elif tax_type == 'cit':
+            if self.vars[tax_type+'_adjust_behavior']:
+                df = df[df.columns[:3]]
+                df.columns=['Current Law', 'Reform', 'Behavior']
+            else:
+                df = df[df.columns[:2]]
+                df.columns=['Current Law', 'Reform']
              
+                    
         #if global_vars[tax_type+'_adjust_behavior']:
-        if self.vars[tax_type+'_adjust_behavior']:
-            #df1.columns=['Current Law', 'Reform', 'Behavior']
-            df.columns=['Current Law', 'Reform', 'Behavior']
-        else:
-            #df1.columns=['Current Law', 'Reform']
-            df.columns=['Current Law', 'Reform']
+        
         #print('df1 ', df1)
         #df1 = df1.rename_axis('Year').reset_index()
         df1 = df.rename_axis('Year').reset_index()
@@ -119,7 +135,7 @@ def display_chart(self, event, global_vars):
                  markerfacecolor='None', markeredgecolor='b',
                  label='Reform')
         #plt.title('Personal Income Tax forecast (in billion MKD) for '+self.selected_attribute_chart)
-        plt.title('Personal Income Tax forecast (in billion MKD)')
+        plt.title('Personal Income Tax forecast (in billions)')
         # for index in range(len(year_list)):
         #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
         pic_filename1 = "MKD_rev_forecast.png"
@@ -165,6 +181,27 @@ def display_chart(self, event, global_vars):
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image
     
+    elif (selected_chart==tax_type+'_distribution_table_income_bins'):
+        #if global_vars[tax_type+'_distribution_table']:
+        #print('global_vars ', global_vars[tax_type+'_distribution_table'])
+        df = pd.read_csv(selected_chart+'.csv', thousands=',') 
+        df.drop('Unnamed: 0', axis=1, inplace=True)
+        df = df.set_index('index')
+        df1=df[df.columns[0]][2:][:-1]
+        #print('df1 is ', df1)
+        df1['pct'] = df1/df1.sum()
+        #print('df1 pct is ', df1['pct'])
+        fig, ax = plt.subplots(figsize=(8, 8))      
+        ax.pie(df1.pct, labels=df1.index[:-1], autopct='%1.1f%%', startangle=90)
+        ax.set_title('Distribution of tax collection by income levels')
+        ax.legend(fontsize='small')
+        pic_filename1 = "mkd_dist.png"
+        plt.savefig(pic_filename1)
+        self.image = ImageTk.PhotoImage(Image.open("mkd_dist.png"))
+        self.pic = tk.Label(self.TAB6,image=self.image)
+        self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
+        self.pic.image = self.image
+        
     elif (selected_chart==tax_type+'_etr'):
         
         df = pd.read_csv(selected_chart+'.csv', index_col=0)

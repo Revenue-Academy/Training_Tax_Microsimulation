@@ -1,4 +1,4 @@
-YEAR,CPI,SALARY,Oil_Prices,Sector,Revenues,Other_revenues,Expenses,Donations_NGO,Donations_Others,Other_additions,Other_deductions,Donations_Govt,Carried_forward_losses,Exemptions,Investment_incentive,Exchange_rate,Add_Bld,Add_Intang,Add_Mach,Add_Others,Add_Comp,Excl_Bld,Excl_Intang,Excl_Mach,Excl_Others,Excl_Comp
+Year,CPI,SALARY,Oil_Prices,Sector,Revenues,Other_revenues,Expenses,Donations_NGO,Donations_Others,Other_additions,Other_deductions,Donations_Govt,Carried_forward_losses,Exemptions,Investment_incentive,Exchange_rate,Add_Bld,Add_Intang,Add_Mach,Add_Others,Add_Comp,Excl_Bld,Excl_Intang,Excl_Mach,Excl_Others,Excl_Comp
 2019,1,1,56.99,Oil & Gas,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05
 2020,1,1,39.16,Oil & Gas,0.946306165,0.946306165,0.946306165,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05
 2021,1,1,68.13,Oil & Gas,1.237972235,1.237972235,1.237972235,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05,1.05

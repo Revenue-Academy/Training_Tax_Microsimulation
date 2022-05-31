@@ -559,22 +559,24 @@ class Calculator(object):
             raise ValueError(msg.format(tax_type))
             return
         
-        #wtd_total_cit = {}
-        #wtd_total_cit['All'] = (tax_data * self.carray('weight')).sum()
+        if tax_type == 'pit':
+            wtd_total_tax = {}
+            wtd_total_tax['All'] = (tax_data * self.array('weight')).sum()
+        elif tax_type == 'cit':
+            wtd_total_tax = {}
+            wtd_total_tax['All'] = (tax_data * self.carray('weight')).sum()
 
-        wtd_total_pit = {}
-        wtd_total_pit['All'] = (tax_data * self.array('weight')).sum()
         # We have  calculated for 'All' so no need to calculate further
         attribute_types.remove('All')
         if len(attribute_var)>0:            
             for attribute_value in attribute_types:
                 attribute_bool = [1 if i==attribute_value else 0 for i in attribute_data]
-                #wtd_total_cit[attribute_value] = (tax_data * self.carray('weight') *
-                                                  #attribute_bool).sum()
-                wtd_total_pit[attribute_value] = (tax_data * self.array('weight') *
-                                                  attribute_bool).sum()     
+                if tax_type == 'pit':
+                    wtd_total_tax[attribute_value] = (tax_data * self.array('weight') * attribute_bool).sum()
+                elif tax_type == 'cit':
+                    wtd_total_tax[attribute_value] = (tax_data * self.carray('weight') * attribute_bool).sum()     
         #print(wtd_total_cit)
-        return wtd_total_pit
+        return wtd_total_tax
             
     def weighted_total_cit(self, variable_name, attribute_var=None):
         """
