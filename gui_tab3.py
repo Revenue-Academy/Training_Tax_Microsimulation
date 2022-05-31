@@ -42,6 +42,7 @@ def display_elasticity(self, widget, tax_type, block_1_title_pos_x):
             (self.button_save_elasticity, self.elasticity_widget_dict) = self.tab_elasticity.display_widgets(self.TAB3)
             self.elasticity_widget_dict[1][1].config(values=self.tab_elasticity.policy_options(self.elasticity_json))
             self.button_save_elasticity.configure(command=self.clicked_generate_policy_revenues)
+            #self.button_save_elasticity.configure(command=self.clicked_generate_policy_revenues('rev_behavior'))
         else:
             self.save_inputs()
             self.tab_elasticity.destroy_all_widgets()

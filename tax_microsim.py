@@ -56,7 +56,7 @@ class Application(tk.Frame):
     from guifuncs import get_growfactors_dict, update_grow_factors_csv
     from guifuncs import get_elasticity_dict, update_elasticity
     from gui_tab1 import tab1
-    #from gui_tab1 import tab12
+    from gui_tab1 import initialize_vars
     from gui_tab1 import display_entry
     from gui_tab1 import grid_placement   
     from gui_tab2 import tab2
@@ -391,6 +391,9 @@ class Application(tk.Frame):
         print('selected_dict ', selected_dict)
         return selected_dict
     
+    #def clicked_generate_policy_revenues(self, run_type):
+    #    self.run_core_program(run_type)
+    
     def clicked_generate_policy_revenues(self):
         self.run_core_program('revenue')
 
@@ -403,12 +406,21 @@ class Application(tk.Frame):
         if global_vars['show_error_log']:
             self.logger.clear()
         self.verbose = global_vars['verbose']
-        if run_type=='distribution':
-            self.vars[self.tax_type+'_display_distribution_table'] = 1
+        if run_type=='dist_by_decile':
+            self.vars[self.tax_type+'_display_distribution_table_bydecile'] = 1
+            self.vars[self.tax_type+'_display_distribution_table_byincome'] = 0
             self.vars[self.tax_type+'_display_revenue_table'] = 0
+        elif run_type=='dist_by_income':
+            self.vars[self.tax_type+'_display_distribution_table_bydecile'] = 0
+            self.vars[self.tax_type+'_display_distribution_table_byincome'] = 1
+            self.vars[self.tax_type+'_display_revenue_table'] = 0
+           
+        #elif run_type == 'rev_behavior':
         else:
+            self.vars[self.tax_type+'_display_distribution_table_bydecile'] = 0
+            self.vars[self.tax_type+'_display_distribution_table'] = 0
             self.vars[self.tax_type+'_display_revenue_table'] = 1
-            self.vars[self.tax_type+'_display_distribution_table'] = 0            
+            
         self.save_inputs()
 
         self.block_selected_dict = self.generate_changes_dict(self.block_widget_dict, 
@@ -476,8 +488,8 @@ class Application(tk.Frame):
         self.foo_thread.start()
         self.master.after(20, self.check_thread)
 
-    def clicked_generate_distribution(self, tax_type):        
-        self.run_core_program('distribution')
+    def clicked_generate_distribution(self, run_type):        
+        self.run_core_program(run_type)
             
     def clicked_display_charts(self):
         pass

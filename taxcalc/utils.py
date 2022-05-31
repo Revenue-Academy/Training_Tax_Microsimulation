@@ -358,22 +358,24 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
                 dist_table[col] = np.where(np.isclose(dist_table['weight'],-99.0),0.0, dist_table[col]/dist_table['weight'])
                 #dist_table[col] /= dist_table['weight']
 
-
+    
     # optionally scale and round table entries
     if scaling:
         for col in distribution_vardict['DIST_TABLE_COLUMNS']:
             if col == 'weight':
-                dist_table[col] *= 1e-5
-                dist_table.round({col: 3})
+                dist_table[col] *= 1
+                dist_table.round({col: 0})
             else:
                 if averages:
                     dist_table[col] *= 1
                     dist_table.round({col: 0})
                 else:
-                    dist_table[col] *= 1e-7
-                    dist_table.round({col: 3})
+                    dist_table[col] *= 1e-6
+                    dist_table[col]=dist_table[col].astype(float).round(0)
+                    #dist_table.round({col: 3})
     # return table as Pandas DataFrame
     vdf.sort_index(inplace=True)
+    
     return dist_table
 
 
