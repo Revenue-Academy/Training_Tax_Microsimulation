@@ -171,17 +171,26 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
     def update_values(mydict, k, field_param, field_value, v_year, v_value):
         j=0
         for i in range(len(mydict[k][field_param])):
-            if (v_year[j] == mydict[k][field_param][i]):
+            print(" v_year[j] == mydict[k][field_param][i] ", v_year[j], mydict[k][field_param][i])
+            print("i & j are ", i, j)
+            print(" mydict[k][field_value][i]=v_value[j] ", mydict[k][field_value][i], v_value[j])
+            if (int(v_year[j]) == int(mydict[k][field_param][i])):
+                
+                #print(" v_year[j] == mydict[k][field_param][i] ", v_year[j], mydict[k][field_param][i])
                 mydict[k][field_value][i]=v_value[j]
-                j=j+1
+                #print(" mydict[k][field_value][i]=v_value[j] ", mydict[k][field_value][i], v_value[j])
+                print("my dict k", mydict[k])
+            j=j+1
         return mydict
-    #print('update_dict ', update_dict)
-    #print('mydict ', mydict)
+    print('update_dict ', update_dict)
+    print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']
             v_year = update_dict[i]['selected_year']
-            v_value = update_dict[i]['selected_value']            
+            v_value = update_dict[i]['selected_value']  
+            print("k, v_year, v_value ", k, v_year, v_value)
+            print(" self.attribute_col", self.attribute_columns)
             if len(self.attribute_columns)>0:
                 attribute_value = update_dict[i]['selected_attribute']
                 #mydict[attribute_value][k][field_value]=v_value
@@ -191,7 +200,8 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
             else: # update values only from start_year to end_year
                 mydict = update_values(mydict, k, field_param, field_value, 
                                        v_year, v_value)
-        #print('mydict updated ', mydict)
+        
+        print('mydict updated ', mydict)
         output_dict={}
         if len(self.attribute_columns)>0:
             first_level_keys = list(mydict.keys())
