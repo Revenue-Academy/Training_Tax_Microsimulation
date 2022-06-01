@@ -175,16 +175,16 @@ class super_combo(tk.Frame):
             if (self.width_json==1):
                 self.entry_1_new_x = self.entry_1_x
                 self.entry_1_new_y = self.combo_new_y                
-                self.block_widget_dict[num][2][0] = tk.Entry(tab, width=6, font = self.fontStyle)
+                self.block_widget_dict[num][2][0] = tk.Entry(tab, width=8, font = self.fontStyle)
                 self.block_widget_dict[num][2][0].place(relx = self.entry_1_new_x, 
                                                           rely = self.entry_1_new_y, anchor = "w")                
             else:
                 self.entry_1_new_y = self.combo_new_y
-                self.l4[num]=tk.Label(tab,text=self.field_year, font = self.fontStyle)
+                self.l4[num]=tk.Label(tab,text=self.field_year.capitalize(), font = self.fontStyle)
                 self.l4[num].place(relx = self.entry_1_label_x, 
                          rely = self.entry_1_new_y, anchor = "w")                
                 for i in range(self.width_json):
-                    self.block_widget_dict[num][2][i] = tk.Entry(tab, width=6, font = self.fontStyle)
+                    self.block_widget_dict[num][2][i] = tk.Entry(tab, width=8, font = self.fontStyle)
                     self.entry_1_new_x = self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x 
                     self.block_widget_dict[num][2][i].place(relx = self.entry_1_new_x, 
                                                           rely = self.entry_1_new_y, anchor = "w")
@@ -445,7 +445,11 @@ class super_combo(tk.Frame):
         # boxes as the length of the col_label and its value 
         # will be the col_labels
         self.l4 = {}
-        self.l4[1]=tk.Label(tab,text="Year: ", font = self.fontStyle)
+        if self.elasticity:
+            self.l4[1]=tk.Label(tab,text=self.field_year.capitalize(), font = self.fontStyle)
+        else:
+            self.l4[1]=tk.Label(tab,text="Year: ", font = self.fontStyle)
+        
         self.l4[1].place(relx = self.entry_1_label_x, 
                  rely = self.entry_1_label_y, anchor = "w")
         #print('Year: ', round(self.entry_1_label_x,2), self.entry_1_label_y)
@@ -456,7 +460,7 @@ class super_combo(tk.Frame):
         year = start_year
         for i in range(self.width_json):
             if (year <= end_year):
-                self.block_widget_dict[1][2][i] = tk.Entry(tab, width=6, font = self.fontStyle)
+                self.block_widget_dict[1][2][i] = tk.Entry(tab, width=8, font = self.fontStyle)
                 if (self.width_json==1):
                     self.block_widget_dict[1][2][i].place(relx = self.entry_1_x, 
                                                           rely = self.entry_1_y, anchor = "w")

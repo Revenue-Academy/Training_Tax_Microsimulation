@@ -1,0 +1,627 @@
+{
+  "read": {
+    "Taxpayer_ID": {
+      "required": true,
+      "type": "int",
+      "desc": "Unique positive numeric identifier for filing unit",
+      "form": {
+        "2020": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Year": {
+      "required": true,
+      "type": "int",
+      "desc": "Tax Year",
+      "form": {
+        "2020": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Tax_due": {
+      "required": false,
+      "type": "float",
+      "desc": "Tax Liability",
+      "form": {
+        "2020": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Sector": {
+      "required": false,
+      "type": "string",
+      "desc": "Sector - Hotels, Banks, Oil&Gas, Gen Business",
+      "form": {
+        "2020": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "Yes"
+    },    
+    "Sector_Code": {
+      "required": true,
+      "type": "int",
+      "desc": "Sector - Hotels, Banks, Oil&Gas, Gen Business",
+      "form": {
+        "2020": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Revenues": {
+      "type": "float",
+      "desc": "Business turnover",
+      "form": {
+        "2020": "Item 101 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Other_revenues": {
+      "type": "float",
+      "desc": "Other business receipts",
+      "form": {
+        "2020": "Item 104 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Expenses": {
+      "type": "float",
+      "desc": "Other business expenses",
+      "form": {
+        "2020": "Item 105 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Donations_NGO": {
+      "type": "float",
+      "desc": "Donations to registered NGOs and institutions",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Donations_Others": {
+      "type": "float",
+      "desc": "Donations to registered NGOs and institutions",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Donations_Govt": {
+      "type": "float",
+      "desc": "Donations to registered NGOs and institutions",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Other_additions": {
+      "type": "float",
+      "desc": "Donations to registered NGOs and institutions",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Op_WDV_Bld": {
+      "type": "float",
+      "desc": "Opening WDV of Buildings asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Op_WDV_Intang": {
+      "type": "float",
+      "desc": "Opening WDV of Intangibles asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Op_WDV_Mach": {
+      "type": "float",
+      "desc": "Opening WDV of Intangibles asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Op_WDV_Others": {
+      "type": "float",
+      "desc": "Opening WDV of Other asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Op_WDV_Comp": {
+      "type": "float",
+      "desc": "Opening WDV of Computers asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Add_Bld": {
+      "type": "float",
+      "desc": "Additions to Buildings",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Add_Intang": {
+      "type": "float",
+      "desc": "Additions to Intangibles",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Add_Mach": {
+      "type": "float",
+      "desc": "Additions to Machinary",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Add_Others": {
+      "type": "float",
+      "desc": "Additions to Other assets",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Add_Comp": {
+      "type": "float",
+      "desc": "Additions to Computers",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Excl_Bld": {
+      "type": "float",
+      "desc": "Exclusions from Buildings",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Excl_Intang": {
+      "type": "float",
+      "desc": "Exclusions from Intangibles",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Excl_Mach": {
+      "type": "float",
+      "desc": "Exclusions from Machinary",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Excl_Others": {
+      "type": "float",
+      "desc": "Exclusions Other assets",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Excl_Comp": {
+      "type": "float",
+      "desc": "Exclusions from Computers",
+      "form": {
+        "2020": "carried forward from Table 411B - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Other_deductions": {
+      "type": "float",
+      "desc": "Deductions from total taxable profits other than tax depreciation",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Carried_forward_losses": {
+      "type": "float",
+      "desc": "carried forward losses of past years allowed to be adjusted against taxable profits",
+      "form": {
+        "2020": "Item 311 - carried forward from Table 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Exemptions": {
+      "type": "float",
+      "desc": "exemptions allowed as per tax law",
+      "form": {
+        "2020": "Item 313 - carried forward from Table 414 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Investment_incentive": {
+      "type": "float",
+      "desc": "investment incentive allowed as per tax law",
+      "form": {
+        "2020": "Item 314 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Exchange_rate": {
+      "type": "float",
+      "desc": "Exchange rate used to convert foreign currency to Egyptian Pounds",
+      "form": {
+        "2020": "After Item 317 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag1": {
+      "type": "float",
+      "desc": "Brought forward loss - one years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag2": {
+      "type": "float",
+      "desc": "Brought forward loss - two years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag3": {
+      "type": "float",
+      "desc": "Brought forward loss - three years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag4": {
+      "type": "float",
+      "desc": "Brought forward loss - four years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag5": {
+      "type": "float",
+      "desc": "Brought forward loss - five years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag6": {
+      "type": "float",
+      "desc": "Brought forward loss - six years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag7": {
+      "type": "float",
+      "desc": "Brought forward loss - seven years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag8": {
+      "type": "float",
+      "desc": "Brought forward loss - eight years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag9": {
+      "type": "float",
+      "desc": "Brought forward loss - nine years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Loss_lag10": {
+      "type": "float",
+      "desc": "Brought forward loss - ten years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    }
+  },
+  "calc": {
+    "Net_accounting_profit": {
+      "type": "float",
+      "desc": "computed accounting business profit",
+      "form": {
+        "2020": "Item-106 - Tax Return Legal Persons"
+      }
+    },
+    "Total_additions_to_GP": {
+      "type": "float",
+      "desc": "additions to accounting profit to compute taxable profits",
+      "form": {
+        "2020": "Sum of items 201 to 215 - Tax Return Legal Persons"
+      }
+    },
+    "Total_taxable_profit": {
+      "type": "float",
+      "desc": "Taxable Income after adding back non-allowable expenses to accounting profit",
+      "form": {
+        "2020": "Item 216 - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr": {
+      "type": "float",
+      "desc": "Tax depreciation as per tax law",
+      "form": {
+        "2020": "Sch 411 of Tax Return Legal Persons"
+      }
+    },
+    "Total_deductions": {
+      "type": "float",
+      "desc": "Sum of tax depreciation and other deductions as per tax law",
+      "form": {
+        "2020": "Tax Return Legal Persons"
+      }
+    },
+    "Net_taxable_profit": {
+      "type": "float",
+      "desc": "Taxable Income after allowing deductions as per tax law",
+      "form": {
+        "2020": "Item 309 - Tax Return Legal Persons"
+      }
+    },
+    "Donations_allowed": {
+      "type": "float",
+      "desc": "Donations to registered NGOs and institutions",
+      "form": {
+        "2020": "Item 310 - carried forward from Table 402 - Tax Return Legal Persons"
+      }
+    },
+    "CF_losses": {
+      "type": "float",
+      "desc": "Carried forward losses from past years",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "Tax_base": {
+      "type": "float",
+      "desc": "Net tax base after allowing donations and carried forward losses as per tax law",
+      "form": {
+        "2020": "Item 312 - Tax Return Legal Persons"
+      }
+    },
+    "Net_tax_base": {
+      "type": "float",
+      "desc": "Net tax base after allowing exemptions and investment incentive as per tax law",
+      "form": {
+        "2020": "Item 315 - Tax Return Legal Persons"
+      }
+    },
+    "Net_tax_base_behavior": {
+      "type": "float",
+      "desc": "Taxable Income after allowing for behavioral effect",
+      "form": {
+        "2020": ""
+      }
+    },
+    "Net_tax_base_Egyp_Pounds": {
+      "type": "float",
+      "desc": "Net tax base in Egyptian Pounds if tax is in foreign currency based on exchange rate",
+      "form": {
+        "2020": "Item 315 - Tax Return Legal Persons"
+      }
+    },
+    "citax": {
+      "type": "float",
+      "desc": "tax due on net tax base",
+      "form": {
+        "2020": "010 - Tax Return Legal Persons"
+      }
+    },
+    "newloss1": {
+      "type": "float",
+      "desc": "Carried forward loss - one years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss2": {
+      "type": "float",
+      "desc": "Carried forward loss - two years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss3": {
+      "type": "float",
+      "desc": "Carried forward loss - three years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss4": {
+      "type": "float",
+      "desc": "Carried forward loss - four years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss5": {
+      "type": "float",
+      "desc": "Carried forward loss - five years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss6": {
+      "type": "float",
+      "desc": "Carried forward loss - six years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss7": {
+      "type": "float",
+      "desc": "Carried forward loss - seven years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss8": {
+      "type": "float",
+      "desc": "Carried forward loss - eight years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss9": {
+      "type": "float",
+      "desc": "Carried forward loss - nine years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "newloss10": {
+      "type": "float",
+      "desc": "Carried forward loss - ten years old",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "Used_loss_total": {
+      "type": "float",
+      "desc": "Used loss out of brought forward losses or loss lag 1 to 8",
+      "form": {
+        "2020": "Sch 412 - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr_Bld": {
+      "type": "float",
+      "desc": "Tax depreciation - Buildings",
+      "form": {
+        "2020": "Sch 411B - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr_Intang": {
+      "type": "float",
+      "desc": "Tax depreciation - Intangibles",
+      "form": {
+        "2020": "Sch 411B - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr_Mach": {
+      "type": "float",
+      "desc": "Tax depreciation - Machinary",
+      "form": {
+        "2020": "Sch 411B - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr_Others": {
+      "type": "float",
+      "desc": "Tax depreciation - Other assets",
+      "form": {
+        "2020": "Sch 411B - Tax Return Legal Persons"
+      }
+    },
+    "Tax_depr_Comp": {
+      "type": "float",
+      "desc": "Tax depreciation - Computers",
+      "form": {
+        "2020": "Sch 411B - Tax Return Legal Persons"
+      }
+    },
+    "Cl_WDV_Bld": {
+      "type": "float",
+      "desc": "Closing WDV of Buildings asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      }
+    },
+    "Cl_WDV_Intang": {
+      "type": "float",
+      "desc": "Closing WDV of Intangibles asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      }
+    },
+    "Cl_WDV_Mach": {
+      "type": "float",
+      "desc": "Closing WDV of Intangibles asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      }
+    },
+    "Cl_WDV_Others": {
+      "type": "float",
+      "desc": "Closing WDV of Other asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      }
+    },
+    "Cl_WDV_Comp": {
+      "type": "float",
+      "desc": "Closing WDV of Computers asset class",
+      "form": {
+        "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
+      }
+    }
+  }
+}
