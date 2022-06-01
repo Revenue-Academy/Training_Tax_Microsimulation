@@ -64,10 +64,13 @@ def initialize_vars(self):
     self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
     #self.vars['start_year'] = 2018
     #elif tax_type == 'cit':
-    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-    self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
-    self.vars['start_year'] = 2020
+    # self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+    # self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt4.csv"
+    # self.vars['start_year'] = 2020
     
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_training.json"    
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_cit_training.csv"
+    self.vars['start_year'] = 2020
 
     
     ##### NOTE 'Year' is a key word for year in records variable
@@ -88,6 +91,7 @@ def initialize_vars(self):
     self.vars['pit_functions_filename'] = "functions_pit_training.py"
     self.vars['pit_function_names_filename'] = "function_names_pit_training.json"
 
+    '''
     self.vars['cit_data_filename'] = "cit_egypt.csv"
     self.vars['cit_weights_filename'] = "cit_weights_egypt.csv"
     self.vars['cit_records_variables_filename'] = "records_variables_cit_egypt.json"    
@@ -95,7 +99,15 @@ def initialize_vars(self):
     self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
     self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
-
+    '''
+    self.vars['cit_data_filename'] = "cit_data_training.csv"
+    self.vars['cit_weights_filename'] = "cit_weights_training.csv"
+    self.vars['cit_records_variables_filename'] = "records_variables_cit_training.json"    
+    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_training.json"
+    self.vars['cit_elasticity_filename'] = "elasticity_cit_training.json"
+    self.vars['cit_functions_filename'] = "functions_cit_training.py"
+    self.vars['cit_function_names_filename'] = "function_names_cit_training.json"
+   
     self.vars['cit_max_lag_years'] = 10
 
     self.vars['vat_data_filename'] = "vat.csv"
@@ -230,10 +242,14 @@ def display_entry(self, widget, tax_type):
             self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_training.json"
             self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_training.csv"
             self.vars['start_year'] = 2018
+            self.vars['SALARY_VARIABLE'] = "gross_i_w"
         elif tax_type == 'cit':
-            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
-            self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
+            #self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_egypt.json"    
+            #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
+            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_training.json"    
+            self.vars['GROWFACTORS_FILENAME'] = "growfactors_cit_training.csv"
             self.vars['start_year'] = 2020
+            self.vars['SALARY_VARIABLE'] = "SALARY"
         
         self.grid_placement(block_1_title_pos_x)
         self.l1[tax_type]=Label(self.TAB1,text="Data Inputs "+ tax_type.upper(),

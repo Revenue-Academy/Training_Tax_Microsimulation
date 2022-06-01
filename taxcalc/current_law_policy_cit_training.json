@@ -1,0 +1,562 @@
+{
+    "_cit_rate_oil": {
+        "long_name": "rate at which corporates in Oil&Gas sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.4055],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_cit_rate_oil_curr_law": {
+        "long_name": "rate at which corporates in Oil&Gas sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.4055],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },    
+    "_cit_rate_other": {
+        "long_name": "rate at which corporates in non-Oil&Gas sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_cit_rate_other_curr_law": {
+        "long_name": "rate at which corporates in non-Oil&Gas sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },    
+    "_cit_rate_banks": {
+        "long_name": "rate at which corporates in banking sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_cit_rate_banks_curr_law": {
+        "long_name": "rate at which corporates in banking sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },    
+    "_cit_rate_hotels": {
+        "long_name": "rate at which corporates in Hotels sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_cit_rate_hotels_curr_law": {
+        "long_name": "rate at which corporates in Hotels sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },    
+    "_cit_rate_genbus": {
+        "long_name": "rate at which corporates in General Business sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_cit_rate_genbus_curr_law": {
+        "long_name": "rate at which corporates in General Business sector are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.225],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    }, 
+    "_mat_rate": {
+        "long_name": "rate at which corporates are liable for mat",
+        "description": "minimum alternate tax rate",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Sector",
+        "col_label": ["Hotels", "Banks", "Gen Business"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.0],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    }, 
+    "_Donations_NGO_rate": {
+        "long_name": "Deduction rate for donations to NGO",
+        "description": "as % of Net taxable profits",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+             "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.09091],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_Donations_Others_rate": {
+        "long_name": "Deduction rate for donations to Others",
+        "description": "as % of Total taxable profits",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+             "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.0],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_Donations_Govt_rate": {
+        "long_name": "Deduction rate for donations to Govt",
+        "description": "as % of Donations to Govt",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+             "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [1.0],
+        "range": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_Loss_CFLimit": {
+        "long_name": "Loss carryforward limit (years)",
+        "description": "Number of years for loss carryforward",
+        "itr_ref": "Tax Law",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": ["2020"],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [5],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_depr_bld": {
+        "long_name": "Depreciation Rate for first block for Buildings",
+        "description": "Depreciation Rate for first block for Buildings",
+        "itr_ref": "Depreciation rate",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.05],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_depr_intang": {
+        "long_name": "Depreciation Rate for Intangibles",
+        "description": "Depreciation Rate for Intangibles",
+        "itr_ref": "Depreciation rate",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.1],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_depr_mach": {
+        "long_name": "Depreciation Rate for Machinary",
+        "description": "Depreciation Rate for Machinary",
+        "itr_ref": "Depreciation rate",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.25],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_depr_others": {
+        "long_name": "Depreciation Rate for Other assets",
+        "description": "Depreciation Rate for Other assets",
+        "itr_ref": "Depreciation rate",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.25],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_depr_comp": {
+        "long_name": "Depreciation Rate for Computers",
+        "description": "Depreciation Rate for Computers",
+        "itr_ref": "Depreciation rate",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Value",
+        "col_label": ["Value"],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [0.5],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+"_elasticity_cit_taxable_income_value": {
+        "long_name": "Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+                "2020"
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Elasticity",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [      
+                [0.0,
+                0.0,
+                0.0]
+      ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+"_elasticity_cit_taxable_income_threshold": {
+        "long_name": "Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+                100000,
+                1000000,
+                9e99
+        ],
+        "start_year": 2020,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Elasticity",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [      
+                [
+                100000,
+                1000000,
+                9e99
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    } 
+}
