@@ -1,0 +1,196 @@
+{
+	"read": {
+		"id_n": {
+			"required": true,
+			"type": "int",
+			"desc": "Unique positive numeric identifier for filing unit",
+			"form": {
+				"2021": "Private Info"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"Year": {
+			"required": true,
+			"type": "int",
+			"desc": "Assessment Year",
+			"form": {
+				"2021": "private info"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"amount_rcvd": {
+			"type": "float",
+			"desc": "Gross income salary",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"salary": {
+			"type": "float",
+			"desc": "Gross income salary",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"other_income": {
+			"type": "float",
+			"desc": "Gross income from other sources",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"deduction": {
+			"type": "float",
+			"desc": "Deductions by Armenia laws",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"income_tax": {
+			"type": "float",
+			"desc": "Personal income tax",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"social_fee": {
+			"type": "float",
+			"desc": "Social security contributions",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"civil_contract": {
+			"type": "float",
+			"desc": "Gross income from civil contracts ",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		},
+		"total_income": {
+			"type": "float",
+			"desc": "Gross income from civil contracts ",
+			"form": {
+				"2021": "pit_armenia"
+			},
+			"cross_year": "No",
+			"attribute": "No"
+		}
+	},
+	"calc": {
+		"min_threshold_social_p": {
+			"type": "float",
+			"desc": "Minimum base_wage",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"max_threshold_social_p": {
+			"type": "float",
+			"desc": "Maximum base_wage",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"deduction_amount_social_p": {
+			"type": "float",
+			"desc": "Minimum social security contributions calculated from min_base_wage",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"base_social": {
+			"type": "float",
+			"desc": "Maximum social security contributions calculated from max_base_salary",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"max_cap_social_p": {
+    			"type": "float",
+    			"desc": "Maximum social security contributions calculated from max_base_salary",
+    			"form": {
+    				"2021": "pit_armenia"
+    			}
+    	},
+		"cal_ssc": {
+			"type": "float",
+			"desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"calculation_base": {
+			"type": "int",
+			"desc": "Calculated personal allowance change (%) if personal allowance change is introduced",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"pit_calc": {
+			"type": "float",
+			"desc": "Tax base calculated for wages",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"te": {
+			"type": "float",
+			"desc": "Tax base calculated for wages",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"tti_w_I": {
+			"type": "float",
+			"desc": "Pit liability from wages (pit-ssc-personal allowance)*tax rate",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"tti_w_I_behavior": {
+			"type": "int",
+			"desc": "Tax Expenditures imputed",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"pit_w_I": {
+			"type": "float",
+			"desc": "Tax base calulated for income from agriculture and medicine",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"pitax": {
+			"type": "float",
+			"desc": "Total post tax income",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		},
+		"total_net_income": {
+			"type": "float",
+			"desc": "Total post tax income",
+			"form": {
+				"2021": "pit_armenia"
+			}
+		}
+	}
+}
