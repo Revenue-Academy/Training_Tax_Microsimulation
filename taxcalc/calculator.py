@@ -234,7 +234,10 @@ class Calculator(object):
                           if v['attribute'] == 'Yes')                     
             else:
                 raise ValueError('must specify records as a CorpRecords object')
-        if self.records is not None:        
+        if self.records is not None:
+            #print('self.__policy.current_year ', self.__policy.current_year)
+            #print('self.__records.data_year ', self.__records.data_year)
+            #print('self.__records.current_year ', self.__records.current_year)
             if self.__policy.current_year < self.__records.data_year:
                 self.__policy.set_year(self.__records.data_year)        
             current_year_is_data_year = (
@@ -407,7 +410,7 @@ class Calculator(object):
         #f='net_salary_income("self.__policy", "self.__records")'       
         if self.records is not None:
             for i in range(len(self.pit_function_names)):
-                print('function name ', self.pit_function_names[str(i)])
+                #print('function name ', self.pit_function_names[str(i)])
                 func_name = globals()[self.pit_function_names[str(i)]]
                 #print(function_names[str(i)])
                 func_name(self.__policy, self.__records)

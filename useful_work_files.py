@@ -43,19 +43,18 @@ def edit_parameter(json_filename):
 
         
 def make_functions_dict():
-    func_list = ['Net_accounting_profit', 'Total_additions_to_GP',
-                 'Total_taxable_profit','Op_WDV_depr','Tax_depr_Bld', 
-                 'Tax_depr_Intang','Tax_depr_Mach','Tax_depr_Others', 
-                 'Tax_depr_Comp',  'Tax_depreciation', 'Cl_WDV_depr',
-                 'Total_deductions','Net_taxable_profit', 
-                 'Net_taxable_profit_behavior',  'Donations_allowed',
-                 'Carried_forward_losses', 'Tax_base_CF_losses', 
-                 'Net_tax_base','Net_tax_base_Egyp_Pounds',  'cit_liability']
+    func_list = ['calc_EmpInc','calc_BussInc','calc_InvestIncome','calc_OtherIncome',
+                 'calc_AssessibleIncome','calc_ReliefEmpIncome','calc_ReliefForeignIncome',
+                 'calc_ReliefRentalIncome','calc_ReliefInterestIncome','calc_PersonalRelief',
+                 'calc_TotalRelief','calc_QualifyingPaymentAllowed','calc_TotalDudAsseIncome',
+                 'calc_TaxableIncome','calc_TaxTerminalBenefit','calc_TaxIncomeBetting',
+                 'calc_CapitalGains','calc_BalanceIncome','calc_BalanceIncomeProgressive',
+                 'calc_tti_behavior','calc_pit_progressive','calc_TotalTaxPayable']
     
     func_dict = {}
     for i in range(len(func_list)):
         func_dict[i] = func_list[i]
-    with open('taxcalc/cit_function_names_egypt.json', 'w') as f:
+    with open('taxcalc/function_names_srilanka.json', 'w') as f:
         f.write(json.dumps(func_dict, indent=2))
     return func_dict
 

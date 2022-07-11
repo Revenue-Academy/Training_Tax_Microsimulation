@@ -15,7 +15,7 @@ def save_inputs(self):
         
 def save_widget_inputs(self):
     self.vars = self.get_inputs()
-    print('self.vars', self.vars)
+    #print('self.vars', self.vars)
     tax_list = []
     if self.vars['pit']:
         tax_list = tax_list + ['pit']
@@ -170,7 +170,17 @@ def make_grow_factors_csv(mydict, index, value, filename):
 def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value, filename):    
     def update_values(mydict, k, field_param, field_value, v_year, v_value):
         j=0
-        for i in range(len(mydict[k][field_param])):
+        #print('v_year ', v_year)
+        #print('mydict[k][field_param] ', mydict[k][field_param])        
+        for i in range(len(mydict[k][field_param])-1):
+            #print('i ', i)
+            #print('j ', j)
+            #print('len(v_year)', len(v_year))
+            #print('v_year[j] ', v_year[j])
+            #print('mydict[k][field_param][i] ', mydict[k][field_param][i])            
+            if j==(len(v_year)-1):
+                #print("I am here")
+                break
             if (int(v_year[j]) == int(mydict[k][field_param][i])):             
                 mydict[k][field_value][i]=v_value[j]
                 j=j+1

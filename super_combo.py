@@ -29,8 +29,8 @@ class super_combo(tk.Frame):
     def __init__(self, tab, input_json, field_year, field_value, position_x, 
                  position_y, attribute_value=None, 
                  selected_attribute_widget=None,
-                 editable_field_year=None, elasticity=None):
-        
+                 editable_field_year=None, elasticity=None, num_combos=None):
+
         if elasticity is not None:
             self.elasticity=1
         else:
@@ -51,8 +51,11 @@ class super_combo(tk.Frame):
         self.field_year=field_year
         self.field_value=field_value
         self.width_json = 0
-        if len(self.input_json)>0:
-            self.width_json = len(self.input_json[list(self.input_json.keys())[0]][field_year])            
+        if num_combos is not None:
+            self.width_json = num_combos
+        else:
+            if len(self.input_json)>0:
+                self.width_json = len(self.input_json[list(self.input_json.keys())[0]][field_year])                       
         grid_placement(self, 0.15)       
         self.pos_x = position_x
         self.pos_y = position_y
@@ -380,13 +383,20 @@ class super_combo(tk.Frame):
         # i is the counter for the widgets i.e. start year to end year for growfactors
         # width is three for elasticity with three thresholds
         i=0 
-        for j in range(self.width_json):
-            param = int(self.input_json['_'+ selected_item][self.field_year][j])            
-            value = self.input_json['_'+ selected_item][self.field_value][j]
-            #print('param ', param)             
+        for j in range(self.width_json):            
+            if (self.width_json==1):
+                param = int(self.input_json['_'+ selected_item][self.field_year][-1])                
+                value = self.input_json['_'+ selected_item][self.field_value][-1]
+            else:
+                param = int(self.input_json['_'+ selected_item][self.field_year][j])                
+                value = self.input_json['_'+ selected_item][self.field_value][j]            
+            #print('param ', param)
+            #print('value ', value)
             if (self.width_json==1) and not self.elasticity:
                 if (param < start_year):
-                    param = start_year     
+                    param = start_year
+            #print('updated param ', param)
+            #print('value ', value)
             # start year and end year condition does not apply for elasticity
             if self.elasticity or ((param >= start_year) and (param <= end_year)):        
                 selected_param[i] = param

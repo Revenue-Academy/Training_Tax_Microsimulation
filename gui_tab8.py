@@ -72,20 +72,29 @@ def tab8(self):
              font = self.fontStyle_title)
     self.TAB8_root_title.place(relx = self.title_pos_x, rely = self.title_pos_y, anchor = "n")
     
-    self.TAB8_root_title=Label(self.TAB8,text="Settings",
+    self.TAB8_root_title=tk.Label(self.TAB8,text="Settings",
              font = self.fontStyle_sub_title)
     self.TAB8_root_title.place(relx = self.title_pos_x, rely = self.sub_title_pos_y, anchor = "n")
     
     self.vars['show_error_log'] = 0
     self.vars['verbose'] = 0
+    self.vars['percent_gdp'] = 0
+    
+    self.percent_gdp_chk = tk.IntVar()
+    self.percent_gdp_chk_box = tk.Checkbutton(self.TAB8, text='Table in % of GDP', 
+                                      font = self.fontStyle, variable=self.percent_gdp_chk,
+                                      command=lambda: self.input_checkbox(self.percent_gdp_chk, 'percent_gdp'))
+    self.percent_gdp_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
+    
     self.error_chk = tk.IntVar()
     self.error_chk_box = tk.Checkbutton(self.TAB8, text='Show Error Log', 
                                       font = self.fontStyle, variable=self.error_chk,
                                       command=lambda: self.display_error(self.error_chk, 'show_error_log'))
-    self.error_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
+    self.error_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y+self.block_entry_entry_gap_y, anchor = "w")
+    
     self.verbose_chk = tk.IntVar()
     self.verbose_chk_box = tk.Checkbutton(self.TAB8, text='Verbose', 
                                       font = self.fontStyle, variable=self.verbose_chk,
                                       command=lambda: self.input_checkbox(self.verbose_chk, 'verbose'))
-    self.verbose_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y+self.block_entry_entry_gap_y, anchor = "w")
+    self.verbose_chk_box.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y+2*self.block_entry_entry_gap_y, anchor = "w")
     

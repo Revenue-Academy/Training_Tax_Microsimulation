@@ -276,7 +276,7 @@ class Application(tk.Frame):
                     self.entry_salary_variable[tax_type].config(values=self.show_salary_options(tax_type))
             if (varname=='DEFAULTS_FILENAME'):
                 if filename != old_filename:
-                    print('i am here')
+                    print('file changed')
                     self.vars[varname] = filename
                     with open(self.sub_directory+'/'+filename) as f:
                         self.current_law_policy = json.load(f)                  
@@ -297,6 +297,7 @@ class Application(tk.Frame):
             self.vars[varname] = int(widget.get())
         else:
             self.vars[varname] = widget.get()
+        self.save_inputs()
         #print(self.vars[varname])
 
     def input_checkbox(self, widget, varname):
@@ -346,7 +347,7 @@ class Application(tk.Frame):
             if self.verbose:
                 print("Run Completed")
             global_vars = self.get_inputs()
-            print('global_vars[chart_list] ', global_vars['chart_list'])
+            #print('global_vars[chart_list] ', global_vars['chart_list'])
             self.tab6()
             self.chart_combo.config(values=global_vars['chart_list'])
             self.progressbar.stop()
@@ -364,7 +365,7 @@ class Application(tk.Frame):
         #print(widget_dict)
         #print('num_changes ', num_changes)
         for num in range(1, num_changes+1):
-            print('num ', num)
+            #print('num ', num)
             selected_item = widget_dict[num][1].get()
             if (selected_item!=''):
                 selected_dict[num]={}            
@@ -388,7 +389,7 @@ class Application(tk.Frame):
                         if int(selected_dict[num]['selected_year'][i]) > int(end_year):
                             showinfo("Warning", "Reform Year is later than End Year")            
                             return
-        print('selected_dict ', selected_dict)
+        print('Changes to Parameters ', selected_dict)
         return selected_dict
     
     #def clicked_generate_policy_revenues(self, run_type):

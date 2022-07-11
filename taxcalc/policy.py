@@ -59,7 +59,7 @@ class Policy(ParametersBase):
     LAST_BUDGET_YEAR = 2023  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
     """
-    JSON_START_YEAR = int(vars['start_year'])  # remains the same unless earlier data added
+    JSON_START_YEAR = int(vars['data_start_year'])  # remains the same unless earlier data added
     LAST_KNOWN_YEAR = int(vars['start_year'])  # last year for which indexed param vals are known
     LAST_BUDGET_YEAR = int(vars['end_year'])  # increases by one for every new assessment year
     DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1    
@@ -78,10 +78,10 @@ class Policy(ParametersBase):
         vars = json.load(f)
         self.verbose = vars['verbose']
 
-        JSON_START_YEAR = int(vars['start_year'])  # remains the same unless earlier data added
+        JSON_START_YEAR = int(vars['data_start_year'])  # remains the same unless earlier data added
         LAST_KNOWN_YEAR = int(vars['start_year'])  # last year for which indexed param vals are known
         LAST_BUDGET_YEAR = int(vars['end_year'])  # increases by one for every new assessment year
-        print('LAST_BUDGET_YEAR ', LAST_BUDGET_YEAR)
+        #print('LAST_BUDGET_YEAR ', LAST_BUDGET_YEAR)
         DEFAULT_NUM_YEARS = LAST_BUDGET_YEAR - JSON_START_YEAR + 1
         start_year=JSON_START_YEAR
         num_years = DEFAULT_NUM_YEARS
@@ -109,9 +109,9 @@ class Policy(ParametersBase):
 
         syr = start_year     
         lyr = start_year + num_years - 1
-        print('start_year ', start_year)
-        print('num_years ', num_years)
-        print('last_year ', lyr)     
+        #print('start_year ', start_year)
+        #print('num_years ', num_years)
+        #print('last_year ', lyr)     
         self._inflation_rates = self._gfactors.price_inflation_rates(syr, lyr)
         self._wage_growth_rates = self._gfactors.wage_growth_rates(syr, lyr, SALARY_VARIABLE)
 

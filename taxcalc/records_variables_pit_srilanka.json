@@ -1,0 +1,456 @@
+{
+  "read": {
+    "id_n": {
+      "required": true,
+      "type": "int",
+      "desc": "Unique positive numeric identifier for filing unit",
+      "form": {
+        "2018": "Asmt_IIT_001_E"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Year": {
+      "required": true,
+      "type": "int",
+      "desc": "Assessment Year",
+      "form": {
+        "2018": "Asmt_IIT_001_E"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "EmpIncCages10": {
+      "type": "float",
+      "desc": "Employment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 10)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "EmpIncCages10_PAYE": {
+      "type": "float",
+      "desc": "Employment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 10)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },		
+    "EmpIncRemuneration": {
+      "type": "float",
+      "desc": "Employment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 10)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TerminalBenefit": {
+      "type": "float",
+      "desc": "TerminalBenefit",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "BussIncDomestic": {
+      "type": "float",
+      "desc": "Business Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 20)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "BussIncForeign": {
+      "type": "float",
+      "desc": "Business Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 20)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "InterestIncomeSenior": {
+      "type": "float",
+      "desc": "Investment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 30)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "RentalIncome": {
+      "type": "float",
+      "desc": "Investment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 30)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "CapitalGains": {
+      "type": "float",
+      "desc": "Investment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 30)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+	"InvestIncomeOther": {
+      "type": "float",
+      "desc": "Investment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 30)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "OtherIncomeBetting": {
+      "type": "float",
+      "desc": "Other Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "OtherIncomeNonBetting": {
+      "type": "float",
+      "desc": "Other Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefEmpIncomeCages60": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "PAYE_Exempt_Excl": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "PAYE_deducted": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "ReliefForeignIncomeCages70": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefRentIncomeCages80": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefInterestIncomeCages90": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "PersonalReliefCages100": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "QualifyingPaymentCages120": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TotalReliefCages110": {
+      "type": "float",
+      "desc": "TotalReliefCages110",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Donations": {
+      "type": "float",
+      "desc": "Donations",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxFinalWHTCages180": {
+      "type": "float",
+      "desc": "Total personal allowance",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TotalTaxPayableCages190": {
+      "type": "float",
+      "desc": "Total Tax Payable",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "TotalExemptedIncome": {
+      "type": "float",
+      "desc": "Exempted Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 230)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    }
+  },
+  "calc": {
+    "EmpInc": {
+      "type": "float",
+      "desc": "Employment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 10)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "BussInc": {
+      "type": "float",
+      "desc": "Business Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 20)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "InvestIncome": {
+      "type": "float",
+      "desc": "Investment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 30)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "OtherIncome": {
+      "type": "float",
+      "desc": "Other Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 40)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	  
+    "AssessibleIncome": {
+      "type": "float",
+      "desc": "Assessible Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage 50)"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefEmpIncomeAllowed": {
+      "type": "float",
+      "desc": "Relief for Employment Income",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefForeignIncomeAllowed": {
+      "type": "float",
+      "desc": "ReliefForeignIncomeAllowed",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefRentalIncomeAllowed": {
+      "type": "float",
+      "desc": "ReliefForeignIncomeAllowed",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ReliefInterestIncomeAllowed": {
+      "type": "float",
+      "desc": "ReliefInterestIncomeAllowed",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "PersonalReliefAllowed": {
+      "type": "float",
+      "desc": "PersonalReliefAllowed",
+      "form": {
+        "2019": "Obtained from data on Salaries & codes"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TotalRelief": {
+      "type": "float",
+      "desc": "TotalRelief",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "QualifyingPaymentAllowed": {
+      "type": "float",
+      "desc": "QualifyingPaymentAllowed",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TotalDudAsseIncome": {
+      "type": "float",
+      "desc": "TotalDudAsseIncome",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxableIncome": {
+      "type": "float",
+      "desc": "TaxableIncome",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxTerminalBenefit": {
+      "type": "float",
+      "desc": "TaxTerminalBenefit",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxIncomeBetting": {
+      "type": "float",
+      "desc": "TaxIncomeBetting",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "TaxRealizationIncAsset": {
+      "type": "float",
+      "desc": "TaxRealizationIncAsset",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "BalanceIncome": {
+      "type": "float",
+      "desc": "BalanceIncome",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "tti": {
+      "type": "float",
+      "desc": "Balance Income Progressive Rates",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "BalanceIncomeProgressiveBehavior": {
+      "type": "float",
+      "desc": "Balance Income at Progressive Rates after behavior adjusument",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxBalanceIncomeProgressive": {
+      "type": "float",
+      "desc": "TaxBalanceIncomeProgressive",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "TaxBalanceIncome": {
+      "type": "float",
+      "desc": "TaxBalanceIncome",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },	
+    "pitax": {
+      "type": "float",
+      "desc": "PIT liability",
+      "form": {
+        "2018": "Asmt_IIT_001_E (Cage )"
+      }
+    }
+  }
+}
