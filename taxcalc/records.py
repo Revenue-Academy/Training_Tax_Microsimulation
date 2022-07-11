@@ -78,7 +78,7 @@ class Records(object):
     vars = json.load(f)
     #print("vars in records", vars)
     
-    PITCSV_YEAR = int(vars["start_year"])
+    PITCSV_YEAR = int(vars["data_start_year"])
     
     #PITCSV_YEAR = 2017
 

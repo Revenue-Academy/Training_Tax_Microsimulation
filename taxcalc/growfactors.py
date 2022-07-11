@@ -121,7 +121,7 @@ class GrowFactors(object):
         # determine first_year and last_year from gfdf
         #self._first_year = min(gfdf.index)
         #self._last_year = max(gfdf.index)
-        self._first_year = int(global_variables['start_year'])
+        self._first_year = int(global_variables['data_start_year'])
         self._last_year = int(global_variables['end_year'])  
         # set gfdf as attribute of class
         self.gfdf = pd.DataFrame()
@@ -161,7 +161,7 @@ class GrowFactors(object):
             msg = 'last_year={} > GrowFactors.last_year={}'
             raise ValueError(msg.format(lastyear, self.last_year))
 
-        print(self.gfdf)
+        #print(self.gfdf)
         # pylint: disable=no-member
         rates = [round((self.gfdf['CPI'][cyr] - 1.0), 4)
                  for cyr in range(firstyear, lastyear + 1)]

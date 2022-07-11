@@ -18,6 +18,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from matplotlib import rcParams
+from matplotlib.ticker import NullFormatter
 rcParams.update({'figure.autolayout': True})
 import numpy as np
 #from taxcalc import *
@@ -77,7 +78,10 @@ def tab6(self):
     # self.pic.place(relx = 0.45, rely = 0.2, anchor = "nw")
     # self.pic.image = self.image                                                          
 
-def display_chart(self, event, global_vars):
+def display_chart(self, event, global_vars):    
+    def formatter(x, pos):
+        return str(round(x / 1e6, 1))
+        
     self.image = ImageTk.PhotoImage(Image.open("blank.png"))
     self.pic = tk.Label(self.TAB6,image=self.image)
     self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
@@ -85,11 +89,11 @@ def display_chart(self, event, global_vars):
     #self.selected_attribute_chart = self.attribute_selection.get()
     selected_chart = self.chart_selection.get()
     
-    print('selected_chart ', selected_chart)
+    #print('selected_chart ', selected_chart)
     #tax_type = selected_chart[:3]
     #f = open('global_vars.json')
     #global_vars = json.load(f)
-    print('global vars', global_vars)
+    #print('global vars', global_vars)
     #tax_type = selected_chart[:3]
     if global_vars['pit']:
         tax_type = 'pit'
@@ -97,7 +101,9 @@ def display_chart(self, event, global_vars):
         tax_type = 'cit'
     else:
         tax_type = 'pit'
-        
+    start_year= global_vars['start_year']
+    data_start_year= global_vars['data_start_year']
+    gini_list = global_vars['gini_list']
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
@@ -115,118 +121,139 @@ def display_chart(self, event, global_vars):
             else:
                 df = df[df.columns[:2]]
                 df.columns=['Current Law', 'Reform']
-             
-                    
-        #if global_vars[tax_type+'_adjust_behavior']:
-        
-        #print('df1 ', df1)
-        #df1 = df1.rename_axis('Year').reset_index()
         df1 = df.rename_axis('Year').reset_index()
-        #print('df1 ', df1)
-        #df1 = df1[1:]
-        #print('df1 after cutting', df1)
         fig, ax = plt.subplots(figsize=(8, 6))
-        #fig = plt.Figure()
-        #ax = fig.add_subplot(figsize=(5, 5))
-        #print('df1 ', df1)
         plt.plot(df1['Year'], df1['Current Law'], color='r', marker='x',
                  label='Current Law')
         plt.plot(df1['Year'], df1['Reform'], color='b', marker='o', 
                  markerfacecolor='None', markeredgecolor='b',
                  label='Reform')
-        #plt.title('Personal Income Tax forecast (in billion MKD) for '+self.selected_attribute_chart)
+        plt.legend()
         plt.title('Personal Income Tax forecast (in billions)')
-        # for index in range(len(year_list)):
-        #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
-        pic_filename1 = "MKD_rev_forecast.png"
+        pic_filename1 = "rev_forecast.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("MKD_rev_forecast.png"))
+        self.image = ImageTk.PhotoImage(Image.open("rev_forecast.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image             
     elif (selected_chart==tax_type+'_distribution_table'):
-        #if global_vars[tax_type+'_distribution_table']:
-        #print('global_vars ', global_vars[tax_type+'_distribution_table'])
         df = pd.read_csv(selected_chart+'.csv', thousands=',') 
         df.drop('Unnamed: 0', axis=1, inplace=True)
         df = df.set_index('index')
-        print('df distribution ', df)
-        #figure(figsize=(8, 8), dpi=200)
-        
+        df.index.names = ['Decile']
         fig, ax = plt.subplots(figsize=(8, 8))  
+        #drop the rows that includes the average and top 1%
         df=df[:-4]            
-        df.plot(kind='bar',y=[df.columns[0], df.columns[3], df.columns[5]],figsize=(7, 7))
-        pic_filename1 = "mkd_dist.png"
+        ax = df.plot(kind='bar',y=['pitax_'+str(data_start_year), 'pitax_'+str(start_year), 'pitax_ref_'+str(start_year)],figsize=(7, 7))
+        ax.set_xlabel("Assessable Income Deciles")
+        ax.yaxis.set_major_formatter(formatter)
+        ax.yaxis.set_minor_formatter(NullFormatter())
+        ax.set_ylabel("Tax Liability in millions")      
+        pic_filename1 = "distribution_chart.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("mkd_dist.png"))
+        self.image = ImageTk.PhotoImage(Image.open("distribution_chart.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image
     
     elif (selected_chart==tax_type+'_distribution_table_top1'):
-        #if global_vars[tax_type+'_distribution_table']:
-        #print('global_vars ', global_vars[tax_type+'_distribution_table'])
         df = pd.read_csv(selected_chart+'.csv', thousands=',') 
         df.drop('Unnamed: 0', axis=1, inplace=True)
         df = df.set_index('index')
-        print('df distribution ', df)
-        #figure(figsize=(8, 8), dpi=200)
-        
+        df.index.names = ['Decile']
         fig, ax = plt.subplots(figsize=(8, 8))              
-        df.plot(kind='bar',y=[df.columns[0], df.columns[3], df.columns[5]],figsize=(7, 7))
-        pic_filename1 = "mkd_dist.png"
+        ax=df.plot(kind='bar',y=['pitax_'+str(data_start_year), 'pitax_'+str(start_year), 'pitax_ref_'+str(start_year)],figsize=(7, 7))       
+        ax.set_xlabel("Assessable Income Deciles")
+        ax.yaxis.set_major_formatter(formatter)
+        ax.yaxis.set_minor_formatter(NullFormatter())
+        ax.set_ylabel("Tax Liability in millions")        
+        pic_filename1 = "distribution_chart_top.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("mkd_dist.png"))
+        self.image = ImageTk.PhotoImage(Image.open("distribution_chart_top.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image
     
     elif (selected_chart==tax_type+'_distribution_table_income_bins'):
-        #if global_vars[tax_type+'_distribution_table']:
-        #print('global_vars ', global_vars[tax_type+'_distribution_table'])
         df = pd.read_csv(selected_chart+'.csv', thousands=',') 
         df.drop('Unnamed: 0', axis=1, inplace=True)
         df = df.set_index('index')
-        df1=df[df.columns[0]][2:][:-1]
+        df.index.names = ['Income Group']
+        #df1=df[df.columns[0]][2:][:-1]
+        df1 = df[['pitax_'+str(start_year),'pitax_ref_'+str(start_year)]][2:][:-1]
         #print('df1 is ', df1)
-        df1['pct'] = df1/df1.sum()
-        #print('df1 pct is ', df1['pct'])
-        fig, ax = plt.subplots(figsize=(8, 8))      
-        ax.pie(df1.pct, labels=df1.index[:-1], autopct='%1.1f%%', startangle=90)
-        ax.set_title('Distribution of tax collection by income levels')
-        ax.legend(fontsize='small')
-        pic_filename1 = "mkd_dist.png"
+        df1['pct1'] = df1['pitax_'+str(start_year)]/df1['pitax_'+str(start_year)].sum()
+        df1['pct2'] = df1['pitax_ref_'+str(start_year)]/df1['pitax_ref_'+str(start_year)].sum()
+        labels1 = []
+        for i in range(len(df1['pct1'])):
+            if df1['pct1'][i]<0.05:
+                labels1=labels1+['']
+            else:
+                labels1=labels1+[df1.index[i]]
+            
+        fig, (ax1,ax2) = plt.subplots(1,2,figsize=(10,7)) #ax1,ax2 refer to your two pies
+        w1,l1,p1 = ax1.pie(df1.pct1,labels=labels1,autopct = '%1.1f%%', startangle=90, pctdistance=1) #plot first pie
+        pctdists = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3, 0.3]
+        for t,d in zip(p1, pctdists):
+            xi,yi = t.get_position()
+            ri = np.sqrt(xi**2+yi**2)
+            phi = np.arctan2(yi,xi)
+            x = d*ri*np.cos(phi)
+            y = d*ri*np.sin(phi)
+            t.set_position((x,y))
+        ax1.set_title('Under Current Law')
+        ax1.legend(df1.index, fontsize='small',bbox_to_anchor=(1.1, 1.0))  
+        labels2 = []
+        for i in range(len(df1['pct2'])):
+            if df1['pct2'][i]<0.05:
+                labels2=labels2+['']
+            else:
+                labels2=labels2+[df1.index[i]]
+                
+        w2,l2,p2 = ax2.pie(df1.pct2,labels=labels2,autopct = '%1.1f%%', startangle=90, pctdistance=1) #plot first pie
+        for t,d in zip(p2, pctdists):
+            xi,yi = t.get_position()
+            ri = np.sqrt(xi**2+yi**2)
+            phi = np.arctan2(yi,xi)
+            x = d*ri*np.cos(phi)
+            y = d*ri*np.sin(phi)
+            t.set_position((x,y))        
+        ax2.set_title('Under Reform')
+      
+        fig.suptitle('Contribution to Tax Revenue by Income Groups in '+str(start_year))
+        pic_filename1 = "tax_contribution.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("mkd_dist.png"))
+        self.image = ImageTk.PhotoImage(Image.open("tax_contribution.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image
         
-    elif (selected_chart==tax_type+'_etr'):
-        
+    elif (selected_chart==tax_type+'_etr'):        
         df = pd.read_csv(selected_chart+'.csv', index_col=0)
-        #df = df[['ETR', 'ETR_ref']]
-        
+        #gini_list =  [0.512656785663004, 0.48923307967360324, 0.48409656284722513]
+        #df = pd.read_csv('pit_etr'+'.csv', index_col=0)        
         df = df[:-1]
         df['ETR'] = np.where(df['ETR']>1, np.nan, df['ETR'])
-        df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])            
+        df['ETR_ref'] = np.where(df['ETR_ref']>1, np.nan, df['ETR_ref'])
+        maxy = max(df['ETR'].max(), df['ETR_ref'].max())         
         df = df.reset_index()
         fig, ax = plt.subplots(figsize=(8, 6))
-        df.plot(kind="line", x='index', y=['ETR', 'ETR_ref'], color=["b", "g"], label=["ETR", "ETR_reform"])   
-        #df.plot(kind="line", x='index', y='ETR_ref', color="g", label="ETR_reform")
-        #df.plot(kind="line", x = 'index' , y=, color="r", label="ETR under Reform", ax=ax)  
+        ax=df.plot(kind="line", x='index', y=['ETR', 'ETR_ref'], color=["r", "b"], label=["ETR "+str(start_year), "ETR Under Reform "+str(start_year)]) 
         #col = ['r', 'b', 'y', 'c', 'm', 'k', 'g', 'r', 'b', 'y']
-               
-        #fig = plt.Figure()
-        #ax = fig.add_subplot(figsize=(5, 5))
-        ax.set_xlabel('Percentile')
-        plt.xticks(df.index[::5])
-        ax.set_title('Effective Tax Rates by Percentile')
-        # for index in range(len(year_list)):
-        #     ax.text(year_list[index], wt_cit[index], wt_cit[index], size=12)
-        pic_filename1 = "egypt_etr.png"
+        #ax.set_xlabel('Percentile')
+        ax.set_xticks(np.arange(0, 101, 10))
+        ax.set_xticklabels(list(df.index[::10])+[100])       
+        ax.set_title('Effective Tax Rates (ETR) by Percentile')
+        ax.set_xlabel("Assessable Income Percentile")
+        gini_text0 = str(start_year)+' Pre Tax Gini                        : '+ str(round(gini_list[0],3))
+        gini_text1 = str(start_year)+' Post Tax Gini(Current Law): '+ str(round(gini_list[1],3))
+        gini_text2 = str(start_year)+' Post Tax Gini (Reform)       : '+ str(round(gini_list[2],3))
+        ax.text(5, 5.5*(maxy/10), gini_text0, fontsize = 8)
+        ax.text(5, 5*(maxy/10), gini_text1, fontsize = 8)
+        ax.text(5, 4.5*(maxy/10), gini_text2, fontsize = 8)
+        pic_filename1 = "etr.png"
         plt.savefig(pic_filename1)
-        self.image = ImageTk.PhotoImage(Image.open("egypt_etr.png"))
+        self.image = ImageTk.PhotoImage(Image.open("etr.png"))
         self.pic = tk.Label(self.TAB6,image=self.image)
         self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
         self.pic.image = self.image       

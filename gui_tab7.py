@@ -52,8 +52,13 @@ def tab7(self):
         #print('ATTRIBUTE_READ_VARS ', self.ATTRIBUTE_READ_VARS)
         #print('self.growfactors ', self.growfactors)
         #self.year_value_pairs_growfactors_dict = len(self.growfactors[list(self.growfactors.keys())[0]]['Year'])
-
-    self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 'Value', 0.01, 0.15, attribute_value, self.selected_attribute_widget, editable_field_year=0)
+    
+    growfactors_combo_width = int(self.vars['end_year'])-int(self.vars['start_year']) + 1
+    self.tab_growfactors = super_combo(self.TAB7, self.growfactors, 'Year', 
+                                       'Value', 0.01, 0.15, attribute_value, 
+                                       self.selected_attribute_widget, 
+                                       editable_field_year=0, 
+                                       num_combos=growfactors_combo_width)
     (self.button_growfactors, self.growfactors_widget_dict) = self.tab_growfactors.display_widgets(self.TAB7)
     # this is the number of year value pairs in the growfactors
     self.year_value_pairs_growfactors_dict = len(self.growfactors_widget_dict[1][2])
