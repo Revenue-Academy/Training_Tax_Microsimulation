@@ -219,7 +219,7 @@ class Policy(ParametersBase):
         # check that all reform dictionary keys are integers
         if not isinstance(reform, dict):
             raise ValueError('ERROR: YYYY PARAM reform is not a dictionary')
-        print('reform ', reform) 
+        #print('reform ', reform) 
         if not reform:
             return  # no reform to implement
         reform_years = sorted(list(reform.keys()))

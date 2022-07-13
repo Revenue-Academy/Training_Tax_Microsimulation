@@ -30,7 +30,7 @@ def update_chart_list(self):
 
 def tab6(self):
     global_vars = self.get_inputs()
-    print('global_vars[chart_list] ', global_vars['chart_list'])
+    #print('global_vars[chart_list] ', global_vars['chart_list'])
     # self.button_1_TAB6_pos_x = self.block_1_title_pos_x
     # self.button_1_TAB6_pos_y = self.block_1_title_pos_y
     """
@@ -103,7 +103,7 @@ def display_chart(self, event, global_vars):
         tax_type = 'pit'
     start_year= global_vars['start_year']
     data_start_year= global_vars['data_start_year']
-    gini_list = global_vars['gini_list']
+    kakwani_list = global_vars['kakwani_list']
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
@@ -245,12 +245,12 @@ def display_chart(self, event, global_vars):
         ax.set_xticklabels(list(df.index[::10])+[100])       
         ax.set_title('Effective Tax Rates (ETR) by Percentile')
         ax.set_xlabel("Assessable Income Percentile")
-        gini_text0 = str(start_year)+' Pre Tax Gini                        : '+ str(round(gini_list[0],3))
-        gini_text1 = str(start_year)+' Post Tax Gini(Current Law): '+ str(round(gini_list[1],3))
-        gini_text2 = str(start_year)+' Post Tax Gini (Reform)       : '+ str(round(gini_list[2],3))
-        ax.text(5, 5.5*(maxy/10), gini_text0, fontsize = 8)
-        ax.text(5, 5*(maxy/10), gini_text1, fontsize = 8)
-        ax.text(5, 4.5*(maxy/10), gini_text2, fontsize = 8)
+        kakwani_text0 = str(start_year)+' Pre Tax Gini                        : '+ str(round(kakwani_list[0],3))
+        kakwani_text1 = str(start_year)+' Kakwani Index (Current Law): '+ str(round(kakwani_list[1],3))
+        kakwani_text2 = str(start_year)+' Kakwani Index (Reform)       : '+ str(round(kakwani_list[2],3))
+        ax.text(5, 5.5*(maxy/10), kakwani_text0, fontsize = 8)
+        ax.text(5, 5*(maxy/10), kakwani_text1, fontsize = 8)
+        ax.text(5, 4.5*(maxy/10), kakwani_text2, fontsize = 8)
         pic_filename1 = "etr.png"
         plt.savefig(pic_filename1)
         self.image = ImageTk.PhotoImage(Image.open("etr.png"))
@@ -259,23 +259,18 @@ def display_chart(self, event, global_vars):
         self.pic.image = self.image       
     
 def get_attribute_selection(self, event):
-    # self.Label1=Label(self.TAB6, text="Charts", font = self.fontStyle_sub_title)
-    # self.Label1.place(relx = self.block_1_title_pos_x, rely = self.block_1_title_pos_y, anchor = "w")
     selected_chart = self.chart_selection.get()
-    print('selected_chart ', selected_chart)
     tax_type = selected_chart[:3]
     f = open('global_vars.json')
     global_vars = json.load(f)
-    #print("vars['charts_ready'] ", vars['charts_ready'])
     self.image = ImageTk.PhotoImage(Image.open("blank.png"))
     self.pic = tk.Label(self.TAB6,image=self.image)
     self.pic.place(relx = 0.20, rely = 0.1, anchor = "nw")
     self.pic.image = self.image
-    #print("vars['charts_ready'] ", vars['charts_ready'])
     if global_vars['charts_ready']:
         df = pd.read_csv(tax_type+'_revenue_projection.csv', index_col=0)
         df = df.T
-        print('df columns ', df.columns)
+        #print('df columns ', df.columns)
         cols = df.columns[df.columns.str.startswith('current_law')]
         #print('self.attribute_cols ', self.attribute_columns)
         

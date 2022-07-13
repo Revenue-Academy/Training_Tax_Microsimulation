@@ -260,23 +260,23 @@ class Application(tk.Frame):
         #self.master.update()
         #filename_path = tk.splitlist(filez)[0]
         old_filename = widget.get()
-        print('Old filename is: ', widget.get())       
+        #print('Old filename is: ', widget.get())       
         filename_path = filez[0]
         filename_list = filename_path.split('/')
         filename = filename_list[-1]
         widget.delete(0,tk.END)
         widget.insert(0,filename)
-        print(filename)
+        #print(filename)
         self.vars[varname] = filename
         if (tax_type is not None) :
-            print('new filename is :', widget.get())
+            #print('new filename is :', widget.get())
             if (varname=='GROWFACTORS_FILENAME'):
                 if filename != old_filename:
                     self.vars[varname] = filename
                     self.entry_salary_variable[tax_type].config(values=self.show_salary_options(tax_type))
             if (varname=='DEFAULTS_FILENAME'):
                 if filename != old_filename:
-                    print('file changed')
+                    #print('file changed')
                     self.vars[varname] = filename
                     with open(self.sub_directory+'/'+filename) as f:
                         self.current_law_policy = json.load(f)                  
@@ -389,7 +389,8 @@ class Application(tk.Frame):
                         if int(selected_dict[num]['selected_year'][i]) > int(end_year):
                             showinfo("Warning", "Reform Year is later than End Year")            
                             return
-        print('Changes to Parameters ', selected_dict)
+        if self.verbose:
+            print('Changes to Parameters ', selected_dict)
         return selected_dict
     
     #def clicked_generate_policy_revenues(self, run_type):
@@ -482,7 +483,7 @@ class Application(tk.Frame):
         self.verbose = vars['verbose']
         progress_bar = Progress_Bar(self.master)
         self.progressbar, self.progress_label = progress_bar.progressbar
-        from generate_tax_expenditures import generate_tax_expenditures   
+        from generate_tax_expenditures import generate_tax_expenditures  
         self.foo_thread = Thread(target=generate_tax_expenditures)
         self.foo_thread.daemon = True
         self.progressbar.start(interval=10)

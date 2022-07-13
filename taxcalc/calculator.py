@@ -491,9 +491,9 @@ class Calculator(object):
                 if len(self.ATTRIBUTE_READ_VARS_PIT) > 0:
                     attribute_data = list(getattr(self.__records, 
                                                   self.ATTRIBUTE_READ_VARS_PIT[attribute_index]))
-                    print('attribute_data', attribute_data)
+                    #print('attribute_data', attribute_data)
                     attribute_types = list(set(attribute_data))
-                    print('attribute_types', attribute_types) 
+                    #print('attribute_types', attribute_types) 
                 else:
                     attribute_types = []          
             else:

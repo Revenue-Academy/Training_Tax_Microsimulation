@@ -199,7 +199,7 @@ class Records(object):
         """
         self.__current_year = new_current_year
         self.Year.fill(new_current_year)
-        print("records self.__current_year ", self.__current_year)
+        #print("records self.__current_year ", self.__current_year)
 
     @staticmethod
     def read_var_info():
@@ -360,8 +360,8 @@ class Records(object):
                 self.IGNORED_VARS.add(varname)
         # check that MUST_READ_VARS are all present in taxdf
         if not Records.MUST_READ_VARS.issubset(READ_VARS):
-            print('MUST_READ_VARS ', Records.MUST_READ_VARS)
-            print('READ_VARS ',READ_VARS)
+            #print('MUST_READ_VARS ', Records.MUST_READ_VARS)
+            #print('READ_VARS ',READ_VARS)
             msg = 'Records data missing one or more MUST_READ_VARS'
             raise ValueError(msg)
         # delete intermediate taxdf object

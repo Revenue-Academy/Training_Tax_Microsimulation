@@ -69,8 +69,6 @@ class super_combo(tk.Frame):
         self.s.configure('my.TButton', font=self.fontStyle)        
         self.text_font = ('Calibri', '12')
         self.block_widget_dict = {}
-        #print('self.width_json ', self.width_json)
-        #print('self.input_json ', self.input_json)
         return
     
     def widget_placement(self, shift_x, shift_y, width):
@@ -154,17 +152,13 @@ class super_combo(tk.Frame):
  
         
     def create_new_row_policy_widgets(self, tab):
-        #self.num_reforms += 1
-        #print("num_reforms in policy widget ", self.num_reforms)
         #num is the counter for the widgets
         self.policy_options_list = self.policy_options(self.input_json)
         if (self.num_widgets==self.num_reforms):
             self.num_widgets += 1
             num = self.num_widgets
             self.block_widget_dict[num] = {}
-            #self.block_selected_dict[self.num_reforms] = {}
             self.block_widget_dict[num][1] = ttk.Combobox(tab, value=self.policy_options_list, font=self.text_font, name=str(num))
-            #self.block_widget_dict[num][1].current(1)
             if (self.num_widgets==1):
                 self.combo_new_y = self.combo_y + self.combo_combo_gap_y*(self.num_widgets-1)
             else:
@@ -191,7 +185,6 @@ class super_combo(tk.Frame):
                     self.entry_1_new_x = self.entry_1_x + i*max(self.entry_1_width_x,self.entry_2_width_x)+(i+1)*self.entry_entry_gap_x 
                     self.block_widget_dict[num][2][i].place(relx = self.entry_1_new_x, 
                                                           rely = self.entry_1_new_y, anchor = "w")
-        #print('Year Entry: ', self.entry_1_x, self.entry_1_x)
 
             self.block_widget_dict[num][3] = {}
             if (self.width_json==1):
@@ -279,10 +272,6 @@ class super_combo(tk.Frame):
     def delete_policy_widgets(self):
         self.num_widgets = len(self.block_widget_dict)
         num = self.num_widgets
-        #print('num of reforms: ', num)
-        #print('self.num_widgets before ', self.num_widgets)
-        #print('self.num_reforms ',self.num_reforms)
-        #print('block_widget_dict before ', self.block_widget_dict)
         if num == 1:
             #showinfo("Warning", "cannot delete")
             self.block_widget_dict[1][1].delete(0, tk.END)
@@ -303,7 +292,7 @@ class super_combo(tk.Frame):
                 self.num_reforms -= 1
             if (self.width_json==1):
                 self.generate_revenue_policy_button_new_y = self.combo_y + 2*self.combo_combo_gap_y*(self.num_widgets-1) + self.combo_button_gap_y
-                print('button at 1 del ',self.generate_revenue_policy_button_new_y)
+                #print('button at 1 del ',self.generate_revenue_policy_button_new_y)
             else:
                 self.l4[num].destroy()
                 self.l5[num].destroy()  
@@ -326,10 +315,7 @@ class super_combo(tk.Frame):
         input_json_sorted = dict(sorted(self.input_json.items()))
         policy_options_list = []
         for k, s in input_json_sorted.items(): 
-            #print(k)
-            #print(input_json[k]['description'])
-            #policy_option_list = policy_option_list + [input_json[k]['description']]
-            #Don't show the current law rates and the elasticity items in the drop down list
+             #Don't show the current law rates and the elasticity items in the drop down list
             if self.elasticity:
                 if (k[1:11] == 'elasticity'):
                     policy_options_list = policy_options_list + [k[1:]]
@@ -348,13 +334,9 @@ class super_combo(tk.Frame):
         #print("Reform2: ", self.reform)
         
     def show_policy_selection(self, event, widget_dict):   
-        global_vars = get_inputs(self)
-        #print('vars ', vars)
+        global_vars = get_inputs(self)     
         #print("inside policy selection")
         active_widget_number = int(str(event.widget)[-1])
-        #print("active_widget_number: ", active_widget_number)
-        #num = active_widget_number
-        #print('num ', num)
         # update the number of reforms only if we change the entries
         # beyond self.num_reforms
         num = len(widget_dict)
@@ -372,18 +354,18 @@ class super_combo(tk.Frame):
         #print('self.input_json selected item \n', self.input_json['_'+ selected_item])
         start_year = int(global_vars['start_year'])
         end_year = int(global_vars['end_year'])
-        """
-        for k in range(len(self.input_json['_'+ selected_item][self.field_year])):
-            year = int(self.input_json['_'+ selected_item][self.field_year][k])
-            if int(year)==start_year:
+        k=0
+        for j in range(len(self.input_json['_'+ selected_item][self.field_year])):
+            param = int(self.input_json['_'+ selected_item][self.field_year][j])
+            if int(param)==start_year:
+                k=j
                 break
-        """
         # growfactors may have many years but we only need those from start 
         # year to end year
-        # i is the counter for the widgets i.e. start year to end year for growfactors
-        # width is three for elasticity with three thresholds
+        # k is the counter for the widgets i.e. start year to end year for growfactors
+        # width is three for elasticity with three thresholds       
         i=0 
-        for j in range(self.width_json):            
+        for j in range(k, k+self.width_json):
             if (self.width_json==1):
                 param = int(self.input_json['_'+ selected_item][self.field_year][-1])                
                 value = self.input_json['_'+ selected_item][self.field_value][-1]
@@ -395,21 +377,25 @@ class super_combo(tk.Frame):
             if (self.width_json==1) and not self.elasticity:
                 if (param < start_year):
                     param = start_year
-            #print('updated param ', param)
-            #print('value ', value)
             # start year and end year condition does not apply for elasticity
             if self.elasticity or ((param >= start_year) and (param <= end_year)):        
                 selected_param[i] = param
                 selected_value[i] = value
-                #print('i ',i)
-                #print('selected_year[i] ', selected_param[i])                 
+                if selected_param[i]>=1e99:
+                    formatted_param = '{:.0e}'.format(selected_param[i])
+                else:
+                    formatted_param = selected_param[i]                
                 widget_dict[num][2][i].config(state=tk.NORMAL)               
                 widget_dict[num][2][i].delete(0, tk.END)
-                widget_dict[num][2][i].insert(tk.END, selected_param[i])
+                widget_dict[num][2][i].insert(tk.END, formatted_param)
+                if selected_value[i]>=1e99:
+                    formatted_value = '{:.0e}'.format(selected_value[i])
+                else:
+                    formatted_value = selected_value[i]                
                 if (not self.editable_field_year):
-                    widget_dict[num][2][i].config(state=tk.DISABLED)
+                    widget_dict[num][2][i].config(state=tk.DISABLED)             
                 widget_dict[num][3][i].delete(0, tk.END)
-                widget_dict[num][3][i].insert(tk.END, selected_value[i])
+                widget_dict[num][3][i].insert(tk.END, formatted_value)
                 i=i+1
 
         if self.attribute_value is not None:
