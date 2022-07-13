@@ -67,10 +67,7 @@ def get_elasticity_dict(self, tax_type):
     #current_law_policy_sorted = dict(sorted(current_law_policy.items()))
     elasticity_dict={}
     elasticity_items_list = []
-    for k, s in current_law_policy.items(): 
-        #print(k)
-        #print(current_law_policy[k]['description'])
-        #policy_option_list = policy_option_list + [current_law_policy[k]['description']]
+    for k, s in current_law_policy.items():
         if (k[1:11] == 'elasticity'):
             if (k[-5:] == 'value'):
                 item = k[1:-6]
@@ -89,12 +86,10 @@ def get_elasticity_dict(self, tax_type):
                                                   current_law_policy[v]['value'][0][1],
                                                   current_law_policy[v]['value'][0][2]]
 
-                elasticity_items_list = elasticity_items_list + [item]
-    #print("elasticity_dict in elasticity_options: ", elasticity_dict)        
+                elasticity_items_list = elasticity_items_list + [item]     
     return elasticity_dict
 
 def update_elasticity(self, mydict, update_dict, field_param, field_value, filename):
-    #print('mydict in update_elasticity ', mydict)
     output_dict={}
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
@@ -114,9 +109,6 @@ def update_elasticity(self, mydict, update_dict, field_param, field_value, filen
             output_dict[str(i+1)]['selected_value'] = [mydict[k][field_param]]
             output_dict[str(i+1)]['selected_year'] = [mydict[k]['year']]
             i=i+2
-    
-    #print('output_dict elasticity ', output_dict)
-    #print('filename ', filename)
     with open(filename, 'w') as f:
         f.write(json.dumps(output_dict, indent=2))      
             
@@ -169,15 +161,8 @@ def make_grow_factors_csv(mydict, index, value, filename):
         
 def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value, filename):    
     def update_values(mydict, k, field_param, field_value, v_year, v_value):
-        j=0
-        #print('v_year ', v_year)
-        #print('mydict[k][field_param] ', mydict[k][field_param])        
-        for i in range(len(mydict[k][field_param])-1):
-            #print('i ', i)
-            #print('j ', j)
-            #print('len(v_year)', len(v_year))
-            #print('v_year[j] ', v_year[j])
-            #print('mydict[k][field_param][i] ', mydict[k][field_param][i])            
+        j=0    
+        for i in range(len(mydict[k][field_param])-1):           
             if j==(len(v_year)-1):
                 #print("I am here")
                 break
@@ -185,25 +170,19 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
                 mydict[k][field_value][i]=v_value[j]
                 j=j+1
         return mydict
-    #print('update_dict ', update_dict)
-    #print('mydict ', mydict)
     if len(update_dict)>0:
         for i in range(1, len(update_dict)+1):
             k = '_' + update_dict[i]['selected_item']
             v_year = update_dict[i]['selected_year']
             v_value = update_dict[i]['selected_value']  
-            #print("k, v_year, v_value ", k, v_year, v_value)
-            #print(" self.attribute_col", self.attribute_columns)
             if len(self.attribute_columns)>0:
                 attribute_value = update_dict[i]['selected_attribute']
-                #mydict[attribute_value][k][field_value]=v_value
                 mydict[attribute_value] = update_values(mydict[attribute_value], 
                                                         k, field_param, field_value, 
                                                         v_year, v_value)                
             else: # update values only from start_year to end_year
                 mydict = update_values(mydict, k, field_param, field_value, 
-                                       v_year, v_value)        
-        #print('mydict updated ', mydict)
+                                       v_year, v_value)
         output_dict={}
         if len(self.attribute_columns)>0:
             first_level_keys = list(mydict.keys())
@@ -227,7 +206,6 @@ def update_grow_factors_csv(self, mydict, update_dict, field_param, field_value,
             output_dict[field_param] = mydict[list(mydict.keys())[0]][field_param]
             for k in mydict.keys():
                 output_dict[k[1:]] = mydict[k][field_value]
-            #print('output_dict ', output_dict)
             with open(filename, 'w', newline='') as f:
              w = csv.writer(f)
              w.writerow(output_dict.keys())

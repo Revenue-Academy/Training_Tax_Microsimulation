@@ -76,6 +76,7 @@ def initialize_vars(self):
     self.vars['pit_functions_filename'] = "functions_pit_macedonia.py"
     self.vars['pit_function_names_filename'] = "function_names_pit_macedonia.json"       
     self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
+    self.vars['gdp_filename'] = 'gdp_nominal_macedonia.csv'
 
     self.vars['pit_data_filename'] = "pit_data_training.csv"
     self.vars['pit_weights_filename'] = "pit_weights_training.csv"
@@ -84,7 +85,7 @@ def initialize_vars(self):
     self.vars['pit_elasticity_filename'] = "elasticity_pit_training.json"
     self.vars['pit_functions_filename'] = "functions_pit_training.py"
     self.vars['pit_function_names_filename'] = "function_names_pit_training.json"
-    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'    
+    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'  
     """
     self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_srilanka.json"
     self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_srilanka.csv" 
@@ -96,6 +97,7 @@ def initialize_vars(self):
     self.vars['pit_functions_filename'] = "functions_pit_srilanka.py"
     self.vars['pit_function_names_filename'] = "function_names_pit_srilanka.json"
     self.vars['pit_distribution_json_filename'] = 'pit_distribution_srilanka.json'
+    self.vars['gdp_filename'] = 'gdp_nominal_srilanka.csv'
 
     """
     self.vars['cit_data_filename'] = "cit_egypt.csv"
@@ -105,13 +107,14 @@ def initialize_vars(self):
     self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
     self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
+    self.vars['gdp_filename'] = 'gdp_nominal_egypt.csv'    
     """
     self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_training.json"    
     self.vars['GROWFACTORS_FILENAME'] = "growfactors_cit_training.csv"
     self.vars['cit_data_filename'] = "cit_data_training.csv"
     self.vars['cit_weights_filename'] = "cit_weights_training.csv"
     self.vars['cit_records_variables_filename'] = "records_variables_cit_training.json"    
-    self.vars['cit_benchmark_filename'] = "cit_tax_incentives_benchmark_training.json"
+    self.vars['cit_benchmark_filename'] = "tax_incentives_benchmark_cit.json"
     self.vars['cit_elasticity_filename'] = "elasticity_cit_training.json"
     self.vars['cit_functions_filename'] = "functions_cit_training.py"
     self.vars['cit_function_names_filename'] = "function_names_cit_training.json"
@@ -140,9 +143,27 @@ def initialize_vars(self):
     self.vars['vat_display_distribution_table_bydecile'] = 0
     self.vars['vat_display_revenue_table'] = 1
     
+
+    
+    self.vars['kakwani_list'] = []
+    
     self.vars['start_year'] = 2022
     self.vars['end_year']=2027
     self.vars['data_start_year'] = 2018
+
+    df= pd.read_csv(self.vars['gdp_filename'])
+    df = df.set_index('Year')
+    GDP_dict = df.to_dict()
+    GDP_Nominal = {}
+    for k,v in GDP_dict.items():
+        for k1,v1 in v.items():
+            GDP_Nominal[k1] = float(v1)
+    
+    self.vars['GDP_Nominal'] = GDP_Nominal
+    self.vars['percent_gdp'] = 1
+    #self.total_revenue_text1 = ""
+    #self.reform_revenue_text1 = ""
+    #self.reform_filename = "app01_reform.json"
     
     #self.vars['SALARY_VARIABLE'] = "gross_i_w"
     self.vars['SALARY_VARIABLE'] = "SALARY"
@@ -173,25 +194,12 @@ def initialize_vars(self):
     self.entry_functions_names_filename = {}
     self.button_function_names_filename = {}
     self.entry_benchmark_filename = {}
-    self.button_benchmark_filename = {}
+    self.button_benchmark_filename = {}    
+    self.entry_gdp_filename = {}    
+    self.button_gdp_filename = {}
     self.entry_salary_variable = {}
     self.entry_start_year = {}
-    self.entry_end_year = {}
-    
-    df= pd.read_csv('gdp_nominal_srilanka.csv')
-    df = df.set_index('Year')
-    GDP_dict = df.to_dict()
-    GDP_Nominal = {}
-    for k,v in GDP_dict.items():
-        for k1,v1 in v.items():
-            GDP_Nominal[k1] = float(v1)
-    
-    self.vars['GDP_Nominal'] = GDP_Nominal
-    self.vars['percent_gdp'] = 1
-    #self.total_revenue_text1 = ""
-    #self.reform_revenue_text1 = ""
-    #self.reform_filename = "app01_reform.json"
-    
+    self.entry_end_year = {}    
                
     self.vars['show_error_log'] = 0
     self.vars['verbose'] = 0
@@ -220,7 +228,8 @@ def grid_placement(self, block_1_title_pos_x, block_1_title_pos_y=None):
     self.block_1_entry_7_y = (self.block_1_entry_6_y+self.block_entry_entry_gap_y)
     self.block_1_entry_8_y = (self.block_1_entry_7_y+self.block_entry_entry_gap_y)
     self.block_1_entry_9_y = (self.block_1_entry_8_y+self.block_entry_entry_gap_y)
-    self.block_1_entry_10_y = (self.block_1_entry_9_y+self.block_entry_entry_gap_y)   
+    self.block_1_entry_10_y = (self.block_1_entry_9_y+self.block_entry_entry_gap_y)
+    self.block_1_entry_11_y = (self.block_1_entry_10_y+self.block_entry_entry_gap_y)     
     self.entry_button_gap = 0.02
     #self.vars={}
         
@@ -346,34 +355,42 @@ def display_entry(self, widget, tax_type):
         self.button_benchmark_filename[tax_type].place(relx = self.block_1_entry_x, 
                                      rely = self.block_1_entry_8_y, anchor = "w")
 
+        self.entry_gdp_filename[tax_type] = tk.Entry(self.TAB1, width=30, font = self.fontStyle)
+        self.entry_gdp_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                    rely = self.block_1_entry_9_y, anchor = "e")
+        self.entry_gdp_filename[tax_type].insert(END, self.vars['gdp_filename'])
+        self.button_gdp_filename[tax_type] = ttk.Button(self.TAB1, text = "Change Nominal GDP Filename", style='my.TButton', command=lambda: self.input_entry_data(self.entry_gdp_filename[tax_type], 'gdp_filename'))
+        self.button_gdp_filename[tax_type].place(relx = self.block_1_entry_x, 
+                                     rely = self.block_1_entry_9_y, anchor = "w")
+        
         self.l2[tax_type]=tk.Label(self.TAB1, text="Salary Variable: ", font = self.fontStyle)
         self.l2[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                 rely = self.block_1_entry_9_y, anchor = "e")
+                 rely = self.block_1_entry_10_y, anchor = "e")
     
         self.entry_salary_variable[tax_type] = ttk.Combobox(self.TAB1, value=self.show_salary_options(tax_type), font=self.text_font)
         self.entry_salary_variable[tax_type].current(3)
         self.entry_salary_variable[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                        rely = self.block_1_entry_9_y, anchor = "w", width=100)
+                        rely = self.block_1_entry_10_y, anchor = "w", width=100)
         self.entry_salary_variable[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_salary_variable[tax_type], 'SALARY_VARIABLE'))
           
         self.l3[tax_type]=tk.Label(self.TAB1, text="Start Year: ", font = self.fontStyle)
         self.l3[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                 rely = self.block_1_entry_10_y, anchor = "e")
+                 rely = self.block_1_entry_11_y, anchor = "e")
     
         self.entry_start_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
         self.entry_start_year[tax_type].current(self.year_list.index(int(self.vars['start_year'])))
         self.entry_start_year[tax_type].place(relx = self.block_1_entry_x - 3*self.entry_button_gap, 
-                        rely = self.block_1_entry_10_y, anchor = "w", width=80)
+                        rely = self.block_1_entry_11_y, anchor = "w", width=80)
         self.entry_start_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_start_year[tax_type], 'start_year'))
     
         self.l31[tax_type]=tk.Label(self.TAB1, text="End Year: ", font = self.fontStyle)
         self.l31[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
-                 rely = self.block_1_entry_10_y, anchor = "e")
+                 rely = self.block_1_entry_11_y, anchor = "e")
         
         self.entry_end_year[tax_type] = ttk.Combobox(self.TAB1, value=self.year_list, font=self.text_font)
         self.entry_end_year[tax_type].current(self.year_list.index(int(self.vars['end_year'])))
         self.entry_end_year[tax_type].place(relx = self.block_1_entry_x + 2*self.entry_button_gap, 
-                        rely = self.block_1_entry_10_y, anchor = "w", width=80)
+                        rely = self.block_1_entry_11_y, anchor = "w", width=80)
         self.entry_end_year[tax_type].bind("<<ComboboxSelected>>", lambda event: self.input_combo_data(event, self.entry_end_year[tax_type], 'end_year'))    
         
         #self.chart_list = []

@@ -319,10 +319,13 @@ def generate_policy_revenues():
                              'value_bill_diff',
                              'Collection difference with Behavioral Adjustment')
             if global_variables[tax_type+'_display_revenue_table']:
-                for tax_type in tax_list:            
-                    data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_bill_str']['All'], 
-                                                           revenue_dict[tax_type][year]['reform_behavior']['value_bill_diff_str']['All']]
-        
+                for tax_type in tax_list:
+                    if percent_gdp:
+                        data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_gdp_str']['All'], 
+                                                           revenue_dict[tax_type][year]['reform_behavior']['value_diff_gdp_str']['All']]
+                    else:
+                        data_row[tax_type] = data_row[tax_type] + [revenue_dict[tax_type][year]['reform_behavior']['value_bill_str']['All'], 
+                                                           revenue_dict[tax_type][year]['reform_behavior']['value_bill_diff_str']['All']]                        
         ''' Cant the following lines 291-295 be merged with earlier loop in lines 264-268? '''
         
         if global_variables[tax_type+'_display_revenue_table']:
@@ -380,36 +383,53 @@ def generate_policy_revenues():
         """
         Return gini.
         """
-        print('df_tax12[tax_type] ', df_tax12[tax_type]['All'])
+        #print('df_tax12[tax_type] ', df_tax12[tax_type]['All'])
         df_tax12[tax_type]['All']['weight'] = df_tax12[tax_type]['All']['weight'+'_'+str(start_year)] 
         df_tax12[tax_type]['All']['pre_tax_income'] = df_tax12[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]        
         df_tax12[tax_type]['All']['after_tax_income'] = (df_tax12[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]-
                                                          df_tax12[tax_type]['All'][tax_collection_var+'_'+str(start_year)])
         df_tax12[tax_type]['All']['after_tax_income_ref'] = (df_tax12[tax_type]['All'][income_measure[tax_type]+'_ref_'+str(start_year)]-
                                                          df_tax12[tax_type]['All'][tax_collection_var+'_ref_'+str(start_year)])      
-        df = pd.DataFrame()
-        df['weight'] = df_tax12[tax_type]['All']['weight']
-        df['pre_tax_income'] = df_tax12[tax_type]['All']['pre_tax_income']
-        df['after_tax_income'] = df_tax12[tax_type]['All']['after_tax_income']
-        df['after_tax_income_ref'] = df_tax12[tax_type]['All']['after_tax_income_ref']
+        gini = pd.DataFrame()
+        gini['weight'] = df_tax12[tax_type]['All']['weight']
+        gini['pre_tax_income'] = df_tax12[tax_type]['All']['pre_tax_income']
+        gini['after_tax_income'] = df_tax12[tax_type]['All']['after_tax_income']
+        gini['after_tax_income_ref'] = df_tax12[tax_type]['All']['after_tax_income_ref']
         
-        df.to_csv('df_for_gini.csv', index=False)
-        print('df ', df)
+        #gini.to_csv('df_for_gini.csv', index=False)
+        #print('df ', df)
         varlist = ['pre_tax_income', 'after_tax_income', 'after_tax_income_ref']
-        gini_list = []
-
-        for var in varlist:
-            gini=df[['weight', var]]
-            gini= gini.sort_values(by=var)
-            #gini['weight'] = 100
-            gini['cumulative_weight']=np.cumsum(gini['weight'])
-            sum_weight = (gini['weight']).sum()
-            gini['percentage_cumul_pop'] = gini['cumulative_weight']/sum_weight
+        kakwani_list = []
+        gini= gini.sort_values(by='pre_tax_income')
+        #gini['weight'] = 100
+        gini['cumulative_weight']=np.cumsum(gini['weight'])
+        sum_weight = (gini['weight']).sum()
+        gini['percentage_cumul_pop'] = gini['cumulative_weight']/sum_weight
+        gini['total_income'] = gini['weight']*gini['pre_tax_income']
+        gini['cumulative_total_income']= np.cumsum(gini['total_income'])
+        sum_total_income = sum(gini['total_income'])
+        gini['percentage_cumul_income'] = gini['cumulative_total_income']/sum_total_income
+        gini['height'] = gini['percentage_cumul_pop']-gini['percentage_cumul_income']
+        gini1 = pd.DataFrame([[np.nan]*len(gini.columns)], columns=gini.columns)
+        gini = gini1.append(gini, ignore_index=True)
+        gini['percentage_cumul_pop']= gini['percentage_cumul_pop'].fillna(0)
+        gini['percentage_cumul_income']= gini['percentage_cumul_income'].fillna(0)
+        gini['height']= gini['height'].fillna(0)
+        gini['base'] = gini.percentage_cumul_pop.diff()
+        gini['base']= gini['base'].fillna(0)
+        gini['integrate_area']= 0.5*gini['base']*(gini['height']+gini['height'].shift())
+        sum_integrate_area = gini['integrate_area'].sum()
+        gini_index0 = 2*(sum_integrate_area)
+        kakwani_list = kakwani_list + [gini_index0]
+        
+        i=0
+        for var in varlist[1:]:
+            gini = gini[1:]
             gini['total_income'] = gini['weight']*gini[var]
             gini['cumulative_total_income']= np.cumsum(gini['total_income'])
             sum_total_income = sum(gini['total_income'])
             gini['percentage_cumul_income'] = gini['cumulative_total_income']/sum_total_income
-            gini['height'] = gini['percentage_cumul_pop']-gini['percentage_cumul_income']
+            gini['height'] = gini['percentage_cumul_pop']-gini['percentage_cumul_income']            
             gini1 = pd.DataFrame([[np.nan]*len(gini.columns)], columns=gini.columns)
             gini = gini1.append(gini, ignore_index=True)
             gini['percentage_cumul_pop']= gini['percentage_cumul_pop'].fillna(0)
@@ -420,8 +440,9 @@ def generate_policy_revenues():
             gini['integrate_area']= 0.5*gini['base']*(gini['height']+gini['height'].shift())
             sum_integrate_area = gini['integrate_area'].sum()
             gini_index = 2*(sum_integrate_area)
-            gini_list = gini_list + [gini_index]        
-        return gini_list
+            kakwani_list = kakwani_list + [gini_index-gini_index0]
+            i=1+1            
+        return kakwani_list
      
     def merge_distribution_table_dicts(dt1, dt2, tax_type, data_start_year, end_year):
         #print('dt1 ',dt1)
@@ -491,8 +512,8 @@ def generate_policy_revenues():
             dt12[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, data_start_year, end_year)
             dt34[tax_type] = merge_distribution_table_dicts(dt3, dt4, tax_type, data_start_year, end_year)
             dt_percentile[tax_type] = merge_distribution_table_dicts(dt1_percentile, dt2_percentile, tax_type, data_start_year, end_year)            
-            gini_list = calc_gini(df_tax12, tax_type)
-            print('gini ', gini_list)
+            kakwani_list = calc_gini(df_tax12, tax_type)
+            #print('gini ', gini_list)
             #print('dt12[tax_type][All]', dt12[tax_type]['All'])
             #print('dt34[tax_type][All]', dt34[tax_type]['All'])
             
@@ -569,16 +590,16 @@ def generate_policy_revenues():
                 row_num[tax_type] = display_table(window_dist[tax_type], row = row_num[tax_type], dataframe=dt_tax_all12)
                 l = tk.Button(window_dist[tax_type],text="Save Results",command=lambda: write_file(dt_tax_all12, text_output2, filename2, window_dist[tax_type], row_num[tax_type]))
                 l.grid(row=row_num[tax_type]+2, column=2, pady = 10, sticky=tk.W)
-        return gini_list        
+        return kakwani_list        
     if global_variables[tax_type+'_distribution_table']:
-        gini_list = display_distribution_table_window(tax_type)
+        kakwani_list = display_distribution_table_window(tax_type)
         for tax_type in tax_list:
             global_variables[tax_type +'_display_revenue_table'] = 1
             chart_list = chart_list + [tax_type+'_distribution_table']
             chart_list = chart_list + [tax_type+'_distribution_table_top1']
             chart_list = chart_list + [tax_type+'_distribution_table_income_bins']
             chart_list = chart_list + [tax_type+'_etr']
-            global_variables['gini_list'] = gini_list
+            global_variables['kakwani_list'] = kakwani_list
             
             
     global_variables['charts_ready'] = 1
