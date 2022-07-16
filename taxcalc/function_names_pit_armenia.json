@@ -1,0 +1,19 @@
+{
+ "0": "cal_min_social_base",
+ "1": "cal_max_social_base",
+ "2": "cal_deduction_social",
+ "3": "cal_tax_base_s", 
+ "4": "cal_cap_social_p",
+ "5": "cal_ssc_fun",
+ "6": "cal_tax_base_b",
+ "7": "cal_pit_fun",
+ "8": "cal_tax_expenditure",
+ "9": "cal_tti_w_I",
+ "10": "cal_tti_w_I_behavior",
+ "11": "cal_pit_w_I",
+ "12": "cal_total_pit",
+ "13": "cal_total_net_income"
+}
+
+
+

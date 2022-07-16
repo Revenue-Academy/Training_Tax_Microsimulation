@@ -1,0 +1,749 @@
+{
+    "_rate1": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk1": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1800000
+        ],
+        "range": {
+            "min": 0,
+            "max": "_tbrk2"
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "for _tbrk2",
+        "out_of_range_action": "stop"
+    },
+    "_rate2": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_tbrk2": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           24000000
+        ],
+        "range": {
+            "min": "_tbrk1",
+            "max": "_tbrk3"
+        },
+        "out_of_range_minmsg": "for _tbrk1",
+        "out_of_range_maxmsg": "for _tbrk3",
+        "out_of_range_action": "stop"
+        
+    },
+    "_rate3": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk3": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           28800000
+        ],
+        "range": {
+            "min": "_tbrk2",
+            "max": "_tbrk4"
+        },
+        "out_of_range_minmsg": "for _tbrk2",
+        "out_of_range_maxmsg": "for _tbrk4",
+        "out_of_range_action": "stop"
+        
+    },
+    "_rate4": {
+        "long_name": "PIT tax rate 2",
+        "description": "The second lowest tax rate, applied to the portion of taxable income below tax bracket 2 and above tax bracket 1.",
+        "itr_ref": " ",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk4": {
+        "long_name": "PIT tax bracket 2 (upper threshold)",
+        "description": "Income below this threshold and above tax bracket 1 is taxed at tax rate 2.",
+        "itr_ref": " ",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+               34560000
+        ],
+        "range": {
+            "min": 9e+99,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate1_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"     
+    },
+    "_tbrk1_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1800000
+        ],
+        "range": {
+            "min": 0,
+            "max": "_tbrk2"
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "for _tbrk2",
+        "out_of_range_action": "stop"     
+    },
+    "_rate2_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"      
+    },
+    "_tbrk2_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1e+99
+        ],
+        "range": {
+            "min": "_tbrk1",
+            "max": "_tbrk3"
+        },
+        "out_of_range_minmsg": "for _tbrk1",
+        "out_of_range_maxmsg": "for _tbrk3",
+        "out_of_range_action": "stop"   
+    },
+    "_rate3_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"    
+    },
+    "_tbrk3_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "https://www.bdo.global/en-gb/microsites/tax-newsletters/ges-news/january-2021-issue/armenia-changes-in-income-tax-and-social-payment-rates-as-from-1-january-2021",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           2e+99
+        ],
+        "range": {
+            "min": "_tbrk2",
+            "max": "_tbrk4"
+        },
+        "out_of_range_minmsg": "for _tbrk2",
+        "out_of_range_maxmsg": "for _tbrk4",
+        "out_of_range_action": "stop"     
+    },
+    "_rate4_curr_law": {
+        "long_name": "PIT tax rate 2",
+        "description": "The second lowest tax rate, applied to the portion of taxable income below tax bracket 2 and above tax bracket 1.",
+        "itr_ref": " ",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           0.22
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"   
+    },
+    "_tbrk4_curr_law": {
+        "long_name": "PIT tax bracket 2 (upper threshold)",
+        "description": "Income below this threshold and above tax bracket 1 is taxed at tax rate 2.",
+        "itr_ref": " ",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+                9e+99
+        ],
+        "range": {
+            "min": 9e+99,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"                
+    },
+    "_elasticity_pit_taxable_income_threshold": {
+        "long_name": "Threshold for Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "bracket",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                100000,
+                1000000,
+                9e99
+            ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_taxable_income_value": {
+        "long_name": "Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Profit",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                0.0,
+                0.0,
+                0.0
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_capital_income_threshold": {
+        "long_name": "Threshold for Elasticity of Capital Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "bracket",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                100000,
+                1000000,
+                9e99
+            ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_monthly_income_threshold": {
+      "long_name": "Minimum monthly threshold for social payment",
+      "description": "Threshold of the calculation basis for social payment is 500.000 *12 = 6,000,000 with rate of 3.5%",
+      "itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+      "notes": "",
+      "row_var": "AYEAR",
+      "row_label": [
+  	 "2021"
+      ],
+      "start_year": 2021,
+      "cpi_inflatable": true,
+      "cpi_inflated": false,
+      "col_var": "",
+      "col_label": "",
+      "boolean_value": false,
+      "integer_value": false,
+      "value": [
+  	   500000
+      ],
+      "range": {
+  	"min": 0,
+  	"max": 9e+99
+      },
+      "out_of_range_minmsg": "",
+      "out_of_range_maxmsg": "",
+      "out_of_range_action": "stop"
+      },
+      "_min_monthly_salary": {
+        "long_name": "Minimum monthly salaray",
+        "description": "Rule for estimation of cap of social payment is minimum monthly salary of 68.000 multiple by 15 times",
+        "itr_ref": "https://www2.deloitte.com/content/dam/Deloitte/global/Documents/Tax/dttl-tax-armeniahighlights-2021.pdf",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+    	"2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+    	  68000
+        ],
+        "range": {
+    	"min": 0,
+    	"max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        },
+      "_deduction_monthly_social_p": {
+        "long_name": "Monthly deductions for social payment",
+        "description": "Amount prescribed by law.For 2021 is 32.500, for 2022 is 27.500 and 2023 is 25.000",
+        "itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+    	"2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+    	  32500
+        ],
+        "range": {
+    	"min": 0,
+    	"max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        },
+     "_rate_sp_1": {
+  		"long_name": "Rate 1 for social payment",
+  		"description": "Rate prescribed by law.For 2021 is 3.5%, for 2022 is 4.5% and 2023 is 5%",
+  		"itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+  		"notes": "",
+  		"row_var": "AYEAR",
+  		"row_label": [
+  			"2021"
+  		],
+  		"start_year": 2021,
+  		"cpi_inflatable": true,
+  		"cpi_inflated": false,
+  		"col_var": "",
+  		"col_label": "",
+  		"boolean_value": false,
+  		"integer_value": false,
+  		"value": [
+  			0.035
+  		],
+  		"range": {
+  			"min": 0,
+  			"max": 1
+  		},
+  		"out_of_range_minmsg": "",
+  		"out_of_range_maxmsg": "",
+  		"out_of_range_action": "stop"
+  	},
+  	"_rate_sp_2": {
+  		"long_name": "Rate 2 for social payment ",
+  		"description": "Rate prescribed by law.For 2021,2022 and 2023 is 10% ",
+  		"itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+  		"notes": "",
+  		"row_var": "AYEAR",
+  		"row_label": [
+  			"2021"
+  		],
+  		"start_year": 2021,
+  		"cpi_inflatable": true,
+  		"cpi_inflated": false,
+  		"col_var": "",
+  		"col_label": "",
+  		"boolean_value": false,
+  		"integer_value": false,
+  		"value": [
+  			0.1
+  		],
+  		"range": {
+  			"min": 0,
+  			"max": 1
+  		},
+  		"out_of_range_minmsg": "",
+  		"out_of_range_maxmsg": "",
+  		"out_of_range_action": "stop"
+  	},
+  	"_max_cap_monthly_social_p": {
+  		"long_name": "Monthly cap for social payment",
+  		"description": "Montly cap for social payment prescribed by law for 2021 is 69.500",
+  		"itr_ref": "https://home.kpmg/xx/en/home/insights/2021/07/armenia-thinking-beyond-borders.html",
+  		"notes": "",
+  		"row_var": "AYEAR",
+  		"row_label": [
+  			"2021"
+  		],
+  		"start_year": 2021,
+  		"cpi_inflatable": true,
+  		"cpi_inflated": false,
+  		"col_var": "",
+  		"col_label": "",
+  		"boolean_value": false,
+  		"integer_value": false,
+  		"value": [
+  			69500
+  		],
+  		"range": {
+  			"min": 0,
+  			"max": 9e+99
+  		},
+  		"out_of_range_minmsg": "",
+  		"out_of_range_maxmsg": "",
+  		"out_of_range_action": "stop"
+  	},
+    "_elasticity_pit_capital_income_value": {
+        "long_name": "Elasticity of Capital Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2021"
+        ],
+        "start_year": 2021,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Profit",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                0.0,
+                0.0,
+                0.0
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    }             
+}
