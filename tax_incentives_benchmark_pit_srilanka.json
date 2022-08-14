@@ -1,6 +1,7 @@
 {
     "policy": {
     "_PersonalRelief": {"2022": [0.0]},
-    "_ReliefEmpIncome": {"2022": [0.0]}
+    "_ReliefEmpIncome": {"2022": [0.0]},
+    "_rate_TerminalBenefit": {"2022": [0.18]}
     }
 }

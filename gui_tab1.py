@@ -68,15 +68,15 @@ def initialize_vars(self):
    
     ##### NOTE 'Year' is a key word for year in records variable
    
-    self.vars['pit_data_filename'] = "pit_macedonia_new.csv"
-    self.vars['pit_weights_filename'] = "pit_weights_macedonia_new.csv"
-    self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia_new.json"
-    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_macedonia_new.json"
-    self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia_new.json"
-    self.vars['pit_functions_filename'] = "functions_pit_macedonia_new.py"
-    self.vars['pit_function_names_filename'] = "function_names_pit_macedonia_new.json"       
-    self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
-    self.vars['gdp_filename'] = 'gdp_nominal_macedonia.csv'
+    # self.vars['pit_data_filename'] = "pit_macedonia_new.csv"
+    # self.vars['pit_weights_filename'] = "pit_weights_macedonia_new.csv"
+    # self.vars['pit_records_variables_filename'] = "records_variables_pit_macedonia_new.json"
+    # self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_macedonia_new.json"
+    # self.vars['pit_elasticity_filename'] = "elasticity_pit_macedonia_new.json"
+    # self.vars['pit_functions_filename'] = "functions_pit_macedonia_new.py"
+    # self.vars['pit_function_names_filename'] = "function_names_pit_macedonia_new.json"       
+    # self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'
+    # self.vars['gdp_filename'] = 'gdp_nominal_macedonia.csv'
 
     # self.vars['pit_data_filename'] = "pit_data_training.csv"
     # self.vars['pit_weights_filename'] = "pit_weights_training.csv"
@@ -88,17 +88,17 @@ def initialize_vars(self):
     # self.vars['pit_distribution_json_filename'] = 'pit_distribution_macedonia.json'  
     
 
-    # self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_srilanka.json"
-    # self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_srilanka.csv" 
-    # self.vars['pit_data_filename'] = "pit_srilanka.csv"
-    # self.vars['pit_weights_filename'] = "pit_weights_srilanka.csv"
-    # self.vars['pit_records_variables_filename'] = "records_variables_pit_srilanka.json"
-    # self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_srilanka.json"
-    # self.vars['pit_elasticity_filename'] = "elasticity_pit_srilanka.json"
-    # self.vars['pit_functions_filename'] = "functions_pit_srilanka.py"
-    # self.vars['pit_function_names_filename'] = "function_names_pit_srilanka.json"
-    # self.vars['pit_distribution_json_filename'] = 'pit_distribution_srilanka.json'
-    # self.vars['gdp_filename'] = 'gdp_nominal_srilanka.csv'
+    self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_srilanka.json"
+    self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_srilanka.csv" 
+    self.vars['pit_data_filename'] = "pit_srilanka.csv"
+    self.vars['pit_weights_filename'] = "pit_weights_srilanka.csv"
+    self.vars['pit_records_variables_filename'] = "records_variables_pit_srilanka.json"
+    self.vars['pit_benchmark_filename'] = "tax_incentives_benchmark_pit_srilanka.json"
+    self.vars['pit_elasticity_filename'] = "elasticity_pit_srilanka.json"
+    self.vars['pit_functions_filename'] = "functions_pit_srilanka.py"
+    self.vars['pit_function_names_filename'] = "function_names_pit_srilanka.json"
+    self.vars['pit_distribution_json_filename'] = 'pit_distribution_srilanka.json'
+    self.vars['gdp_filename'] = 'gdp_nominal_srilanka.csv'
 
     """
     self.vars['cit_data_filename'] = "cit_egypt.csv"
@@ -267,11 +267,11 @@ def display_entry(self, widget, tax_type):
         self.entry_end_year[tax_type].destroy()
     else:
         if tax_type == 'pit':
-            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_macedonia_new.json"
-            self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_macedonia_new.csv"
+            self.vars['DEFAULTS_FILENAME'] = "current_law_policy_pit_srilanka.json"
+            self.vars['GROWFACTORS_FILENAME'] = "growfactors_pit_srilanka.csv"
             self.vars['start_year'] = 2022
             self.vars['data_start_year'] = 2018
-            self.vars['SALARY_VARIABLE'] = "gross_i_w"
+            self.vars['SALARY_VARIABLE'] = "EmpIncRemuneration"
             self.vars['pit_id_var'] = 'id_n'
            
         elif tax_type == 'cit':

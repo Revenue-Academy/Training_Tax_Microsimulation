@@ -60,7 +60,8 @@ def display_distribution(self, widget, tax_type, block_1_title_pos_x):
 
             self.display_distribution_table_attr_chk[tax_type] = tk.IntVar()
             self.display_distribution_table_attr_chk_box[tax_type] = tk.Checkbutton(self.TAB5, text='Generate Distribution Table by Attribute', 
-                                                           font = self.fontStyle,                                              
+                                                           font = self.fontStyle,
+                                                           state = tk.DISABLED,
                                                            variable=self.display_distribution_table_attr_chk[tax_type], command=lambda: self.display_distribution_table(self.display_distribution_table_chk[tax_type], tax_type, self.block_distribution_pos_x[tax_type]))
             self.display_distribution_table_attr_chk_box[tax_type].place(relx = self.block_distribution_pos_x[tax_type], 
                                                 rely = self.block_1_entry_1_y+2*self.entry_entry_gap_y, anchor = "w")
