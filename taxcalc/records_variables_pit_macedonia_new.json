@@ -1,0 +1,811 @@
+{
+  "read": {
+    "id_n": {
+      "required": true,
+      "type": "int",
+      "desc": "Unique positive numeric identifier for filing unit",
+      "form": {
+        "2018": "Private Info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "Year": {
+      "required": true,
+      "type": "int",
+      "desc": "Assessment Year",
+      "form": {
+        "2018": "private info"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_wage_l": {
+      "type": "float",
+      "desc": "Gross income from Salary, other personal income based on employment and pensions",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "gross_i_w": {
+      "type": "float",
+      "desc": "Gross income from wages",
+      "form": {
+        "2019": "Obtained from data on Salaries & codes"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_add_l": {
+      "type": "float",
+      "desc": "Gross income from additional income on which contributions have not been paid",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_supvr_l": {
+      "type": "float",
+      "desc": "Gross income from Income of members of the management bodies and the supervisory bodies in the trade companies",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_officials_l": {
+      "type": "float",
+      "desc": "Gross income from Income of officials, MPs, councilors",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_jury_l": {
+      "type": "float",
+      "desc": "Gross income from Allowances for justices and jury members, forensic experts and receivers",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_manu_l": {
+      "type": "float",
+      "desc": "Gross income from Fees for members of Macedonian Academy of Sciences and Arts",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_contract_l": {
+      "type": "float",
+      "desc": "Gross income from Income under a contract for occasional or temporary performance of services ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_agr_med_l": {
+      "type": "float",
+      "desc": "Gross income from Revenues from agricultural products and medicinal herbs and berries ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "gross_i_l": {
+      "type": "float",
+      "desc": "Gross income from 'other income of labour'",
+      "form": {
+        "2019": "Obtained from data on Salaries & codes"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_prop_c": {
+      "type": "float",
+      "desc": "Gross income from Property income and property rights (rents) ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_copyrights_c": {
+      "type": "float",
+      "desc": "Gross income from Copyright Income ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_dividends_c": {
+      "type": "float",
+      "desc": "Gross income from Dividends and other income earned by participating in the profit ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_interest_c": {
+      "type": "float",
+      "desc": "Gross income from Interest on loans, bonds and other securities ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_gamesch_c": {
+      "type": "float",
+      "desc": "Gross income from Winnings from games of chance ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_other_c": {
+      "type": "float",
+      "desc": "Gross income from Other income ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "gross_i_c": {
+      "type": "float",
+      "desc": "Gross income from 'capital'",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "total_sources_of_i": {
+      "type": "float",
+      "desc": "Count of sources of income",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "total_gross_i": {
+      "type": "float",
+      "desc": "Total gross income from labor and capital",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "personal_allowance_w": {
+      "type": "float",
+      "desc": "Total personal allowance",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "ssc_w": {
+      "type": "float",
+      "desc": "Total social security contributions",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_prop_c": {
+      "type": "float",
+      "desc": "Deductions from Property income and property rights (rents) (kind_8)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_copyrights_c": {
+      "type": "float",
+      "desc": "Deductions from copyright Income (kind_9)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_other_claimed_c": {
+      "type": "float",
+      "desc": "Deductions from other income earned by participating in the profit (kind_10)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_prop_c_rate": {
+      "type": "float",
+      "desc": "Deductions rate from property income and property rights (rents) (kind_8)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_copyrights_c_rate": {
+      "type": "float",
+      "desc": "Deductions rate from copyright Income (kind_9)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "deductions_income_other_c_rate": {
+      "type": "float",
+      "desc": "Deductions rate from and other income earned by participating in the profit (kind_10)",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "exemption_income_gamesch_c": {
+      "type": "float",
+      "desc": "calculated deduction/exemption from grames of chance",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "total_deductions": {
+      "type": "float",
+      "desc": "Total Deductions from capital",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_salary_l": {
+      "type": "float",
+      "desc": "Tax base from Salary, other personal income based on employment and pensions",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_add_l": {
+      "type": "float",
+      "desc": "Tax base income from additional income on which contributions have not been paid",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_supvr_l": {
+      "type": "float",
+      "desc": "Tax base from Income of members of the management bodies and the supervisory bodies in the trade companies",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_officials_l": {
+      "type": "float",
+      "desc": "Tax base from Income of officials, MPs, councilors",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_jury_l": {
+      "type": "float",
+      "desc": "Tax base from Allowances for justices and jury members, forensic experts and receivers",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_manu_l": {
+      "type": "float",
+      "desc": "Tax base from Fees for members of MANU",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_contract_l": {
+      "type": "float",
+      "desc": "Tax base from Income under a contract for occasional or temporary performance of services ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_agr_med_l": {
+      "type": "float",
+      "desc": "Tax base from Revenues from agricultural products and medicinal herbs and berries ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_prop_c": {
+      "type": "float",
+      "desc": "Tax base from Property income and property rights (rents) ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_copyrights_c": {
+      "type": "float",
+      "desc": "Tax base from Copyright Income ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_dividends_c": {
+      "type": "float",
+      "desc": "Tax base from Dividends and other income earned by participating in the profit ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_interest_c": {
+      "type": "float",
+      "desc": "Tax base from Interest on loans, bonds and other securities ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_gamesch_c": {
+      "type": "float",
+      "desc": "Tax base from Winnings from games of chance ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "tax_base_income_other_c": {
+      "type": "float",
+      "desc": "Tax base from Other income ",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "te_disable_unemp": {
+      "type": "float",
+      "desc": "Dummy variable if Tax Ependiture if te = 1 otherwise not exists",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "te_special_comp": {
+      "type": "float",
+      "desc": "Dummy variable if Tax Ependiture if te = 1 otherwise not exists",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "te_TIDZ": {
+      "type": "float",
+      "desc": "Dummy variable if Tax Ependiture if te = 1 otherwise not exists",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "rent_house_business": {
+      "type": "int",
+      "desc": "Is rental capital income from property houses or businesses",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "rent_non_house_business": {
+      "type": "int",
+      "desc": "Is rental capital income from property other than houses or businesses",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "rent_actual_costing": {
+      "type": "int",
+      "desc": "Actual costing method used for property",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "rent_actual_cost": {
+      "type": "float",
+      "desc": "Actual cost from income from property",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_sculpture": {
+      "type": "int",
+      "desc": "Is capital income from sculptural works, tapestry, ceramic-plastics, artistic ceramics and stained glass",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_artistic_photography": {
+      "type": "int",
+      "desc": "for artistic photography, wall painting and painting in space etc.",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_paintings": {
+      "type": "int",
+      "desc": "Is capital income from for paintings, graphic works, industrial modelling by producing models,  literary work etc.",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_music_ballet": {
+      "type": "int",
+      "desc": "Is capital income from for works of art in the area of serious music, ballet, opera and film-act etc.",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_translations_lectures": {
+      "type": "int",
+      "desc": "Is capital income from for translations (except translations of literary works), lectures and similar intellectual works",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_stage_music": {
+      "type": "int",
+      "desc": "Is capital income from for performing stage programs of popular and folk music",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_copyrights_other": {
+      "type": "int",
+      "desc": "Is capital income from for other income and industrial property works, which are not mentioned in the previous provisions",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_copyrights_actual_costing": {
+      "type": "int",
+      "desc": "Actual costing method used for copyrights",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_copyrights_actual_cost": {
+      "type": "int",
+      "desc": "Actual cost from income from copyrights",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    },
+    "income_claimed_other_c": {
+      "type": "float",
+      "desc": "Is capital income claimed from other income",
+      "form": {
+        "2018": "pit_macedonia"
+      },
+      "cross_year": "No",
+      "attribute": "No"
+    }
+  },
+  "calc": {
+    "min_base_wage": {
+      "type": "float",
+      "desc": "Minimum base_wage",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "max_base_wage": {
+      "type": "float",
+      "desc": "Maximum base_wage",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },    
+    "min_ssc": {
+      "type": "float",
+      "desc": "Minimum social security contributions calculated from min_base_wage",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "max_ssc": {
+      "type": "float",
+      "desc": "Maximum social security contributions calculated from max_base_salary",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "ssc_w_calc": {
+      "type": "float",
+      "desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "ssc_w_rem_cap": {
+       "type": "float",
+       "desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income",
+       "form": {
+         "2018": "pit_macedonia"
+       }
+     },
+     "total_ssc_w": {
+        "type": "float",
+        "desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income",
+        "form": {
+          "2018": "pit_macedonia"
+        }
+      },
+    "cal_ssc_inc_temp_calc": {
+      "type": "float",
+      "desc": "Calculated Social Security Contributions computed as 0.2675 of Gross Income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "personal_allowance_new": {
+      "type": "float",
+      "desc": "Calculated personal allowance change (%) if personal allowance change is introduced",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tax_base_w": {
+      "type": "float",
+      "desc": "Tax base calculated for wages",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "pit_w": {
+      "type": "float",
+      "desc": "Pit liability from wages (pit-ssc-personal allowance)*tax rate",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "te": {
+      "type": "float",
+      "desc": "Tax Expenditures imputed",
+      "form": {
+        "2018": "pit_macedonia"
+    }
+    },
+    "tax_base_agr": {
+      "type": "float",
+      "desc": "Tax base calulated for income from agriculture and medicine",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tax_base_inc_temp": {
+          "type": "float",
+          "desc": "Tax base calulated for income from agriculture and medicine",
+          "form": {
+            "2018": "pit_macedonia"
+          }
+    },
+    "tax_base_other": {
+      "type": "float",
+      "desc": "Tax base calulated for other labor income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_w_I": {
+      "type": "float",
+      "desc": "Total taxable income from wages and 'other income of labour'",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_w_I_behavior": {
+      "type": "float",
+      "desc": "Total taxable income from labor and 'other income of labour' adjusted for behavior",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "pit_w_I": {
+      "type": "float",
+      "desc": "Pit liability from labor and 'other income of labour'(gross income-deductions)*tax rate",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_wd": {
+      "type": "float",
+      "desc": "Tax base for capial for those sources of income that do not have deductions",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "deductions_rental_income_c": {
+      "type": "float",
+      "desc": "Deductions from income from property/rental incomes",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "deductions_copyrights_income_c": {
+      "type": "float",
+      "desc": "Deductions from income from copyrights income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "deductions_income_other_c": {
+      "type": "float",
+      "desc": "Deductions from income for other capital income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "deductions_income_agr_med_l": {
+      "type": "float",
+      "desc": "Deduction from income from agriculture/medicine",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_c_a": {
+      "type": "float",
+      "desc": "Tax case (total) from capital income except games of chance",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_c_g": {
+      "type": "float",
+      "desc": "Tax base from capital income from games of chance",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_c": {
+      "type": "float",
+      "desc": "Total tax base from capital income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_c_a_behavior": {
+      "type": "float",
+      "desc": "Total taxable income from 'capital'(gross income-deductions) adjusted for behavior",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "tti_c_g_behavior": {
+      "type": "float",
+      "desc": "Total taxable income from 'capital'(gross income-deductions) adjusted for behavior",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "pit_c": {
+      "type": "float",
+      "desc": "Pit liability from 'capital'(gross income-deductions)*tax rate",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "net_w_I": {
+      "type": "float",
+      "desc": "post tax income from  all labor including wages",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "net_c": {
+      "type": "float",
+      "desc": "post tax income from capital",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "total_gross_income": {
+      "type": "float",
+      "desc": "Gross Total Income (GTI) (gross_i_w + gross_i_l + gross_i_c)", 
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "total_taxable_income": {
+      "type": "float",
+      "desc": "Taxable Total Income (TTI)",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "pitax": {
+      "type": "float",
+      "desc": "PIT liability",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    },
+    "total_net_income": {
+      "type": "float",
+      "desc": "Total post tax income",
+      "form": {
+        "2018": "pit_macedonia"
+      }
+    }
+  }
+}
