@@ -576,13 +576,13 @@ def generate_policy_revenues():
             elif global_variables[tax_type+'_display_distribution_table_bydecile']:
                 window_dist[tax_type] = tk.Toplevel()
                 window_dist[tax_type].geometry("1000x700+600+140")
-                header1 = ["header","", tax_type.upper()+' (Rupees)']
+                header1 = ["header","", tax_type.upper()+' (LCU)']
                 header2 = ["header",'Decile']
                 for year in range(data_start_year, start_year+1):
-                    header1 = header1+[tax_type.upper()+' (Rupees)']
+                    header1 = header1+[tax_type.upper()+' (LCU)']
                     header2 = header2+['Current Law '+str(year)]                    
                 for year in range(start_year, end_year+1):
-                    header1 = header1+[tax_type.upper()+' (Rupees)']                    
+                    header1 = header1+[tax_type.upper()+' (LCU)']                    
                     header2 = header2+['Reform '+str(year)]          
                 title_header = [["title", tax_type.upper()+" Tax Liability - Distribution by Deciles"],
                                     header1, header2]     

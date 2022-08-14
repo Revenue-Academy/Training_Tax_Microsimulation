@@ -1,0 +1,1235 @@
+{
+    "_rate1": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk1": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1080000
+        ],
+        "range": {
+            "min": 0,
+            "max": "_tbrk2"
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "for _tbrk2",
+        "out_of_range_action": "stop"
+    },
+    "_rate2": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_tbrk2": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1e+99
+        ],
+        "range": {
+            "min": "_tbrk1",
+            "max": "_tbrk3"
+        },
+        "out_of_range_minmsg": "for _tbrk1",
+        "out_of_range_maxmsg": "for _tbrk3",
+        "out_of_range_action": "stop"
+        
+    },
+    "_rate3": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk3": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           2e+99
+        ],
+        "range": {
+            "min": "_tbrk2",
+            "max": "_tbrk4"
+        },
+        "out_of_range_minmsg": "for _tbrk2",
+        "out_of_range_maxmsg": "for _tbrk4",
+        "out_of_range_action": "stop"
+        
+    },
+    "_rate4": {
+        "long_name": "PIT tax rate 2",
+        "description": "The second lowest tax rate, applied to the portion of taxable income below tax bracket 2 and above tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+        
+    },
+    "_tbrk4": {
+        "long_name": "PIT tax bracket 2 (upper threshold)",
+        "description": "Income below this threshold and above tax bracket 1 is taxed at tax rate 2.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+                9e+99
+        ],
+        "range": {
+            "min": 9e+99,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+     "_ave_gross_wage": {
+        "long_name": "Average Gross Wage",
+        "description": "Estimated by State Statistical Office of North Macedonia",
+        "itr_ref": "34079 MKD",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            34079 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    }, 
+     "_number_of_wages_ssc": {
+        "long_name": "Average Gross Wage",
+        "description": "Estimated by State Statistical Office of North Macedonia",
+        "itr_ref": "34079 MKD",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            16 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },   
+    "_ssc_rate": {
+        "long_name": "Social Security Contributions",
+        "description": "This rate at which social security contributions are taxed.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.28 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+     "_ssc_temp_rate": {
+        "long_name": "Average Gross Wage",
+        "description": "Estimated by State Statistical Office of North Macedonia",
+        "itr_ref": "34079 MKD",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0 
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    }, 
+    "_exclude_cap": {
+       "long_name": "Average Gross Wage",
+       "description": "Estimated by State Statistical Office of North Macedonia",
+       "itr_ref": "34079 MKD",
+       "notes": "",
+       "row_var": "Year",
+       "row_label": [
+           "2018"
+       ],
+       "start_year": 2018,
+       "cpi_inflatable": true,
+       "cpi_inflated": false,
+       "col_var": "",
+       "col_label": "",
+       "boolean_value": false,
+       "integer_value": false,
+       "value": [
+           0 
+       ],
+       "range": {
+           "min": 0,
+           "max": 1
+       },
+       "out_of_range_minmsg": "",
+       "out_of_range_maxmsg": "",
+       "out_of_range_action": "stop" 
+   },           
+    "_rate_personal_allowance_w": {
+        "long_name": "% change in personal allowance (rate by which personal allowance is changed)",
+        "description": "Personal allowance on wages",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            1.0
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+     },    
+    "_rate_ded_income_agr_med_l": {
+        "long_name": "Tax rate applicable to capital income from agriculture and medicine",
+        "description": "Tax collected from capital income",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.8
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },    
+    "_rate_rent_house_business_c": {
+        "long_name": "Tax rate at which capital income from renting houses or businesses is levied",
+        "description": "Tax collected from capital income",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.15
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_rent_non_house_business_c": {
+         "long_name": "Tax rate at which capital income from renting other than houses or businesses is levied",
+         "description": "Tax collected from capital income",
+         "itr_ref": "R code",
+         "notes": "",
+         "row_var": "AYEAR",
+         "row_label": [
+             "2018"
+         ],
+         "start_year": 2018,
+         "cpi_inflatable": true,
+         "cpi_inflated": false,
+         "col_var": "",
+         "col_label": "",
+         "boolean_value": false,
+         "integer_value": false,
+         "value": [
+             0.15 
+         ],
+         "range": {
+             "min": 0,
+             "max": 1
+         },
+         "out_of_range_minmsg": "",
+         "out_of_range_maxmsg": "",
+         "out_of_range_action": "stop"       
+     },
+     "_rate_income_sculpture_c": {
+          "long_name": " Tax rate at which capital income from sculptural works, tapestry etc. is levied",
+          "description": "Tax collected from capital income .",
+          "itr_ref": "R code",
+          "notes": "",
+          "row_var": "AYEAR",
+          "row_label": [
+              "2018"
+          ],
+          "start_year": 2018,
+          "cpi_inflatable": true,
+          "cpi_inflated": false,
+          "col_var": "",
+          "col_label": "",
+          "boolean_value": false,
+          "integer_value": false,
+          "value": [
+              0.60
+          ],
+          "range": {
+              "min": 0,
+              "max": 1
+          },
+          "out_of_range_minmsg": "",
+          "out_of_range_maxmsg": "",
+          "out_of_range_action": "stop"
+    },
+    "_rate_income_artistic_photography_c": {
+        "long_name": "Tax rate at which capital income from artistic photography, wall painting etc. is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.50 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_income_paintings_c": {
+        "long_name": "Tax rate at which capital income from paintings, graphic works, industrial modelling etc. is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.50 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_income_music_ballet_c": {
+        "long_name": "Tax rate at which capital income from works of art in the area of serious music, ballet, opera etc. is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.30 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_income_translations_lectures_c": {
+        "long_name": "Tax rate at which capital income from translations (except translations of literary works), lectures etc. is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.30
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_income_stage_music_c": {
+        "long_name": " Tax rate at which capital income from performing stage programs of popular and folk music is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.25 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_rate_income_copyrights_other_c": {
+        "long_name": " Tax rate at which capital income from other author’s and industrial property works, which are not mentioned in the previous provisions is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.25
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_rate_income_claimed_other_c": {
+        "long_name": " Tax rate at which capital income from other income from capital is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.35
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_capital_income_rate_a": {
+        "long_name": " Tax rate at which capital income from all other income except games of chance is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },
+    "_capital_income_rate_g": {
+        "long_name": " Tax rate at which capital income from games of chance is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.15
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"   
+    },
+    "_capital_income_rate": {
+        "long_name": " Tax rate at which capital income is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"        
+    },
+    "_rate1_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"     
+    },
+    "_tbrk1_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1080000
+        ],
+        "range": {
+            "min": 0,
+            "max": "_tbrk2"
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "for _tbrk2",
+        "out_of_range_action": "stop"     
+    },
+    "_rate2_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.18
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"      
+    },
+    "_tbrk2_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           1e+99
+        ],
+        "range": {
+            "min": "_tbrk1",
+            "max": "_tbrk3"
+        },
+        "out_of_range_minmsg": "for _tbrk1",
+        "out_of_range_maxmsg": "for _tbrk3",
+        "out_of_range_action": "stop"   
+    },
+    "_rate3_curr_law": {  
+        "long_name": "PIT tax rate 1", 
+        "description": "The lowest tax rate, applied to the portion of taxable income below tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",    
+        "row_label": [  
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.18
+        ],
+        "range": {
+            "min": 0,
+            "max": 1 
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"    
+    },
+    "_tbrk3_curr_law": {
+        "long_name": "PIT tax bracket 1 (upper threshold)",
+        "description": "Taxable income below this threshold is taxed at tax rate 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+           2e+99
+        ],
+        "range": {
+            "min": "_tbrk2",
+            "max": "_tbrk4"
+        },
+        "out_of_range_minmsg": "for _tbrk2",
+        "out_of_range_maxmsg": "for _tbrk4",
+        "out_of_range_action": "stop"     
+    },
+    "_rate4_curr_law": {
+        "long_name": "PIT tax rate 2",
+        "description": "The second lowest tax rate, applied to the portion of taxable income below tax bracket 2 and above tax bracket 1.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.18
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"   
+    },
+    "_tbrk4_curr_law": {
+        "long_name": "PIT tax bracket 2 (upper threshold)",
+        "description": "Income below this threshold and above tax bracket 1 is taxed at tax rate 2.",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": [
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+                9e+99
+        ],
+        "range": {
+            "min": 9e+99,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"                
+    },
+    "_capital_income_rate_a_curr_law": {
+        "long_name": " Tax rate at which capital income is levied",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.1 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"         
+    },
+    "_capital_income_rate_g_curr_law": {
+        "long_name": " Tax rate at which capital income from game of chance is levied as per current law",
+        "description": "Tax collected from capital income .",
+        "itr_ref": "R code",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.10 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"         
+    },
+    "_cit_rate": {
+        "long_name": "rate at which corporates are taxed",
+        "description": "Corporate Tax rate",
+        "itr_ref": "Schedule 1 Finance Act",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.3
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_gst_rate": {
+        "long_name": "GST Benchmark Rate",
+        "description": "GST Benchmark Rate to calculate Policy Gap",
+        "itr_ref": "Benchmark Rate",
+        "notes": "",
+        "row_var": "AYEAR",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0.18
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_taxable_income_threshold": {
+        "long_name": "Threshold for Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "bracket",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                100000,
+                1000000,
+                9e99
+            ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_taxable_income_value": {
+        "long_name": "Elasticity of Taxable Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Profit",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                0.0,
+                0.0,
+                0.0
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_capital_income_threshold": {
+        "long_name": "Threshold for Elasticity of Capital Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "bracket",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                100000,
+                1000000,
+                9e99
+            ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 9e99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    },
+    "_elasticity_pit_capital_income_value": {
+        "long_name": "Elasticity of Capital Income",
+        "description": "elasticity",
+        "itr_ref": "elasticity",
+        "notes": "",
+        "row_var": "Tax_year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": false,
+        "cpi_inflated": false,
+        "col_var": "Profit",
+        "col_label": [
+            "bracket1",
+            "bracket2",
+            "bracket3"
+        ],
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            [
+                0.0,
+                0.0,
+                0.0
+                ]
+      ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop"
+    }             
+}
