@@ -655,7 +655,7 @@ class Calculator(object):
         del arys
         return pdf
 
-    def dataframe_gst(self, variable_list):
+    def dataframe_vat(self, variable_list):
         """
         Return pandas DataFrame containing the listed variables from embedded
         Records object.
