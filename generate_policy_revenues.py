@@ -147,6 +147,7 @@ def generate_policy_revenues():
         tax_collection_var_list = tax_collection_var_list + ['pitax']
         id_varlist = id_varlist + [global_variables['pit_id_var']]        
         recs = Records(data=global_variables['pit_data_filename'], weights=global_variables['pit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
+        tax_collection_var = 'pitax'
     else:
         recs = None
     if global_variables['cit']:
@@ -154,6 +155,7 @@ def generate_policy_revenues():
         tax_collection_var_list = tax_collection_var_list + ['citax']
         id_varlist = id_varlist + [global_variables['cit_id_var']]        
         crecs = CorpRecords(data=global_variables['cit_data_filename'], weights=global_variables['cit_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
+        tax_collection_var = 'citax'
     else:
         crecs = None
     if global_variables['vat']:
@@ -161,6 +163,7 @@ def generate_policy_revenues():
         tax_collection_var_list = tax_collection_var_list + ['vatax']
         id_varlist = id_varlist + [global_variables['vat_id_var']]         
         grecs = GSTRecords(data=global_variables['vat_data_filename'], weights=global_variables['vat_weights_filename'], gfactors=GrowFactors(growfactors_filename=global_variables['GROWFACTORS_FILENAME']))
+        tax_collection_var = 'vatax'
     else:
         grecs = None  
     
@@ -199,7 +202,7 @@ def generate_policy_revenues():
     pol2.implement_reform(reform['policy'])
     calc2 = Calculator(policy=pol2, records=recs, corprecords=crecs, gstrecords=grecs, verbose=verbose)
 
-    tax_collection_var = tax_collection_var_list[0]
+    #tax_collection_var = tax_collection_var_list[0]
     id_var = id_varlist[0]
 
     if adjust_behavior:
@@ -372,10 +375,21 @@ def generate_policy_revenues():
                                                  averages=output_in_averages,
                                                  scaling=True, attribute_var=dist_table_attribute_var)
 
-            df_tax1[tax_type][year]['All'] = calc1.dataframe([id_var, 'weight', income_measure[tax_type], tax_collection_var])
-            df_tax1[tax_type][year]['All'].set_index(id_var)
-            df_tax2[tax_type][year]['All'] = calc2.dataframe([id_var, 'weight', income_measure[tax_type], tax_collection_var])
-            df_tax2[tax_type][year]['All'].set_index(id_var)
+            if tax_type=='pit':
+                df_tax1[tax_type][year]['All'] = calc1.dataframe([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax1[tax_type][year]['All'].set_index(id_var)
+                df_tax2[tax_type][year]['All'] = calc2.dataframe([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax2[tax_type][year]['All'].set_index(id_var)
+            elif tax_type=='cit':
+                df_tax1[tax_type][year]['All'] = calc1.dataframe_cit([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax1[tax_type][year]['All'].set_index(id_var)
+                df_tax2[tax_type][year]['All'] = calc2.dataframe_cit([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax2[tax_type][year]['All'].set_index(id_var)
+            elif tax_type=='vat':
+                df_tax1[tax_type][year]['All'] = calc1.dataframe_vat([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax1[tax_type][year]['All'].set_index(id_var)
+                df_tax2[tax_type][year]['All'] = calc2.dataframe_vat([id_var, 'weight', income_measure[tax_type], tax_collection_var])
+                df_tax2[tax_type][year]['All'].set_index(id_var)
             #print('dt1_percentile[tax_type][year] ', dt1_percentile[tax_type][year])
     #print('dt1 ',dt1)
 
@@ -383,8 +397,8 @@ def generate_policy_revenues():
         """
         Return gini.
         """
-        #print('df_tax12[tax_type] ', df_tax12[tax_type]['All'])
-        df_tax12[tax_type]['All']['weight'] = df_tax12[tax_type]['All']['weight'+'_'+str(start_year)] 
+
+        df_tax12[tax_type]['All']['weight'] = df_tax12[tax_type]['All']['weight'+'_'+str(start_year)]
         df_tax12[tax_type]['All']['pre_tax_income'] = df_tax12[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]        
         df_tax12[tax_type]['All']['after_tax_income'] = (df_tax12[tax_type]['All'][income_measure[tax_type]+'_'+str(start_year)]-
                                                          df_tax12[tax_type]['All'][tax_collection_var+'_'+str(start_year)])
@@ -508,6 +522,7 @@ def generate_policy_revenues():
         dt12={}
         dt34={}
         for tax_type in tax_list:
+
             df_tax12[tax_type] = merge_distribution_table_dicts(df_tax1, df_tax2, tax_type, data_start_year, end_year)
             dt12[tax_type] = merge_distribution_table_dicts(dt1, dt2, tax_type, data_start_year, end_year)
             dt34[tax_type] = merge_distribution_table_dicts(dt3, dt4, tax_type, data_start_year, end_year)

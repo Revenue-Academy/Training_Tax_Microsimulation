@@ -108,7 +108,7 @@ def initialize_vars(self):
     self.vars['cit_elasticity_filename'] = "elasticity_cit_egypt.json"
     self.vars['cit_functions_filename'] = "functions_cit_egypt.py"
     self.vars['cit_function_names_filename'] = "function_names_cit_egypt.json"
-    self.vars['gdp_filename'] = 'gdp_nominal_egypt.csv'    
+    self.vars['gdp_filename'] = 'gdp_nominal_egypt.csv'  
     """
     self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_training.json"    
     self.vars['GROWFACTORS_FILENAME'] = "growfactors_cit_training.csv"
@@ -258,7 +258,9 @@ def display_entry(self, widget, tax_type):
         self.entry_functions_names_filename[tax_type].destroy() 
         self.button_function_names_filename[tax_type].destroy()
         self.entry_benchmark_filename[tax_type].destroy()
-        self.button_benchmark_filename[tax_type].destroy()      
+        self.button_benchmark_filename[tax_type].destroy()
+        self.entry_gdp_filename[tax_type].destroy()
+        self.button_gdp_filename[tax_type].destroy()
         self.l2[tax_type].destroy() 
         self.entry_salary_variable[tax_type].destroy() 
         self.l3[tax_type].destroy() 
@@ -279,10 +281,10 @@ def display_entry(self, widget, tax_type):
             #self.vars['GROWFACTORS_FILENAME'] = "growfactors_egypt.csv"
             self.vars['DEFAULTS_FILENAME'] = "current_law_policy_cit_training.json"    
             self.vars['GROWFACTORS_FILENAME'] = "growfactors_cit_training.csv"
-            self.vars['start_year'] = 2020
-            self.vars['data_start_year'] = 2020           
+            self.vars['start_year'] = 2022
+            self.vars['data_start_year'] = 2020
             self.vars['SALARY_VARIABLE'] = "SALARY"
-            self.vars['cit_id_var'] = 'id_n'
+            self.vars['cit_id_var'] = 'Taxpayer_ID'
         
         self.grid_placement(block_1_title_pos_x)
         self.l1[tax_type]=Label(self.TAB1,text="Data Inputs "+ tax_type.upper(),
@@ -439,7 +441,7 @@ def tab1(self):
     self.vars['vat'] = 0
     
     self.status['pit'] = tk.NORMAL
-    self.status['cit'] = tk.DISABLED
+    self.status['cit'] = tk.NORMAL
     #self.status['vat'] = tk.NORMAL
     self.status['vat'] = tk.DISABLED
     

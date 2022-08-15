@@ -82,7 +82,7 @@ class CorpRecords(object):
     vars = json.load(f)
     #print("vars in corprecords", vars)
     
-    CITCSV_YEAR = int(vars['start_year'])
+    CITCSV_YEAR = int(vars['data_start_year'])
 
     CUR_PATH = os.path.abspath(os.path.dirname(__file__))
     CIT_DATA_FILENAME = vars['cit_data_filename']
@@ -135,6 +135,7 @@ class CorpRecords(object):
         else:
             msg = 'start_year is not an integer'
             raise ValueError(msg)
+        
         # construct sample weights for current_year
         if self.WT.size > 0:
             wt_colname = 'WT{}'.format(self.current_year)

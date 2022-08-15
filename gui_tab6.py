@@ -97,13 +97,16 @@ def display_chart(self, event, global_vars):
     #tax_type = selected_chart[:3]
     if global_vars['pit']:
         tax_type = 'pit'
+        tax_collection_var = 'pitax'        
     elif global_vars['cit']:
         tax_type = 'cit'
+        tax_collection_var = 'citax'        
     else:
-        tax_type = 'pit'
+        tax_type = 'vat'
     start_year= global_vars['start_year']
     data_start_year= global_vars['data_start_year']
-    kakwani_list = global_vars['kakwani_list']
+    kakwani_list = global_vars['kakwani_list']      
+    
     if (selected_chart==tax_type+'_revenue_projection'):
         df = pd.read_csv(selected_chart+'.csv', index_col=0)           
         df = df.T
@@ -143,8 +146,8 @@ def display_chart(self, event, global_vars):
         df.index.names = ['Decile']
         fig, ax = plt.subplots(figsize=(8, 8))  
         #drop the rows that includes the average and top 1%
-        df=df[:-4]            
-        ax = df.plot(kind='bar',y=['pitax_'+str(data_start_year), 'pitax_'+str(start_year), 'pitax_ref_'+str(start_year)],figsize=(7, 7))
+        df=df[:-4]
+        ax = df.plot(kind='bar',y=[tax_collection_var+'_'+str(data_start_year), tax_collection_var+'_'+str(start_year), tax_collection_var+'_ref_'+str(start_year)],figsize=(7, 7))
         ax.set_xlabel("Assessable Income Deciles")
         ax.yaxis.set_major_formatter(formatter)
         ax.yaxis.set_minor_formatter(NullFormatter())
@@ -162,7 +165,7 @@ def display_chart(self, event, global_vars):
         df = df.set_index('index')
         df.index.names = ['Decile']
         fig, ax = plt.subplots(figsize=(8, 8))              
-        ax=df.plot(kind='bar',y=['pitax_'+str(data_start_year), 'pitax_'+str(start_year), 'pitax_ref_'+str(start_year)],figsize=(7, 7))       
+        ax=df.plot(kind='bar',y=[tax_collection_var+'_'+str(data_start_year), tax_collection_var+'_'+str(start_year), tax_collection_var+'_ref_'+str(start_year)],figsize=(7, 7))       
         ax.set_xlabel("Assessable Income Deciles")
         ax.yaxis.set_major_formatter(formatter)
         ax.yaxis.set_minor_formatter(NullFormatter())
@@ -180,10 +183,10 @@ def display_chart(self, event, global_vars):
         df = df.set_index('index')
         df.index.names = ['Income Group']
         #df1=df[df.columns[0]][2:][:-1]
-        df1 = df[['pitax_'+str(start_year),'pitax_ref_'+str(start_year)]][2:][:-1]
+        df1 = df[[tax_collection_var+'_'+str(start_year), tax_collection_var+'_ref_'+str(start_year)]][2:][:-1]
         #print('df1 is ', df1)
-        df1['pct1'] = df1['pitax_'+str(start_year)]/df1['pitax_'+str(start_year)].sum()
-        df1['pct2'] = df1['pitax_ref_'+str(start_year)]/df1['pitax_ref_'+str(start_year)].sum()
+        df1['pct1'] = df1[tax_collection_var+'_'+str(start_year)]/df1[tax_collection_var+'_'+str(start_year)].sum()
+        df1['pct2'] = df1[tax_collection_var+'_ref_'+str(start_year)]/df1[tax_collection_var+'_ref_'+str(start_year)].sum()
         labels1 = []
         for i in range(len(df1['pct1'])):
             if df1['pct1'][i]<0.05:
