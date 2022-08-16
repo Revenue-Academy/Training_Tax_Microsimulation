@@ -18,5 +18,6 @@
   "16": "Net_tax_base",
   "17": "Net_tax_base_behavior",  
   "18": "Net_tax_base_Egyp_Pounds",
-  "19": "cit_liability"
+  "19": "mat_liability",
+  "20": "cit_liability"
 }
