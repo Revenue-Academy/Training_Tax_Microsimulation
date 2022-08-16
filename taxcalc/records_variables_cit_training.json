@@ -622,6 +622,13 @@
       "form": {
         "2020": "carried forward from Table 411B  - Tax Return Legal Persons"
       }
+    },
+    "MAT": {
+      "type": "float",
+      "desc": "Minimum alternative tax",
+      "form": {
+        "2020": " "
+      }
     }
   }
 }
