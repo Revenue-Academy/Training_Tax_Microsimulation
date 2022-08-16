@@ -249,9 +249,19 @@ def Net_tax_base_Egyp_Pounds(Net_tax_base_behavior, Exchange_rate, Net_tax_base_
 DEBUG = False
 DEBUG_IDX = 0
 
+@iterate_jit(nopython=True)
+def mat_liability(mat_rate, Net_accounting_profit, MAT):
+    """
+    Compute tax liability given the corporate rate
+    """
+    # subtract TI_special_rates from TTI to get Aggregate_Income, which is
+    # the portion of TTI that is taxed at normal rates
+    MAT = mat_rate*Net_accounting_profit
+        
+    return MAT
 
 @iterate_jit(nopython=True)
-def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus, Sector_Code, Net_tax_base_Egyp_Pounds, citax):
+def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus, Sector_Code, Net_tax_base_Egyp_Pounds, MAT, citax):
     """
     Compute tax liability given the corporate rate
     """
@@ -266,6 +276,9 @@ def cit_liability(cit_rate_oil, cit_rate_hotels, cit_rate_banks, cit_rate_genbus
         citax = cit_rate_oil * taxinc
     elif Sector_Code == 3:
         citax = cit_rate_genbus * taxinc
+        
+    if MAT>citax:
+        citax=MAT
         
     return citax
 
