@@ -297,6 +297,7 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
     if groupby == 'weighted_deciles':
         pdf = add_quantile_table_row_variable(vdf, income_measure,
                                               10, decile_details=True)
+        
     elif groupby == 'weighted_percentiles':
         pdf = add_quantile_table_row_variable(vdf, income_measure,
                                               100, decile_details=False)       
@@ -304,6 +305,7 @@ def create_distribution_table(vdf, groupby, distribution_vardict, income_measure
         pdf = add_income_table_row_variable(vdf, income_measure,
                                             distribution_vardict['STANDARD_INCOME_BINS'])
     # construct grouped DataFrame
+    pdf.to_csv("decile_data.csv")
     gpdf = pdf.groupby('table_row', as_index=False)
     dist_table = stat_dataframe(gpdf, distribution_vardict['DIST_TABLE_COLUMNS'])
     del pdf['table_row']

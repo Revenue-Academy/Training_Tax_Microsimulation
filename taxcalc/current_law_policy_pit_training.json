@@ -128,7 +128,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.18
+            0.10
         ],
         "range": {
             "min": 0,
@@ -185,7 +185,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.18
+            0.10
         ],
         "range": {
             "min": 0,
@@ -226,8 +226,8 @@
     },
      "_ave_gross_wage": {
         "long_name": "Average Gross Wage",
-        "description": "Estimated by State Statistical Office of North Macedonia",
-        "itr_ref": "34079 MKD",
+        "description": "Estimated by State Statistical Office",
+        "itr_ref": "34079 LCU",
         "notes": "",
         "row_var": "Year",
         "row_label": [
@@ -250,7 +250,34 @@
         "out_of_range_minmsg": "",
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop" 
-    },  
+    }, 
+     "_number_of_wages_ssc": {
+        "long_name": "Average Gross Wage",
+        "description": "Estimated by State Statistical Office",
+        "itr_ref": "34079 LCU",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            16 
+        ],
+        "range": {
+            "min": 0,
+            "max": 9e+99
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    },   
     "_ssc_rate": {
         "long_name": "Social Security Contributions",
         "description": "This rate at which social security contributions are taxed.",
@@ -268,7 +295,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.275 
+            0.28 
         ],
         "range": {
             "min": 0,
@@ -277,7 +304,61 @@
         "out_of_range_minmsg": "",
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop"
-    },    
+    },
+     "_ssc_temp_rate": {
+        "long_name": "Average Gross Wage",
+        "description": "Estimated by State Statistical Office",
+        "itr_ref": "34079 LCU",
+        "notes": "",
+        "row_var": "Year",
+        "row_label": [
+            "2018"
+        ],
+        "start_year": 2018,
+        "cpi_inflatable": true,
+        "cpi_inflated": false,
+        "col_var": "",
+        "col_label": "",
+        "boolean_value": false,
+        "integer_value": false,
+        "value": [
+            0 
+        ],
+        "range": {
+            "min": 0,
+            "max": 1
+        },
+        "out_of_range_minmsg": "",
+        "out_of_range_maxmsg": "",
+        "out_of_range_action": "stop" 
+    }, 
+    "_exclude_cap": {
+       "long_name": "Average Gross Wage",
+       "description": "Estimated by State Statistical Office",
+       "itr_ref": "34079 LCU",
+       "notes": "",
+       "row_var": "Year",
+       "row_label": [
+           "2018"
+       ],
+       "start_year": 2018,
+       "cpi_inflatable": true,
+       "cpi_inflated": false,
+       "col_var": "",
+       "col_label": "",
+       "boolean_value": false,
+       "integer_value": false,
+       "value": [
+           0 
+       ],
+       "range": {
+           "min": 0,
+           "max": 1
+       },
+       "out_of_range_minmsg": "",
+       "out_of_range_maxmsg": "",
+       "out_of_range_action": "stop" 
+   },           
     "_rate_personal_allowance_w": {
         "long_name": "% change in personal allowance (rate by which personal allowance is changed)",
         "description": "Personal allowance on wages",
@@ -349,7 +430,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.30
+            0.15
         ],
         "range": {
             "min": 0,
@@ -376,7 +457,7 @@
          "boolean_value": false,
          "integer_value": false,
          "value": [
-             0.25 
+             0.15 
          ],
          "range": {
              "min": 0,
@@ -673,7 +754,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.15 
+            0.10 
         ],
         "range": {
             "min": 0,
@@ -930,7 +1011,6 @@
         "out_of_range_maxmsg": "",
         "out_of_range_action": "stop"         
     },
-  
     "_capital_income_rate_g_curr_law": {
         "long_name": " Tax rate at which capital income from game of chance is levied as per current law",
         "description": "Tax collected from capital income .",
@@ -948,7 +1028,7 @@
         "boolean_value": false,
         "integer_value": false,
         "value": [
-            0.15 
+            0.10 
         ],
         "range": {
             "min": 0,
