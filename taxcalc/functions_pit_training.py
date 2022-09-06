@@ -18,8 +18,8 @@ def cal_min_base_wage(ave_gross_wage, min_base_wage):
 
 "Calculation for maximum base wage"
 @iterate_jit(nopython=True)
-def cal_max_base_wage(ave_gross_wage, max_base_wage):
-    max_base_wage = ave_gross_wage * 16 * 12
+def cal_max_base_wage(ave_gross_wage,number_of_wages_ssc, max_base_wage):
+    max_base_wage = ave_gross_wage * number_of_wages_ssc * 12
     return max_base_wage
 
 "Calculation for minimum Social Security Contribution (SSC)"
@@ -47,7 +47,7 @@ def cal_ssc_w(ssc_w, income_wage_l, ssc_rate, min_base_wage, max_base_wage, min_
     note: income_wage_l = gross income for wages
     """
     if (ssc_w ==0 and income_wage_l > 0):     #ssc in cases where wage income is non-zero but ssc as per data is zero is deemed zero
-        ssc_w_calc = 0
+        ssc_w_calc = 0 
     elif (income_wage_l < min_base_wage):
         ssc_w_calc = min_ssc
     elif (income_wage_l >= min_base_wage) and (income_wage_l <= max_base_wage):
@@ -56,17 +56,83 @@ def cal_ssc_w(ssc_w, income_wage_l, ssc_rate, min_base_wage, max_base_wage, min_
         ssc_w_calc = max_ssc
     return ssc_w_calc
 
+"Calculation for Social Security Contribution (SSC) without cap"  
+@iterate_jit(nopython=True)
+def cal_ssc_w_rem_cap(ssc_w, income_wage_l, ssc_rate, min_base_wage, max_base_wage, min_ssc, max_ssc, ssc_w_rem_cap):
+    """
+    Compute ssc for wages.
+    """
+    """ Note : First condition: Case when SSC is zero (e.g Exemption from SSC for TIDZ or no income from wages);
+    Second condition:Case when gross income from wages is below minimum wages;
+    Third condition: Case when gross income from wages is range between minium and maximum wages an
+    Fourth condition:Case when gross income from wages is above maximum wages.
+    note: income_wage_l = gross income for wages
+    """
+    if (ssc_w ==0 and income_wage_l > 0):     #ssc in cases where wage income is non-zero but ssc as per data is zero is deemed zero
+        ssc_w_rem_cap = 0 
+    elif (income_wage_l < min_base_wage):
+        ssc_w_rem_cap = min_ssc
+    elif (income_wage_l >= min_base_wage) and (income_wage_l <= max_base_wage):
+        ssc_w_rem_cap = ssc_rate * income_wage_l
+    elif (income_wage_l > max_base_wage):
+        ssc_w_rem_cap = ssc_rate * income_wage_l
+    return ssc_w_rem_cap
+
+
+
+
+"Calculation for Social Security Contribution (SSC)"  
+@iterate_jit(nopython=True)
+def cal_ssc_inc_temp_fun(ssc_w, income_contract_l, ssc_rate, min_base_wage, max_base_wage, min_ssc, max_ssc, cal_ssc_inc_temp_calc):
+    """
+    Compute ssc for wages.
+    """
+    """ Note : First condition: Case when SSC is zero (e.g Exemption from SSC for TIDZ or no income from wages);
+    Second condition:Case when gross income from wages is below minimum wages;
+    Third condition: Case when gross income from wages is range between minium and maximum wages an
+    Fourth condition:Case when gross income from wages is above maximum wages.
+    note: income_wage_l = gross income for wages
+    """
+    if (ssc_w > 0 and income_contract_l > 0):     #ssc in cases where wage income is non-zero but ssc as per data is zero is deemed zero
+        cal_ssc_inc_temp_calc = 0
+    elif (income_contract_l < min_base_wage):
+        cal_ssc_inc_temp_calc = min_ssc
+    elif (income_contract_l >= min_base_wage) and (income_contract_l <= max_base_wage):
+        cal_ssc_inc_temp_calc = ssc_rate * income_contract_l
+    elif (income_contract_l > max_base_wage):
+        cal_ssc_inc_temp_calc = max_ssc
+    return cal_ssc_inc_temp_calc
+	
+
+"Calculation SSC with or without CAP"
+@iterate_jit(nopython=True)
+def cal_ssc_total(exclude_cap, ssc_w_rem_cap,ssc_w_calc,total_ssc_w):
+     if exclude_cap == 1:
+        total_ssc_w = ssc_w_rem_cap 
+     else :
+        total_ssc_w = ssc_w_calc
+     return total_ssc_w
+
+
 "Calculation for personal allowance - default rate of personal allowance is 100%, which can be changed in reform"
 @iterate_jit(nopython=True)
 def cal_personal_allowance_new(rate_personal_allowance_w, personal_allowance_w, personal_allowance_new):
     personal_allowance_new = personal_allowance_w * rate_personal_allowance_w
     return personal_allowance_new
 
+# "Calculation for tax base for wages"
+# #we can introduce the same condition that income_salary_l> and add all the other exemptions
+# @iterate_jit(nopython=True)
+# def cal_tax_base_w(income_wage_l, ssc_w_calc, personal_allowance_new):
+#     tax_base_w = income_wage_l - ssc_w_calc - personal_allowance_new
+#     tax_base_w = max(tax_base_w, 0.)
+#     return tax_base_w
+
 "Calculation for tax base for wages"
 #we can introduce the same condition that income_salary_l> and add all the other exemptions
 @iterate_jit(nopython=True)
-def cal_tax_base_w(income_wage_l, ssc_w_calc, personal_allowance_w):
-    tax_base_w = income_wage_l - ssc_w_calc - personal_allowance_w
+def cal_tax_base_w(income_wage_l, total_ssc_w, personal_allowance_new):
+    tax_base_w = income_wage_l - total_ssc_w - personal_allowance_new
     tax_base_w = max(tax_base_w, 0.)
     return tax_base_w
 
@@ -112,19 +178,38 @@ def cal_tax_base_agr(income_agr_med_l, deductions_income_agr_med_l):
     tax_base_agr = income_agr_med_l - deductions_income_agr_med_l
     return tax_base_agr
    
-"Calculation for tax base for other labor income" 
+"Calculation for tax base for temp income"
+#we can introduce the same condition that income_salary_l> and add all the other exemptions
 @iterate_jit(nopython=True)
-def cal_tax_base_other(tax_base_agr, income_add_l, income_supvr_l, income_officials_l, 
-                       income_jury_l, income_manu_l, income_contract_l, tax_base_other):
+def cal_tax_inc_temp(income_contract_l, cal_ssc_inc_temp_calc,ssc_temp_rate):
+    tax_base_inc_temp = income_contract_l - (cal_ssc_inc_temp_calc *ssc_temp_rate)
+    tax_base_inc_temp = max(tax_base_inc_temp, 0.)
+    return tax_base_inc_temp
+
+
+                       
+# "Calculation for tax base for other labor income" 
+# @iterate_jit(nopython=True)
+# def cal_tax_base_other(tax_base_agr, income_add_l, income_supvr_l, income_officials_l, 
+#                         income_jury_l, income_manu_l, income_contract_l, tax_base_other):
+#     tax_base_other = (tax_base_agr + income_add_l + income_supvr_l + income_officials_l + 
+#                       income_jury_l + income_manu_l + income_contract_l)
+#     tax_base_other = max(tax_base_other, 0.)
+#     return tax_base_other
+
+    "Calculation for tax base for other labor income" 
+@iterate_jit(nopython=True)
+def cal_tax_base_other(tax_base_agr,tax_base_inc_temp, income_add_l, income_supvr_l, income_officials_l, 
+                        income_jury_l, income_manu_l, tax_base_other):
     tax_base_other = (tax_base_agr + income_add_l + income_supvr_l + income_officials_l + 
-                      income_jury_l + income_manu_l + income_contract_l)
+                      income_jury_l + income_manu_l + tax_base_inc_temp)
     tax_base_other = max(tax_base_other, 0.)
     return tax_base_other
-                       
 
+ 
 "Calculation for total tax base from labor - sum of tax base wages and other labour income "
 @iterate_jit(nopython=True)
-def cal_tti_w_I(tax_base_w, tax_base_other, tti_w_I):
+def cal_tti_w_I(tax_base_w, tax_base_other,tti_w_I):
     tti_w_I = tax_base_w + tax_base_other
     return tti_w_I
 

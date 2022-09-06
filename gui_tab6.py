@@ -187,6 +187,7 @@ def display_chart(self, event, global_vars):
         #print('df1 is ', df1)
         df1['pct1'] = df1[tax_collection_var+'_'+str(start_year)]/df1[tax_collection_var+'_'+str(start_year)].sum()
         df1['pct2'] = df1[tax_collection_var+'_ref_'+str(start_year)]/df1[tax_collection_var+'_ref_'+str(start_year)].sum()
+        print("df1['pct2'] is", df1['pct2'])
         labels1 = []
         for i in range(len(df1['pct1'])):
             if df1['pct1'][i]<0.05:
